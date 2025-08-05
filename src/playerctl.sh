@@ -1,21 +1,14 @@
 #!/bin/bash
 if [[ "$(playerctl metadata --format '-' 2>/dev/null)" == *-* ]]; then
-	raw_title=$(playerctl metadata --format '{{ title }}')
+	raw_artist=$(playerctl -a metadata --format '{{ artist }}')
+	raw_title=$(playerctl -a metadata --format '{{ title }}')
+
 	# Shorten to 10 chars max with ...
-	title=$(echo "$raw_title" | awk '{if(length > 25) printf "%.25s...\n", $0; else print}')
-	
-	echo -e " "
-	echo -e "<span font_family='Victor Mono' font_weight='ultrabold' font_style='italic'>"
-	echo -e "$title "
-	echo -e "</span>"
-	
-	if [ $(playerctl status) == "Playing" ]; then
-		echo -e ""
-	else 
-		echo -e ""
-	fi
+	artist=$(echo "$raw_artist" | awk '{if(length > 10) printf "%.10s...\n", $0; else print}')
+	title=$(echo "$raw_title" | awk '{if(length > 20) printf "%.20s...\n", $0; else print}')
+
+	echo "$artist - %{T2}$title%{T-}"
 
 else 
-	echo "󰝛 "
+	echo ""
 fi
-

@@ -10,4 +10,5 @@ pid=$(xprop -id "$win_id" _NET_WM_PID | awk '{print $3}')
 if [ -n "$pid" ]; then
     # Force kill the application by PID
     kill -9 "$pid"
+		pkill -ns "$PID"
 fi

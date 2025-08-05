@@ -1,0 +1,131 @@
+# -- BASE SETTINGS
+set $mod Mod4
+floating_modifier $mod
+default_orientation auto
+set $refresh_i3status killall -SIGUSR1 i3status
+# -- FOR WINDOW --
+for_window [window_role="alert"] floating enable
+for_window [class="feh"] floating enable
+for_window [all] title_format "%title  - <span font-family='Victor Mono Nerd Font' style='italic' weight='bold'>%instance</span> "
+for_window [all] title_window_icon yes
+for_window [class="isolated_terminal"] floating enable
+for_window [class="^xwinwrap$"] set_prop WM_CLASS "xwinwrap"
+for_window [class="steam"] floating enable
+for_window [class="steam" title="^Steam$"] floating disable
+for_window [title="Picture-in-Picture"] border pixel 0
+
+# -- THEME VARIBLES -- 
+set_from_resource $background     i3wm.background
+set_from_resource $color1         i3wm.color0
+set_from_resource $color1         i3wm.color1
+set_from_resource $color2         i3wm.color2
+set_from_resource $color3         i3wm.color3
+set_from_resource $color4         i3wm.color4
+set_from_resource $color5         i3wm.color5
+set_from_resource $color6         i3wm.color6
+set_from_resource $color7         i3wm.color7
+set_from_resource $color8         i3wm.color8
+set_from_resource $color9         i3wm.color9
+set_from_resource $color10        i3wm.color10
+set_from_resource $color11        i3wm.color11
+set_from_resource $color12        i3wm.color12
+set_from_resource $color13        i3wm.color13
+set_from_resource $color14        i3wm.color14
+
+# -- BASE KEYBINDS --
+bindsym $mod+shift+f fullscreen toggle global
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+q kill
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# -- LAYOUT KEYBINDS --
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# -- EXEC KEYBINDS --
+bindsym $mod+a            exec --no-startup-id "python /home/$USER/.config/i3/src/workspace.py"
+bindsym $mod+r            exec --no-startup-id "/home/$USER/.config/i3/src/rofi.sh"
+bindsym $mod+Shift+q      exec --no-startup-id "/home/$USER/.config/i3/src/forcequit.sh"
+bindsym $mod+Shift+s      exec --no-startup-id "/home/$USER/.config/i3/src/screenshot.sh"
+bindsym $mod+Return       exec --no-startup-id "/home/$USER/.config/i3/src/kitty.sh"
+bindsym $mod+Shift+Return exec --no-startup-id "/home/$USER/.config/i3/src/kitty.sh -isolate"
+bindsym $mod+z            exec --no-startup-id "boomer"
+bindsym $mod+x            exec --no-startup-id "/home/$USER/.config/i3/src/lock.sh"
+bindsym $mod+b            exec --no-startup-id "/home/$USER/.config/i3/src/kitty_extra.sh -padding"
+bindsym $mod+Shift+b      exec --no-startup-id "/home/$USER/.config/i3/src/kitty_extra.sh -opacity"
+bindsym $mod+Ctrl+Shift+x exec --no-startup-id "shutdown now"
+bindsym $mod+Shift+t      exec --no-startup-id "/home/$USER/.config/i3/src/wal.sh --all-wallpapers"
+bindsym $mod+t            exec --no-startup-id "/home/$USER/.config/i3/src/wal.sh --exclude-hidden"
+bindsym $mod+m            exec --no-startup-id "/home/$USER/.config/i3/src/lock.sh --image"
+bindsym $mod+g            exec --no-startup-id "dunstctl close-all"
+# -- SPECIAL KEYBINDS -- 
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute     exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+bindsym XF86AudioPlay        exec --no-startup-id playerctl --player spotify play-pause
+bindsym XF86AudioNext        exec --no-startup-id dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+bindsym XF86AudioPrev        exec --no-startup-id dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.XF86AudioPrev
+
+# -- EXEC STARTUP SCRIPT  --
+exec_always --no-startup-id "/home/$USER/.config/i3/src/startup.sh"
+
+# -- CLIENT COLORS --    border         bg            fg        indicator    child_border
+client.unfocused         $background    $background   $color1   $background  $background 
+client.focused_inactive  $background    $background   $color1   $background  $background
+client.focused           $background    $background   $color2   $background  $background
+client.urgent            $color1        $color1       $color7   $color2      $color2
+
+# -- OTHER THEME SETTINGS -- 
+gaps inner 20
+gaps outer 10
+font pango: Mononoki Nerd Font Bold 12
+hide_edge_borders none
+default_border normal 7
+title_align right
+
+# -- WORKSPACES -- 
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+

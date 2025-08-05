@@ -1,5 +1,4 @@
 #!/bin/bash
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 is_video() {
 	local file="$1"
@@ -33,12 +32,12 @@ else
   		if [[ "$1" = "--exclude-hidden" ]]; then
     			echo "Picking non-hidden wallpaper"
   			wallpaper=$(find -L "$WALLPAPER_DIR" -type f -not -path "*/.*/*" | grep -v ".git" | shuf -n 1)
-			$SCRIPT_DIR/wal.sh --custom "$wallpaper";
+			$HOME/.dwm/src/wal.sh --custom "$wallpaper";
 			exit 
   		else
 			echo "Picking universal wallpaper"
 			wallpaper=$(find -L "$WALLPAPER_DIR" -type f -path "*/.*/*" | grep -v ".git" | shuf -n 1)
-			$SCRIPT_DIR/wal.sh --custom "$wallpaper"
+			$HOME/.dwm/src/wal.sh --custom "$wallpaper"
 			exit
 		fi
 	else 
@@ -50,12 +49,22 @@ fi
 export XDG_CACHE_HOME="$HOME/.cache" &> /dev/null &
 touch $HOME/.i3wallpaper
 
+# OBSELETE AS NOW -e IS USED WITH PYWAL SO THIS IS NOT AN ISSUE 
+# only one dependancy is run before the rest, that is polybar 
+# when wal is run it reloads polybar but we end up reloading it 
+# manually using a kill-replace style script, if we kill it here
+# then wal will not reload it, we dont want wall to reload it 
+# because it animates the bar dissapearing twice which is not 
+# ideal for visual candy.
+# $HOME/.config/i3/src/kill_polybar.sh
+
+# plank is a visual child process so it has to go too
 
 # run wal 
 echo "Running PyWal"
 echo "Using image: $first_wall"
 echo "$first_wall" > $HOME/.i3wallpaper
-wal -i "$first_wall" -q -t -s -n -a 92
+wal -i "$first_wall" -q -e -t -s -n -a 92
 echo "Done"
 
 
@@ -73,6 +82,19 @@ else
 	echo "Setting primary wallpaper"
 	output=$(xrandr | grep "primary" | awk '{print $1}')
 	echo "Using monitor $output"
-	xwallpaper --zoom "$first_wall"
+	xwallpaper --output  $output --zoom "$first_wall"
 	echo "Set Wallpaper"
 fi
+
+
+# start deps 
+echo "Running Deps"
+echo "Done"
+($HOME/.dwm/src/wal_deps.sh) &
+
+# echo fix picom
+if [[ $(pgrep "picom") = "" ]];then 
+	echo "Picom exited for some reason"
+	echo "Starting Picom"
+	picom --config "$HOME/.dwm/conf/picom.conf" --experimental-backends &
+fi 

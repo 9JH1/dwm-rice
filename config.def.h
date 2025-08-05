@@ -12,12 +12,12 @@ static const unsigned int gappov =
 static int smartgaps =
     0; /* 1 means no outer gap when there is only one window */
 static const int showbar = 1;               /* 0 means no bar */
-static const int topbar = 0;                /* 0 means bottom bar */
+static const int topbar = 1;                /* 0 means bottom bar */
 static const int usealtbar = 1;             /* 1 means use non-dwm status bar */
 static const char *altbarclass = "Polybar"; /* Alternate bar class name */
 static const char *alttrayname = "snixembed"; /* Polybar tray instance name */
 static const char *altbarcmd =
-    "$HOME/.dwm/src/bar.sh"; /* Alternate bar launch command */
+    "$HOME/.dwm/src/polybar.sh"; /* Alternate bar launch command */
 static const char *fonts[] = {"monospace:size=10"};
 static const char dmenufont[] = "monospace:size=10";
 static const char col_gray1[] = "#222222";
@@ -35,14 +35,12 @@ static const char *colors[][3] = {
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
 static const Rule rules[] = {
-    /* xprop(1):
-     *	WM_CLASS(STRING) = instance, class
-     *	WM_NAME(STRING) = title
-     */
-    /* class      instance    title       tags mask     isfloating   monitor */
-    {"Gimp", NULL, NULL, 0, 1, -1},
-    {NULL, NULL},
-    {"Firefox", NULL, NULL, 1 << 8, 0, -1},
+	/* xprop(1):
+	 *	WM_CLASS(STRING) = instance, class
+	 *	WM_NAME(STRING) = title
+	 */
+	/* class      instance    title       tags mask     isfloating   monitor */
+	{ "namethatdosentexist",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
@@ -51,7 +49,7 @@ static const int nmaster = 1;    /* number of clients in master area */
 static const int resizehints =
     1; /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen =
-    1; /* 1 will force focus on the fullscreen window */
+    0; /* 1 will force focus on the fullscreen window */
 
 #define FORCE_VSPLIT                                                           \
   1 /* nrowgrid layout: force two clients to always split vertically */
@@ -93,42 +91,50 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] =
     "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = {
-    "dmenu_run", "-m",      dmenumon, "-fn",    dmenufont, "-nb",     col_gray1,
-    "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
-static const char *termcmd[] = {"kitty", NULL};
+static const char *dmenucmd[] = {"/home/_3hy/.dwm/src/rofi.sh", NULL};
+static const char *termcmd[] = {"/home/_3hy/.dwm/src/kitty.sh", NULL};
 static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh",
                                        "--exclude-hidden", NULL};
 static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh",
                                   "--include-hidden", NULL};
 static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
 static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
+static const char *term_extra_border[] = {"/home/_3hy/.dwm/src/kitty_extra.sh","-padding",NULL};
+static const char *term_extra_opacity[] = {"/home/_3hy/.dwm/src/kitty_extra.sh","-opacity",NULL};
+static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh",NULL};
 
 static const Key keys[] = {
     {MODKEY, XK_r, spawn, {.v = dmenucmd}},              // launcher
     {MODKEY, XK_Return, spawn, {.v = termcmd}},          // terminal
     {MODKEY, XK_t, spawn, {.v = wallpaper_safe}},        // wallpaper safe
     {MODKEY | ShiftMask, XK_t, spawn, {.v = wallpaper}}, // wallpaper universal
-    {MODKEY, XK_b, togglebar, {0}},                      // toggle bar
+		{ MODKEY,XK_Tab,view,{0} }, // view 
+		{MODKEY,XK_x,spawn,{.v = lock}},
+    {MODKEY, XK_p, togglebar, {0}},                      // toggle bar
     {MODKEY, XK_j, focusstack, {.i = +1}}, // cycle focus clockwise
     {MODKEY, XK_k, focusstack, {.i = -1}}, // cycle focus counter-clockwise
     {MODKEY, XK_i, incnmaster, {.i = +1}}, // not sure
     {MODKEY, XK_d, incnmaster, {.i = -1}}, // not sure
-
+		{MODKEY, XK_b, spawn, {.v = term_extra_opacity}}, // kitty opacity
+		{MODKEY|ShiftMask, XK_s, spawn, {.v = screenshot}}, // screenshot
     {MODKEY, XK_0, view, {.ui = ~0}},                    // show all windows
-    {MODKEY, XK_h, setmfact, {.f = -0.05}},              // resize window left
-    {MODKEY, XK_l, setmfact, {.f = +0.05}},              // resize window right
+    {MODKEY, XK_space, setlayout, {0}},                  // remove gaps
     {MODKEY, XK_Tab, view, {0}},                         // go to last workspace
     {MODKEY, XK_q, killclient, {0}},                     // kill focused window
-    {MODKEY, XK_space, setlayout, {0}},                  // remove gaps
-    {MODKEY | ShiftMask, XK_space, togglefloating, {0}}, // toggle floating
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}}, // forcefull kill
+		{MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}}, // kitty border 
+    {MODKEY | ShiftMask, XK_space, togglefloating, {0}}, // toggle floating
     {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},         // always on top
-    {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}},  // resize window up
+    
+		{MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}},  // resize window up
     {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}},  // resize window down
-    {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},   // not sure
-
-    {MODKEY | ShiftMask | ControlMask, XK_1, setlayout, {.v = &layouts[0]}},
+    {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},   // reset resize y
+    
+		{MODKEY, XK_l, setmfact, {.f = +0.05}},              // resize window right
+    {MODKEY, XK_h, setmfact, {.f = -0.05}},              // resize window left
+		{MODKEY, XK_o, setmfact, {.f = 0.00}}, // reset resize x
+    
+		{MODKEY | ShiftMask | ControlMask, XK_1, setlayout, {.v = &layouts[0]}},
     {MODKEY | ShiftMask | ControlMask, XK_2, setlayout, {.v = &layouts[1]}},
     {MODKEY | ShiftMask | ControlMask, XK_3, setlayout, {.v = &layouts[2]}},
     {MODKEY | ShiftMask | ControlMask, XK_4, setlayout, {.v = &layouts[3]}},
@@ -138,8 +144,8 @@ static const Key keys[] = {
     {MODKEY | ShiftMask | ControlMask, XK_8, setlayout, {.v = &layouts[7]}},
     {MODKEY | ShiftMask | ControlMask, XK_9, setlayout, {.v = &layouts[8]}},
     {MODKEY | ShiftMask | ControlMask, XK_0, setlayout, {.v = &layouts[9]}},
-    {MODKEY | ControlMask, XK_comma, cyclelayout, {.i = -1}},
-    {MODKEY | ControlMask, XK_period, cyclelayout, {.i = +1}},
+    {MODKEY, XK_a, cyclelayout, {.i = -1}},
+    {MODKEY, XK_s, cyclelayout, {.i = +1}},
 
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
