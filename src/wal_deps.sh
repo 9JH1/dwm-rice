@@ -5,9 +5,8 @@ SCRIPT_DIR="$HOME/.dwm/src"
 # important things first
 echo "Reloading Dunst"
 $SCRIPT_DIR/dunst.sh >/dev/null &
-echo "Killing Polybar"
-$SCRIPT_DIR/kill_polybar.sh >/dev/null 
 echo "Starting Polybar"
+killall polybar 
 $SCRIPT_DIR/polybar.sh &>/dev/null &
 
 # reload I3 and everything else that we dident reload 
@@ -18,8 +17,6 @@ echo "Reloading TTY"
 sh "$HOME/.cache/wal/colors-tty.sh"
 echo "Reloading XRDB"
 xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources"
-echo "Reloading I3"
-i3-msg reload
 
 # less important things 
 echo "Reloading Kitty"

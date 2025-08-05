@@ -1,4 +1,3 @@
-/* See LICENSE file for copyright and license details. */
 
 /* appearance */
 static const unsigned int borderpx = 0; /* border pixel of windows */
@@ -35,12 +34,8 @@ static const char *colors[][3] = {
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
 static const Rule rules[] = {
-	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
-	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "namethatdosentexist",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "isolated_terminal",  NULL,       NULL,       1 << 8,       1,           -1 },
 };
 
 /* layout(s) */
@@ -92,15 +87,16 @@ static const Layout layouts[] = {
 static char dmenumon[2] =
     "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = {"/home/_3hy/.dwm/src/rofi.sh", NULL};
-static const char *termcmd[] = {"/home/_3hy/.dwm/src/kitty.sh", NULL};
+static const char *termcmd[] = {"/home/_3hy/.dwm/src/alacritty.sh", NULL};
+static const char *termcmdalt[] = {"/home/_3hy/.dwm/src/alacritty.sh","-isolate", NULL};
 static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh",
                                        "--exclude-hidden", NULL};
 static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh",
                                   "--include-hidden", NULL};
 static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
 static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
-static const char *term_extra_border[] = {"/home/_3hy/.dwm/src/kitty_extra.sh","-padding",NULL};
-static const char *term_extra_opacity[] = {"/home/_3hy/.dwm/src/kitty_extra.sh","-opacity",NULL};
+static const char *term_extra_border[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh","-padding",NULL};
+static const char *term_extra_opacity[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh","-opacity",NULL};
 static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh",NULL};
 
 static const Key keys[] = {
@@ -108,13 +104,13 @@ static const Key keys[] = {
     {MODKEY, XK_Return, spawn, {.v = termcmd}},          // terminal
     {MODKEY, XK_t, spawn, {.v = wallpaper_safe}},        // wallpaper safe
     {MODKEY | ShiftMask, XK_t, spawn, {.v = wallpaper}}, // wallpaper universal
-		{ MODKEY,XK_Tab,view,{0} }, // view 
+		{MODKEY,XK_Tab,view,{0} }, // view 
 		{MODKEY,XK_x,spawn,{.v = lock}},
     {MODKEY, XK_p, togglebar, {0}},                      // toggle bar
     {MODKEY, XK_j, focusstack, {.i = +1}}, // cycle focus clockwise
     {MODKEY, XK_k, focusstack, {.i = -1}}, // cycle focus counter-clockwise
-    {MODKEY, XK_i, incnmaster, {.i = +1}}, // not sure
-    {MODKEY, XK_d, incnmaster, {.i = -1}}, // not sure
+    {MODKEY, XK_i, incnmaster, {.i = +1}}, // switch from horizontal to vertical 
+    {MODKEY, XK_d, incnmaster, {.i = -1}}, // switch from vertical to horizontal
 		{MODKEY, XK_b, spawn, {.v = term_extra_opacity}}, // kitty opacity
 		{MODKEY|ShiftMask, XK_s, spawn, {.v = screenshot}}, // screenshot
     {MODKEY, XK_0, view, {.ui = ~0}},                    // show all windows
@@ -134,18 +130,10 @@ static const Key keys[] = {
     {MODKEY, XK_h, setmfact, {.f = -0.05}},              // resize window left
 		{MODKEY, XK_o, setmfact, {.f = 0.00}}, // reset resize x
     
-		{MODKEY | ShiftMask | ControlMask, XK_1, setlayout, {.v = &layouts[0]}},
-    {MODKEY | ShiftMask | ControlMask, XK_2, setlayout, {.v = &layouts[1]}},
-    {MODKEY | ShiftMask | ControlMask, XK_3, setlayout, {.v = &layouts[2]}},
-    {MODKEY | ShiftMask | ControlMask, XK_4, setlayout, {.v = &layouts[3]}},
-    {MODKEY | ShiftMask | ControlMask, XK_5, setlayout, {.v = &layouts[4]}},
-    {MODKEY | ShiftMask | ControlMask, XK_6, setlayout, {.v = &layouts[5]}},
-    {MODKEY | ShiftMask | ControlMask, XK_7, setlayout, {.v = &layouts[6]}},
-    {MODKEY | ShiftMask | ControlMask, XK_8, setlayout, {.v = &layouts[7]}},
-    {MODKEY | ShiftMask | ControlMask, XK_9, setlayout, {.v = &layouts[8]}},
-    {MODKEY | ShiftMask | ControlMask, XK_0, setlayout, {.v = &layouts[9]}},
     {MODKEY, XK_a, cyclelayout, {.i = -1}},
     {MODKEY, XK_s, cyclelayout, {.i = +1}},
+		{MODKEY, XK_f, setlayout, {.v = &layouts[1]}}, // set monocle layout 
+		{MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[0]}}, // set tile layout
 
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)

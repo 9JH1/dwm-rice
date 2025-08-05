@@ -1,9 +1,0 @@
-fix weird kitty background issue
-
-re-write polybar config 
-remove use of seperator modules and add as suffix's if possible 
-add proper date-alt styles
-
-check that all paths use $HOME instead of /home/$USER 
-
-make kitty blur per-terminal instead of all terminals updating at the same time
