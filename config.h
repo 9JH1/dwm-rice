@@ -6,7 +6,7 @@ static const unsigned int snap = 64;    /* snap pixel */
 static const unsigned int gappih = 20;  /* horiz inner gap between windows */
 static const unsigned int gappiv = 10;  /* vert inner gap between windows */
 static const unsigned int gappoh =
-    10; /* horiz outer gap between windows and screen edge */
+    30; /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov =
     30; /* vert outer gap between windows and screen edge */
 static int smartgaps =
@@ -41,6 +41,7 @@ static const Rule rules[] = {
      */
     /* class      instance    title       tags mask     isfloating   monitor */
     {"Gimp", NULL, NULL, 0, 1, -1},
+    {NULL, NULL},
     {"Firefox", NULL, NULL, 1 << 8, 0, -1},
 };
 
@@ -75,15 +76,6 @@ static const Layout layouts[] = {
     {NULL, NULL},
 };
 
-static const int layout_count = 13;
-static int layout_index = 0;
-
-static inline int cycle_layout() {
-  if (layout_index++ >= layout_count)
-    layout_index = 0;
-  return layout_index;
-}
-
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY, TAG)                                                      \
@@ -111,6 +103,7 @@ static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh",
                                   "--include-hidden", NULL};
 static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
 static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
+
 static const Key keys[] = {
     {MODKEY, XK_r, spawn, {.v = dmenucmd}},              // launcher
     {MODKEY, XK_Return, spawn, {.v = termcmd}},          // terminal
@@ -134,7 +127,6 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}},  // resize window up
     {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}},  // resize window down
     {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},   // not sure
-    {MODKEY, XK_x, setlayout, {.v = &layouts[cycle_layout()]}}, // cycle layout
 
     {MODKEY | ShiftMask | ControlMask, XK_1, setlayout, {.v = &layouts[0]}},
     {MODKEY | ShiftMask | ControlMask, XK_2, setlayout, {.v = &layouts[1]}},
@@ -146,6 +138,8 @@ static const Key keys[] = {
     {MODKEY | ShiftMask | ControlMask, XK_8, setlayout, {.v = &layouts[7]}},
     {MODKEY | ShiftMask | ControlMask, XK_9, setlayout, {.v = &layouts[8]}},
     {MODKEY | ShiftMask | ControlMask, XK_0, setlayout, {.v = &layouts[9]}},
+    {MODKEY | ControlMask, XK_comma, cyclelayout, {.i = -1}},
+    {MODKEY | ControlMask, XK_period, cyclelayout, {.i = +1}},
 
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
