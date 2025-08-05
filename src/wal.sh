@@ -73,6 +73,6 @@ else
 	echo "Setting primary wallpaper"
 	output=$(xrandr | grep "primary" | awk '{print $1}')
 	echo "Using monitor $output"
-	xwallpaper --output  $output --zoom "$first_wall"
+	xwallpaper --zoom "$first_wall"
 	echo "Set Wallpaper"
 fi
