@@ -16,13 +16,12 @@ level2=$color6
 level3=$alert
 
 read -r -d '' POLYBAR_FONT_CONFIG << EOM 
-font-4 = "Mononoki Nerd Font:style=Regular:size=18;5.2"
-font-3 = "Mononoki Nerd Font:style=Regular:size=25;5.1"
-font-2 = "Mononoki Nerd Font:style=Regular:size=16;2.1"
-font-1 = "Victor Mono Nerd Font:style=Bold Italic:size=13;2.5"
-font-0 = "Mononoki Nerd Font:style=Bold:size=13;2.1"
-dpi = 130
-height = 4%
+font-3 = "Mononoki Nerd Font:style=Regular:size=17;3.7"
+font-2 = "Mononoki Nerd Font:style=Regular:size=13;2.1"
+font-1 = "Victor Mono Nerd Font:style=Bold Italic:size=10;2.5"
+font-0 = "Mononoki Nerd Font:style=Bold:size=10;2.1"
+dpi = 100
+height = 25px
 border-size = 2pt
 line-size = 2
 background=$background_transparent
@@ -261,7 +260,7 @@ format-foreground = $color1
 [module/powermenu]
 type = custom/script
 exec = ~/.dwm/src/symbol.sh
-format = <label>
+format = %{T2}<label>%{T-}
 tail = true
 click-left = ~/.dwm/src/jgmenu.sh
 format-foreground = $module_foreground 

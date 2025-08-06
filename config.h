@@ -34,8 +34,8 @@ static const char *colors[][3] = {
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
 static const Rule rules[] = {
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "isolated_terminal",  NULL,       NULL,       1 << 8,       1,           -1 },
+    /* class      instance    title       tags mask     isfloating   monitor */
+    {"isolated_terminal", NULL, NULL, 1 << 8, 1, -1},
 };
 
 /* layout(s) */
@@ -88,58 +88,70 @@ static char dmenumon[2] =
     "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = {"/home/_3hy/.dwm/src/rofi.sh", NULL};
 static const char *termcmd[] = {"/home/_3hy/.dwm/src/alacritty.sh", NULL};
-static const char *termcmdalt[] = {"/home/_3hy/.dwm/src/alacritty.sh","-isolate", NULL};
+static const char *termcmdalt[] = {"/home/_3hy/.dwm/src/alacritty.sh",
+                                   "-isolate", NULL};
 static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh",
                                        "--exclude-hidden", NULL};
 static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh",
                                   "--include-hidden", NULL};
 static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
 static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
-static const char *term_extra_border[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh","-padding",NULL};
-static const char *term_extra_opacity[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh","-opacity",NULL};
-static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh",NULL};
+static const char *term_extra_border[] = {
+    "/home/_3hy/.dwm/src/alacritty_extra.sh", "-padding", NULL};
+static const char *term_extra_opacity[] = {
+    "/home/_3hy/.dwm/src/alacritty_extra.sh", "-opacity", NULL};
+static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh", NULL};
 
 static const Key keys[] = {
-    {MODKEY, XK_r, spawn, {.v = dmenucmd}},              // launcher
-    {MODKEY, XK_Return, spawn, {.v = termcmd}},          // terminal
-		{MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmdalt}}, // floating terminal
+    {MODKEY, XK_r, spawn, {.v = dmenucmd}},     // launcher
+    {MODKEY, XK_Return, spawn, {.v = termcmd}}, // terminal
+    {MODKEY | ShiftMask,
+     XK_Return,
+     spawn,
+     {.v = termcmdalt}},                                 // floating terminal
     {MODKEY, XK_t, spawn, {.v = wallpaper_safe}},        // wallpaper safe
     {MODKEY | ShiftMask, XK_t, spawn, {.v = wallpaper}}, // wallpaper universal
-		{MODKEY,XK_x,spawn,{.v = lock}},
-    {MODKEY, XK_v, togglebar, {0}},                      // toggle bar
+    {MODKEY, XK_x, spawn, {.v = lock}},
+    {MODKEY, XK_v, togglebar, {0}},        // toggle bar
     {MODKEY, XK_j, focusstack, {.i = +1}}, // cycle focus clockwise
     {MODKEY, XK_k, focusstack, {.i = -1}}, // cycle focus counter-clockwise
-    {MODKEY, XK_i, incnmaster, {.i = +1}}, // switch from horizontal to vertical 
+    {MODKEY, XK_i, incnmaster, {.i = +1}}, // switch from horizontal to vertical
     {MODKEY, XK_g, incnmaster, {.i = -1}}, // switch from vertical to horizontal
-		{MODKEY, XK_b, spawn, {.v = term_extra_opacity}},   // term opacity
-		{MODKEY|ShiftMask, XK_s, spawn, {.v = screenshot}}, // screenshot
-    {MODKEY, XK_0, view, {.ui = ~0}},                    // show all windows
-    {MODKEY, XK_space, setlayout, {0}},                  // remove gaps
+    {MODKEY, XK_b, spawn, {.v = term_extra_opacity}},     // term opacity
+    {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}}, // screenshot
+    {MODKEY, XK_0, view, {.ui = ~0}},                     // show all windows
+    {MODKEY, XK_space, setlayout, {0}},                   // remove gaps
     {MODKEY, XK_Tab, view, {0}},                         // go to last workspace
     {MODKEY, XK_q, killclient, {0}},                     // kill focused window
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}}, // forcefull kill
-		{MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}}, // term border 
+    {MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}}, // term border
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}}, // toggle floating
     {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},         // always on top
-    
-		{MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}},  // resize window up
-    {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}},  // resize window down
-    {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},   // reset resize y
 
-		{MODKEY,              XK_equal,      incrigaps,      {.i = +1 } },
-		{MODKEY,              XK_minus,      incrigaps,      {.i = -1 } },
-		{MODKEY|ShiftMask,    XK_equal,      incrogaps,      {.i = +1 } },
-		{MODKEY|ShiftMask,    XK_minus,      incrogaps,      {.i = -1 } }, 
-		
-		{MODKEY, XK_l, setmfact, {.f = +0.05}},              // resize window right
-    {MODKEY, XK_h, setmfact, {.f = -0.05}},              // resize window left
-		{MODKEY, XK_o, setmfact, {.f = 0.00}},               // reset resize x
-    
+    {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}}, // resize window up
+    {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}}, // resize window down
+    {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},  // reset resize y
+
+    {MODKEY | ShiftMask, XK_equal, incrigaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_minus, incrigaps, {.i = -1}},
+    {MODKEY, XK_equal, incrogaps, {.i = +1}},
+    {MODKEY, XK_minus, incrogaps, {.i = -1}},
+
+    {MODKEY, XK_l, setmfact, {.f = +0.05}}, // resize window right
+    {MODKEY, XK_h, setmfact, {.f = -0.05}}, // resize window left
+    {MODKEY, XK_o, setmfact, {.f = 0.00}},  // reset resize x
+
     {MODKEY, XK_s, cyclelayout, {.i = -1}},
     {MODKEY, XK_d, cyclelayout, {.i = +1}},
-		{MODKEY, XK_f, setlayout, {.v = &layouts[1]}}, // set monocle layout 
-		{MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[0]}}, // set tile layout
-		{MODKEY | ShiftMask | ControlMask, XK_f, setlayout, {.v = &layouts[13]}}, // set floating layout
+    {MODKEY, XK_f, setlayout, {.v = &layouts[1]}}, // set monocle layout
+    {MODKEY | ShiftMask,
+     XK_f,
+     setlayout,
+     {.v = &layouts[0]}}, // set tile layout
+    {MODKEY | ShiftMask | ControlMask,
+     XK_f,
+     setlayout,
+     {.v = &layouts[13]}}, // set floating layout
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8){MODKEY | ShiftMask, XK_q, quit, {0}},
