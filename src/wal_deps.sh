@@ -20,7 +20,7 @@ xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources"
 
 # less important things 
 echo "Reloading Kitty"
-$SCRIPT_DIR/kitty.sh no-run >/dev/null & 
+$SCRIPT_DIR/alacritty.sh no-run >/dev/null & 
 echo "Reloading Walcord"
 walcord &>/dev/null &
 echo "Reloading Qutebrowser"

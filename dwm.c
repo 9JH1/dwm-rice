@@ -211,11 +211,12 @@ static void setup(void);
 static void setviewport(void);
 static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
-static void sigchld(int unused);
 static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h,
                           int interact);
 static void arrange(Monitor *m);
+static void autostart_exec(void);
+static void togglefullscr(const Arg *arg);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attachstack(Client *c);
@@ -263,13 +264,13 @@ static Client *nexttiled(Client *c);
 static void pop(Client *c);
 static void propertynotify(XEvent *e);
 static void quit(const Arg *arg);
+static void propertynotify(XEvent *e);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void resize(Client *c, int x, int y, int w, int h, int interact);
 static void resizeclient(Client *c, int x, int y, int w, int h);
 static void resizemouse(const Arg *arg);
 static void restack(Monitor *m);
 static void run(void);
-static void runautostart(void);
 static void scan(void);
 static void scantray(void);
 static int sendevent(Client *c, Atom proto);
@@ -319,11 +320,7 @@ static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 
 /* variables */
-static const char autostartblocksh[] = "autostart_blocking.sh";
-static const char autostartsh[] = "autostart.sh";
 static const char broken[] = "broken";
-static const char dwmdir[] = "dwm";
-static const char localshare[] = ".local/share";
 static char stext[256];
 static int screen;
 static int sw, sh; /* X display screen geometry width, height */
@@ -372,6 +369,33 @@ static Window root, wmcheckwin;
 struct NumTags {
   char limitexceeded[LENGTH(tags) > 31 ? -1 : 1];
 };
+
+static pid_t *autostart_pids;
+static size_t autostart_len;
+
+/* execute command from autostart array */
+static void
+autostart_exec() {
+	const char *const *p;
+	size_t i = 0;
+
+	/* count entries */
+	for (p = autostart; *p; autostart_len++, p++)
+		while (*++p);
+
+	autostart_pids = malloc(autostart_len * sizeof(pid_t));
+	for (p = autostart; *p; i++, p++) {
+		if ((autostart_pids[i] = fork()) == 0) {
+			setsid();
+			execvp(*p, (char *const *)p);
+			fprintf(stderr, "dwm: execvp %s\n", *p);
+			perror(" failed");
+			_exit(EXIT_FAILURE);
+		}
+		/* skip arguments */
+		while (*++p);
+	}
+}
 
 /* function implementations */
 void applyrules(Client *c) {
@@ -474,6 +498,7 @@ int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact) {
   }
   return *x != c->x || *y != c->y || *w != c->w || *h != c->h;
 }
+
 
 void arrange(Monitor *m) {
   if (m)
@@ -1023,7 +1048,11 @@ int gettextprop(Window w, Atom atom, char *text, unsigned int size) {
   XFree(name.value);
   return 1;
 }
-
+void togglefullscr(const Arg *arg)
+{
+    if(!selmon->sel) return;
+    setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+}
 void grabbuttons(Client *c, int focused) {
   updatenumlockmask();
   {
@@ -1284,6 +1313,8 @@ void movemouse(const Arg *arg) {
   Time lasttime = 0;
 
   if (!(c = selmon->sel))
+
+
     return;
   if (c->isfullscreen) /* no support moving fullscreen windows by mouse */
     return;
@@ -1321,6 +1352,7 @@ void movemouse(const Arg *arg) {
       if (!c->isfloating && selmon->lt[selmon->sellt]->arrange &&
           (abs(nx - c->x) > snap || abs(ny - c->y) > snap))
         togglefloating(NULL);
+
       if (!selmon->lt[selmon->sellt]->arrange || c->isfloating)
         resize(c, nx, ny, c->w, c->h, 1);
       break;
@@ -1383,7 +1415,16 @@ void propertynotify(XEvent *e) {
   }
 }
 
-void quit(const Arg *arg) { running = 0; }
+void quit(const Arg *arg) {
+	size_t i;
+	for (i = 0; i < autostart_len; i++) {
+		if (0 < autostart_pids[i]) {
+			kill(autostart_pids[i], SIGTERM);
+			waitpid(autostart_pids[i], NULL, 0);
+		}
+	}
+	running = 0;
+}
 
 Monitor *recttomon(int x, int y, int w, int h) {
   Monitor *m, *r = selmon;
@@ -1539,81 +1580,6 @@ void run(void) {
       }
     }
   }
-}
-
-void runautostart(void) {
-  char *pathpfx;
-  char *path;
-  char *xdgdatahome;
-  char *home;
-  struct stat sb;
-
-  if ((home = getenv("HOME")) == NULL)
-    /* this is almost impossible */
-    return;
-
-  /* if $XDG_DATA_HOME is set and not empty, use $XDG_DATA_HOME/dwm,
-   * otherwise use ~/.local/share/dwm as autostart script directory
-   */
-  xdgdatahome = getenv("XDG_DATA_HOME");
-  if (xdgdatahome != NULL && *xdgdatahome != '\0') {
-    /* space for path segments, separators and nul */
-    pathpfx = ecalloc(1, strlen(xdgdatahome) + strlen(dwmdir) + 2);
-
-    if (sprintf(pathpfx, "%s/%s", xdgdatahome, dwmdir) <= 0) {
-      free(pathpfx);
-      return;
-    }
-  } else {
-    /* space for path segments, separators and nul */
-    pathpfx =
-        ecalloc(1, strlen(home) + strlen(localshare) + strlen(dwmdir) + 3);
-
-    if (sprintf(pathpfx, "%s/%s/%s", home, localshare, dwmdir) < 0) {
-      free(pathpfx);
-      return;
-    }
-  }
-
-  /* check if the autostart script directory exists */
-  if (!(stat(pathpfx, &sb) == 0 && S_ISDIR(sb.st_mode))) {
-    /* the XDG conformant path does not exist or is no directory
-     * so we try ~/.dwm instead
-     */
-    char *pathpfx_new = realloc(pathpfx, strlen(home) + strlen(dwmdir) + 3);
-    if (pathpfx_new == NULL) {
-      free(pathpfx);
-      return;
-    }
-    pathpfx = pathpfx_new;
-
-    if (sprintf(pathpfx, "%s/.%s", home, dwmdir) <= 0) {
-      free(pathpfx);
-      return;
-    }
-  }
-
-  /* try the blocking script first */
-  path = ecalloc(1, strlen(pathpfx) + strlen(autostartblocksh) + 2);
-  if (sprintf(path, "%s/%s", pathpfx, autostartblocksh) <= 0) {
-    free(path);
-    free(pathpfx);
-  }
-
-  if (access(path, X_OK) == 0)
-    system(path);
-
-  /* now the non-blocking script */
-  if (sprintf(path, "%s/%s", pathpfx, autostartsh) <= 0) {
-    free(path);
-    free(pathpfx);
-  }
-
-  if (access(path, X_OK) == 0)
-    system(strcat(path, " &"));
-
-  free(pathpfx);
-  free(path);
 }
 
 void scan(void) {
@@ -1964,8 +1930,6 @@ void showhide(Client *c) {
 void spawn(const Arg *arg) {
   struct sigaction sa;
 
-  if (arg->v == dmenucmd)
-    dmenumon[0] = '0' + selmon->num;
   if (fork() == 0) {
     if (dpy)
       close(ConnectionNumber(dpy));
@@ -2025,8 +1989,7 @@ void togglefloating(const Arg *arg) {
   if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
     return;
   selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
-  if (selmon->sel->isfloating)
-    resize(selmon->sel, selmon->sel->x, selmon->sel->y, selmon->sel->w,
+  resize(selmon->sel, selmon->sel->x, selmon->sel->y, selmon->sel->w,
            selmon->sel->h, 0);
 
   selmon->sel->x =
@@ -2186,7 +2149,7 @@ void updateclientlist(void) {
 void updatecurrentdesktop(void) {
   long rawdata[] = {selmon->tagset[selmon->seltags]};
   int i = 0;
-  while (*rawdata >> i + 1) {
+  while (*rawdata >> (i + 1)) {
     i++;
   }
   long data[] = {i};
@@ -2481,13 +2444,14 @@ int main(int argc, char *argv[]) {
   if (!(dpy = XOpenDisplay(NULL)))
     die("dwm: cannot open display");
   checkotherwm();
+	autostart_exec();
   setup();
 #ifdef __OpenBSD__
   if (pledge("stdio rpath proc exec", NULL) == -1)
     die("pledge");
 #endif /* __OpenBSD__ */
   scan();
-  runautostart();
+  autostart_exec();
   run();
   cleanup();
   XCloseDisplay(dpy);

@@ -1,13 +1,13 @@
 /* Key binding functions */
-static void defaultgaps(const Arg *arg);
-static void incrgaps(const Arg *arg);
+/*static void incrgaps(const Arg *arg);
 static void incrigaps(const Arg *arg);
+static void defaultgaps(const Arg *arg);
 static void incrogaps(const Arg *arg);
 static void incrohgaps(const Arg *arg);
 static void incrovgaps(const Arg *arg);
 static void incrihgaps(const Arg *arg);
 static void incrivgaps(const Arg *arg);
-static void togglegaps(const Arg *arg);
+static void togglegaps(const Arg *arg);*/
 /* Layouts (delete the ones you do not need) */
 static void bstack(Monitor *m);
 static void bstackhoriz(Monitor *m);
@@ -62,7 +62,7 @@ defaultgaps(const Arg *arg)
 	setgaps(gappoh, gappov, gappih, gappiv);
 }
 
-void
+/*void
 incrgaps(const Arg *arg)
 {
 	setgaps(
@@ -71,7 +71,7 @@ incrgaps(const Arg *arg)
 		selmon->gappih + arg->i,
 		selmon->gappiv + arg->i
 	);
-}
+}*/
 
 void
 incrigaps(const Arg *arg)

@@ -1,7 +1,9 @@
 isolate=0;
-if [ -v $1 ]; then isolate=1;fi
-read -r -d '' ALACRITTY_CONFIG << EOM
+if [ -v $1 ]; then 
+	isolate=1;
+fi
 
+read -r -d '' ALACRITTY_CONFIG << EOM
 [general]
 import = ['~/.dwm/conf/alacritty-extra.toml']
 
@@ -21,7 +23,7 @@ family='MonaspiceRN NFM'
 style="bold"
 
 [font.italic]
-family='Victor Mono'
+family='Victor Mono Nerd Font'
 style='Bold Italic'
 
 [terminal]
@@ -37,12 +39,13 @@ smooth_motion_spring = 0.5
 smooth_motion_max_stretch_x = 100.0
 smooth_motion_max_stretch_y = 100.0
 EOM
-ALACRITTY_PATH=$(mktemp --suffix=".toml")
+
+ALACRITTY_PATH="/tmp/alacritty.toml"
 ALACRITTY_COLORS=$(cat $HOME/.cache/wal/colors-alacritty.toml)
 echo "$ALACRITTY_CONFIG" > "$ALACRITTY_PATH"
 echo "$ALACRITTY_COLORS" >> "$ALACRITTY_PATH"
 
-if [ "$1" = "no-run" ]; then
+if [[ "$1" == "no-run" ]]; then
 	exit
 fi 
 
