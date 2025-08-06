@@ -16,7 +16,7 @@ static const int usealtbar = 1;             /* 1 means use non-dwm status bar */
 static const char *altbarclass = "Polybar"; /* Alternate bar class name */
 static const char *alttrayname = "snixembed"; /* Polybar tray instance name */
 static const char *altbarcmd =
-    "$HOME/.dwm/src/polybar.sh"; /* Alternate bar launch command */
+    "$HOME/.dwm/src/polybar.sh no-run"; /* Alternate bar launch command */
 static const char *fonts[] = {"monospace:size=10"};
 static const char dmenufont[] = "monospace:size=10";
 static const char col_gray1[] = "#222222";
@@ -30,17 +30,11 @@ static const char *colors[][3] = {
     [SchemeSel] = {col_gray4, col_cyan, col_cyan},
 };
 
-
 static const char *const autostart[] = {
-	"nm-applet", NULL,
-	"blueman-applet", NULL,
-	"unclutter","--timeout","0.5",NULL,
-	"lxqt-policykit-agent", NULL,
-	"xset", "r", "rate", "200", "35", NULL,
-	"$HOME/.dwm/autostart.sh", NULL,
-	NULL
+    "/home/_3hy/.dwm/autostart.sh",
+    NULL,
+    NULL,
 };
-
 
 /* tagging */
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
@@ -61,6 +55,7 @@ static const int lockfullscreen =
 #define FORCE_VSPLIT                                                           \
   1 /* nrowgrid layout: force two clients to always split vertically */
 #include "vanitygaps.c"
+#include <X11/XF86keysym.h>
 
 static const Layout layouts[] = {
     /* symbol     arrange function */
@@ -98,19 +93,38 @@ static const Layout layouts[] = {
 /* commands */
 static const char *dmenucmd[] = {"/home/_3hy/.dwm/src/rofi.sh", NULL};
 static const char *termcmd[] = {"/home/_3hy/.dwm/src/alacritty.sh", NULL};
-static const char *termcmdalt[] = {"/home/_3hy/.dwm/src/alacritty.sh", "-isolate", NULL};
-static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh", "--exclude-hidden", NULL};
-static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh", "--include-hidden", NULL};
+static const char *termcmdalt[] = {"/home/_3hy/.dwm/src/alacritty.sh",
+                                   "-isolate", NULL};
+static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh",
+                                       "--exclude-hidden", NULL};
+static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh",
+                                  "--include-hidden", NULL};
 static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
 static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
-static const char *term_extra_border[] = { "/home/_3hy/.dwm/src/alacritty_extra.sh", "-padding", NULL};
-static const char *term_extra_opacity[] = { "/home/_3hy/.dwm/src/alacritty_extra.sh", "-opacity", NULL};
+static const char *term_extra_border[] = {
+    "/home/_3hy/.dwm/src/alacritty_extra.sh", "-padding", NULL};
+static const char *term_extra_opacity[] = {
+    "/home/_3hy/.dwm/src/alacritty_extra.sh", "-opacity", NULL};
 static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh", NULL};
+static const char *voldown[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
+                                "-1%", NULL};
+static const char *volup[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
+                              "+1%", NULL};
+static const char *mute[] = {"pactl", "set-sink-mute", "@DEFAULT_SINK@",
+                             "toggle", NULL};
+static const char *brightnessup[] = {"brightness", "set", "+1%", NULL};
+static const char *brightnessdown[] = {"brightnessctl", "set", "1%-", NULL};
+static const char *pause_toggle[] = {"playerctl", "play-pause", NULL};
+static const char *forward[] = {"playerctl", "next", NULL};
+static const char *backward[] = {"playerctl", "previous", NULL};
 
 static const Key keys[] = {
     {MODKEY, XK_r, spawn, {.v = dmenucmd}},     // launcher
     {MODKEY, XK_Return, spawn, {.v = termcmd}}, // terminal
-    {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmdalt}}, // floating terminal
+    {MODKEY | ShiftMask,
+     XK_Return,
+     spawn,
+     {.v = termcmdalt}},                                 // floating terminal
     {MODKEY, XK_t, spawn, {.v = wallpaper_safe}},        // wallpaper safe
     {MODKEY | ShiftMask, XK_t, spawn, {.v = wallpaper}}, // wallpaper universal
     {MODKEY, XK_x, spawn, {.v = lock}},
@@ -118,8 +132,11 @@ static const Key keys[] = {
     {MODKEY, XK_j, focusstack, {.i = +1}}, // cycle focus clockwise
     {MODKEY, XK_k, focusstack, {.i = -1}}, // cycle focus counter-clockws e
     {MODKEY, XK_i, incnmaster, {.i = +1}}, // switch from horizontal to vertical
-		{MODKEY, XK_g, incnmaster, {.i = 0}}, // reset 
-    {MODKEY|ShiftMask, XK_i, incnmaster, {.i = -1}}, // switch from vertical to horizontal
+    {MODKEY, XK_g, incnmaster, {.i = 0}},  // reset
+    {MODKEY | ShiftMask,
+     XK_i,
+     incnmaster,
+     {.i = -1}}, // switch from vertical to horizontal
     {MODKEY, XK_b, spawn, {.v = term_extra_opacity}},     // term opacity
     {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}}, // screenshot
     {MODKEY, XK_0, view, {.ui = ~0}},                     // show all windows
@@ -130,7 +147,7 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}}, // term border
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}}, // toggle floating
     {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},         // always on top
-		{MODKEY|ControlMask, XK_Return, zoom, {0}},
+    {MODKEY | ControlMask, XK_Return, zoom, {0}},
     {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}}, // resize window up
     {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}}, // resize window down
     {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},  // reset resize y
@@ -142,11 +159,22 @@ static const Key keys[] = {
     {MODKEY, XK_l, setmfact, {.f = +0.05}}, // resize window right
     {MODKEY, XK_h, setmfact, {.f = -0.05}}, // resize window left
     {MODKEY, XK_o, setmfact, {.f = 0.00}},  // reset resize x
+    {0, XF86XK_AudioLowerVolume, spawn, {.v = voldown}},
+    {0, XF86XK_AudioRaiseVolume, spawn, {.v = volup}},
+    {0, XF86XK_AudioMute, spawn, {.v = mute}},
+    {0, XF86XK_AudioPlay, spawn, {.v = pause_toggle}},
+    {0, XF86XK_AudioNext, spawn, {.v = forward}},
+    {0, XF86XK_AudioPrev, spawn, {.v = backward}},
+    {0, XF86XK_MonBrightnessUp, spawn, {.v = brightnessup}},
+    {0, XF86XK_MonBrightnessDown, spawn, {.v = brightnessdown}},
 
     {MODKEY, XK_s, cyclelayout, {.i = -1}},
     {MODKEY, XK_d, cyclelayout, {.i = +1}},
     {MODKEY, XK_f, setlayout, {.v = &layouts[1]}}, // set monocle layout
-		{MODKEY|ShiftMask, XK_f, togglefullscr, {0} }, // actually set fullscreen X11 prop
+    {MODKEY | ShiftMask,
+     XK_f,
+     togglefullscr,
+     {0}}, // actually set fullscreen X11 prop
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8){MODKEY | ShiftMask, XK_q, quit, {0}},
@@ -186,5 +214,5 @@ static IPCCommand ipccommands[] = {
     IPCCOMMAND(setmfact, 1, {ARG_TYPE_FLOAT}),
     IPCCOMMAND(setlayoutsafe, 1, {ARG_TYPE_PTR}),
     IPCCOMMAND(quit, 1, {ARG_TYPE_NONE}),
-		IPCCOMMAND(togglebar, 1,{ARG_TYPE_NONE}),
+    IPCCOMMAND(togglebar, 1, {ARG_TYPE_NONE}),
 };

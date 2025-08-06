@@ -14,7 +14,7 @@ level0=$color4
 level1=$color5 
 level2=$color6
 level3=$alert
-scale='1.2'
+scale='0.8'
 
 read -r -d '' POLYBAR_FONT_CONFIG << EOM
 font-3 = "Mononoki Nerd Font:style=Regular:size=$(awk -v scale="$scale" 'BEGIN {print int(17 * scale)}');$(awk -v scale="$scale" 'BEGIN {print int(4 * scale)}')"
@@ -328,6 +328,11 @@ format-background = $background_transparent
 format-foreground = $color3
 EOM
 
+
 POLYBAR_CONFIG_PATH=$(mktemp --suffix=".ini")
 echo "$POLYBAR_CONFIG" > "$POLYBAR_CONFIG_PATH"
+if [[ "$1" == "no-run" ]]; then 
+	exit 
+fi 
+
 polybar -c "$POLYBAR_CONFIG_PATH" bar_main & 

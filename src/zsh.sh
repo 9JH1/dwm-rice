@@ -1,8 +1,8 @@
 #!/bin/sh
-export ZDOTDIR="$HOME/.config/zsh"
+export ZDOTDIR="$HOME/.dwm/conf/"
 export ZSH_ISOLATE=1
 
-killall 
+killall  zsh
 if ! command -v zsh >/dev/null 2>&1; then
     echo "Error: zsh is not installed" >&2
     exit 1
