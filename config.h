@@ -31,7 +31,7 @@ static const char *colors[][3] = {
 };
 
 static const char *const autostart[] = {
-    "/home/_3hy/.dwm/autostart.sh",
+    "/home/_3hy/.dwm/src/autostart.sh",
     NULL,
     NULL,
 };
