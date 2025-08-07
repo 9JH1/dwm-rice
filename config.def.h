@@ -106,6 +106,10 @@ static const char *term_extra_border[] = {
 static const char *term_extra_opacity[] = {
     "/home/_3hy/.dwm/src/alacritty_extra.sh", "-opacity", NULL};
 static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh", NULL};
+static const char *lock_alt[] = {"/home/_3hy/.dwm/src/lock.sh", "--image",
+                                 NULL};
+static const char *lock_alt_alt[] = {"/home/_3hy/.dwm/src/lock.sh", "--image",
+                                     NULL};
 static const char *voldown[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
                                 "-1%", NULL};
 static const char *volup[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
@@ -155,6 +159,8 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_minus, incrigaps, {.i = -1}},
     {MODKEY, XK_equal, incrogaps, {.i = +1}},
     {MODKEY, XK_minus, incrogaps, {.i = -1}},
+    {MODKEY, XK_m, spawn, {.v = lock_alt}},
+    {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
 
     {MODKEY, XK_l, setmfact, {.f = +0.05}}, // resize window right
     {MODKEY, XK_h, setmfact, {.f = -0.05}}, // resize window left

@@ -1270,7 +1270,6 @@ void mappingnotify(XEvent *e) {
 void maprequest(XEvent *e) {
   static XWindowAttributes wa;
   XMapRequestEvent *ev = &e->xmaprequest;
-
   if (!XGetWindowAttributes(dpy, ev->window, &wa) || wa.override_redirect)
     return;
   if (usealtbar && wmclasscontains(ev->window, altbarclass, ""))

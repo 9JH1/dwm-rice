@@ -1,6 +1,6 @@
 #!/bin/bash
 source "/home/$USER/.cache/wal/colors.sh"
-hex="${color3:1}"
+hex="${color3:1}10"
 echo $hex
 if [ ! -v $1 ]; then 
 	if [ "$1" = "--image" ];then
@@ -10,10 +10,9 @@ if [ ! -v $1 ]; then
 		rm /tmp/screen.png
 	else 
 		i3lock -c "$hex" & 
-		sleep 1
 		systemctl suspend
 	fi
 else 
-	i3lock -c "00000070"
+	i3lock -c "$hex"
 fi
 
