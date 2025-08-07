@@ -41,7 +41,7 @@ static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
 static const Rule rules[] = {
     /* class      instance    title       tags mask     isfloating   monitor */
-    {"isolated_terminal", NULL, NULL, 1 << 8, 1, -1},
+    {"iso_term", NULL, NULL, 0, 1, -1},
 };
 
 /* layout(s) */
@@ -112,7 +112,7 @@ static const char *volup[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
                               "+1%", NULL};
 static const char *mute[] = {"pactl", "set-sink-mute", "@DEFAULT_SINK@",
                              "toggle", NULL};
-static const char *brightnessup[] = {"brightness", "set", "+1%", NULL};
+static const char *brightnessup[] = {"brightnessctl", "set", "+1%", NULL};
 static const char *brightnessdown[] = {"brightnessctl", "set", "1%-", NULL};
 static const char *pause_toggle[] = {"playerctl", "play-pause", NULL};
 static const char *forward[] = {"playerctl", "next", NULL};

@@ -1,5 +1,5 @@
 isolate=0;
-if [ -v $1 ]; then 
+if [[ "$1" == "-isolate" ]]; then 
 	isolate=1;
 fi
 
@@ -30,7 +30,7 @@ style='Bold Italic'
 
 [terminal.shell]
 program = "/bin/sh"
-args = ["-c", "export ZDOTDIR=$HOME/.dwm/conf/ && export ZSH_ISOLATE=$isolate && zsh"]
+args = ["-c", "export ZSH_ISOLATE=$isolate && $HOME/.dwm/src/zsh.sh"]
 
 [cursor]
 smooth_motion = true
@@ -49,8 +49,9 @@ if [[ "$1" == "no-run" ]]; then
 	exit
 fi 
 
-if [ -v $1 ]; then 
-	alacritty --config-file "$ALACRITTY_PATH"
+if [[ "$1" == "-isolate" ]]; then 
+	echo "Running isolated Term"
+	alacritty --config-file "$ALACRITTY_PATH" --class "iso_term"
 else 
-	alacritty --config-file "$ALACRITTY_PATH" --class "isolated_terminal"
+	alacritty --config-file "$ALACRITTY_PATH"
 fi
