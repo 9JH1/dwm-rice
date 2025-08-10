@@ -1,65 +1,54 @@
-
-/* appearance */
-static const unsigned int borderpx = 0; /* border pixel of windows */
-static const unsigned int snap = 64;    /* snap pixel */
-static const unsigned int gappih = 20;  /* horiz inner gap between windows */
-static const unsigned int gappiv = 10;  /* vert inner gap between windows */
-static const unsigned int gappoh =
-    30; /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov =
-    30; /* vert outer gap between windows and screen edge */
-static int smartgaps =
-    0; /* 1 means no outer gap when there is only one window */
-static const int showbar = 1;               /* 0 means no bar */
-static const int topbar = 1;                /* 0 means bottom bar */
-static const int usealtbar = 1;             /* 1 means use non-dwm status bar */
-static const char *altbarclass = "Polybar"; /* Alternate bar class name */
-static const char *alttrayname = "snixembed"; /* Polybar tray instance name */
-static const char *altbarcmd =
-    "$HOME/.dwm/src/polybar.sh no-run"; /* Alternate bar launch command */
-static const char *fonts[] = {"monospace:size=10"};
-static const char dmenufont[] = "monospace:size=10";
-static const char col_gray1[] = "#222222";
-static const char col_gray2[] = "#444444";
-static const char col_gray3[] = "#bbbbbb";
-static const char col_gray4[] = "#eeeeee";
-static const char col_cyan[] = "#005577";
-static const char *colors[][3] = {
-    /*               fg         bg         border   */
-    [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
-    [SchemeSel] = {col_gray4, col_cyan, col_cyan},
-};
+static const unsigned int snap     = 64;
+static const unsigned int gappih   = 30; 
+static const unsigned int gappiv   = 30; 
+static const unsigned int gappoh   = 30; 
+static const unsigned int gappov   = 30; 
+static const unsigned int smartgaps=  0; 
+static const int showbar           =  1;
+static const int topbar            =  1;
+static const int usealtbar         =  1;
+static const int nmaster           =  1;   
+static const int resizehints       =  1;
+static const int lockfullscreen    =  0;
+static const unsigned int borderpx =  0; 
+static const float mfact           = 0.55; 
+static const char *altbarclass     = "Polybar"; 
+static const char *alttrayname     = "snixembed"; 
+static const char *altbarcmd       = "$HOME/.dwm/src/polybar.sh no-run"; 
+static const char *fonts[]         = {"monospace:size=20"};
+static const char *dmenucmd[]      = {"/home/_3hy/.dwm/src/rofi.sh", NULL};
+static const char *termcmd[]       = {"/home/_3hy/.dwm/src/alacritty.sh", NULL};
+static const char *termcmdalt[]    = {"/home/_3hy/.dwm/src/alacritty.sh", "-isolate", NULL};
+static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh","--exclude-hidden", NULL};
+static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh", "--include-hidden", NULL};
+static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
+static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
+static const char *term_extra_border[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh", "-padding", NULL};
+static const char *term_extra_opacity[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh", "-opacity", NULL};
+static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh", NULL};
+static const char *lock_alt[] = {"/home/_3hy/.dwm/src/lock.sh", "--image",NULL};
+static const char *lock_alt_alt[] = {"/home/_3hy/.dwm/src/lock.sh", "--image",NULL};
+static const char *voldown[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@","-1%", NULL};
+static const char *volup[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@","+1%", NULL};
+static const char *mute[] = {"pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL};
+static const char *brightnessup[] = {"brightnessctl", "set", "+1%", NULL};
+static const char *brightnessdown[] = {"brightnessctl", "set", "1%-", NULL};
+static const char *pause_toggle[] = {"playerctl", "play-pause", NULL};
+static const char *forward[] = {"playerctl", "next", NULL};
+static const char *backward[] = {"playerctl", "previous", NULL};
 
 static const char *const autostart[] = {
-    "/home/_3hy/.dwm/src/autostart.sh",
-    NULL,
-    NULL,
+	"/home/_3hy/.dwm/src/autostart.sh", NULL,NULL
 };
 
-/* tagging */
-static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-static const Rule rules[] = {
-    /* class      instance    title       tags mask     isfloating   monitor */
-    {"iso_term", NULL, NULL, 0, 1, -1},
-};
 
-/* layout(s) */
-static const float mfact = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster = 1;    /* number of clients in master area */
-static const int resizehints =
-    1; /* 1 means respect size hints in tiled resizals */
-static const int lockfullscreen =
-    0; /* 1 will force focus on the fullscreen window */
-
-#define FORCE_VSPLIT                                                           \
-  1 /* nrowgrid layout: force two clients to always split vertically */
+#define FORCE_VSPLIT 1
 #include "vanitygaps.c"
 #include <X11/XF86keysym.h>
 
 static const Layout layouts[] = {
-    /* symbol     arrange function */
-    {"[]=", tile}, /* first entry is default */
+    {"[]=", tile},
     {"[M]", monocle},
     {"[@]", spiral},
     {"[\\]", dwindle},
@@ -72,100 +61,75 @@ static const Layout layouts[] = {
     {":::", gaplessgrid},
     {"|M|", centeredmaster},
     {">M>", centeredfloatingmaster},
-    {"><>", NULL}, /* no layout function means floating behavior */
+    {"><>", NULL}, 
     {NULL, NULL},
 };
 
 /* key definitions */
 #define MODKEY Mod4Mask
-#define TAGKEYS(KEY, TAG)                                                      \
-  {MODKEY, KEY, view, {.ui = 1 << TAG}},                                       \
-      {MODKEY | ControlMask, KEY, toggleview, {.ui = 1 << TAG}},               \
-      {MODKEY | ShiftMask, KEY, tag, {.ui = 1 << TAG}},                        \
+#define TAGKEYS(KEY, TAG) {MODKEY, KEY, view, {.ui = 1 << TAG}}, \
+      {MODKEY | ControlMask, KEY, toggleview, {.ui = 1 << TAG}}, \
+      {MODKEY | ShiftMask, KEY, tag, {.ui = 1 << TAG}},          \
       {MODKEY | ControlMask | ShiftMask, KEY, toggletag, {.ui = 1 << TAG}},
 
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd)                                                             \
-  {                                                                            \
-    .v = (const char *[]) { "/bin/sh", "-c", cmd, NULL }                       \
-  }
-
-/* commands */
-static const char *dmenucmd[] = {"/home/_3hy/.dwm/src/rofi.sh", NULL};
-static const char *termcmd[] = {"/home/_3hy/.dwm/src/alacritty.sh", NULL};
-static const char *termcmdalt[] = {"/home/_3hy/.dwm/src/alacritty.sh",
-                                   "-isolate", NULL};
-static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh",
-                                       "--exclude-hidden", NULL};
-static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh",
-                                  "--include-hidden", NULL};
-static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
-static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
-static const char *term_extra_border[] = {
-    "/home/_3hy/.dwm/src/alacritty_extra.sh", "-padding", NULL};
-static const char *term_extra_opacity[] = {
-    "/home/_3hy/.dwm/src/alacritty_extra.sh", "-opacity", NULL};
-static const char *lock[] = {"/home/_3hy/.dwm/src/lock.sh", NULL};
-static const char *lock_alt[] = {"/home/_3hy/.dwm/src/lock.sh", "--image",
-                                 NULL};
-static const char *lock_alt_alt[] = {"/home/_3hy/.dwm/src/lock.sh", "--image",
-                                     NULL};
-static const char *voldown[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
-                                "-1%", NULL};
-static const char *volup[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
-                              "+1%", NULL};
-static const char *mute[] = {"pactl", "set-sink-mute", "@DEFAULT_SINK@",
-                             "toggle", NULL};
-static const char *brightnessup[] = {"brightnessctl", "set", "+1%", NULL};
-static const char *brightnessdown[] = {"brightnessctl", "set", "1%-", NULL};
-static const char *pause_toggle[] = {"playerctl", "play-pause", NULL};
-static const char *forward[] = {"playerctl", "next", NULL};
-static const char *backward[] = {"playerctl", "previous", NULL};
-
 static const Key keys[] = {
-    {MODKEY, XK_r, spawn, {.v = dmenucmd}},     // launcher
-    {MODKEY, XK_Return, spawn, {.v = termcmd}}, // terminal
-    {MODKEY | ShiftMask,
-     XK_Return,
-     spawn,
-     {.v = termcmdalt}},                                 // floating terminal
-    {MODKEY, XK_t, spawn, {.v = wallpaper_safe}},        // wallpaper safe
-    {MODKEY | ShiftMask, XK_t, spawn, {.v = wallpaper}}, // wallpaper universal
+    {MODKEY, XK_r, spawn, {.v = dmenucmd}},
+    {MODKEY, XK_Return, spawn, {.v = termcmd}},
+    {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmdalt}},
+    {MODKEY, XK_t, spawn, {.v = wallpaper_safe}},
+    {MODKEY | ShiftMask, XK_t, spawn, {.v = wallpaper}},
     {MODKEY, XK_x, spawn, {.v = lock}},
-    {MODKEY, XK_v, togglebar, {0}},        // toggle bar
-    {MODKEY, XK_j, focusstack, {.i = +1}}, // cycle focus clockwise
-    {MODKEY, XK_k, focusstack, {.i = -1}}, // cycle focus counter-clockws e
-    {MODKEY, XK_i, incnmaster, {.i = +1}}, // switch from horizontal to vertical
-    {MODKEY, XK_g, incnmaster, {.i = 0}},  // reset
-    {MODKEY | ShiftMask,
-     XK_i,
-     incnmaster,
-     {.i = -1}}, // switch from vertical to horizontal
-    {MODKEY, XK_b, spawn, {.v = term_extra_opacity}},     // term opacity
-    {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}}, // screenshot
-    {MODKEY, XK_0, view, {.ui = ~0}},                     // show all windows
-    {MODKEY, XK_space, setlayout, {0}},                   // remove gaps
-    {MODKEY, XK_Tab, view, {0}},                         // go to last workspace
-    {MODKEY, XK_q, killclient, {0}},                     // kill focused window
-    {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}}, // forcefull kill
-    {MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}}, // term border
-    {MODKEY | ShiftMask, XK_space, togglefloating, {0}}, // toggle floating
-    {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},         // always on top
-    {MODKEY | ControlMask, XK_Return, zoom, {0}},
-    {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}}, // resize window up
-    {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}}, // resize window down
-    {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},  // reset resize y
-    {MODKEY | ShiftMask, XK_equal, incrigaps, {.i = +1}},
-    {MODKEY | ShiftMask, XK_minus, incrigaps, {.i = -1}},
-    {MODKEY, XK_equal, incrogaps, {.i = +1}},
-    {MODKEY, XK_minus, incrogaps, {.i = -1}},
+		{MODKEY, XK_b, spawn, {.v = term_extra_opacity}},
+    {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}},
+		{MODKEY | ShiftMask, XK_r, spawn, {.v = autostart[0]}},
     {MODKEY, XK_m, spawn, {.v = lock_alt}},
     {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
+    {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}},
+    {MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}},
 
-    {MODKEY, XK_l, setmfact, {.f = +0.05}}, // resize window right
-    {MODKEY, XK_h, setmfact, {.f = -0.05}}, // resize window left
-    {MODKEY, XK_o, setmfact, {.f = 0.00}},  // reset resize x
-    {0, XF86XK_AudioLowerVolume, spawn, {.v = voldown}},
+
+    {MODKEY, XK_j, focusstack, {.i = +1}},
+    {MODKEY, XK_k, focusstack, {.i = -1}},
+    {MODKEY, XK_i, incnmaster, {.i = +1}}, 
+    {MODKEY, XK_g, incnmaster, {.i = 0}},
+    {MODKEY | ShiftMask, XK_i, incnmaster, {.i = -1}},
+    
+
+		// 
+    {MODKEY, XK_q, killclient, {0}},
+    {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
+    {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
+    {MODKEY | ControlMask, XK_Return, zoom, {0}},
+		
+		// gaps 
+    {MODKEY, XK_equal, incrogaps, {.i = +1}},
+    {MODKEY, XK_minus, incrogaps, {.i = -1}},
+    {MODKEY | ShiftMask, XK_equal, incrigaps, {.i = +1}},
+    {MODKEY | ShiftMask, XK_minus, incrigaps, {.i = -1}},	
+
+	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+		// window resizing
+    {MODKEY, XK_l, setmfact, {.f = +0.05}},
+    {MODKEY, XK_h, setmfact, {.f = -0.05}}, 
+    {MODKEY, XK_o, setmfact, {.f = 0.00}}, 
+    {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}},
+    {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}},
+    {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},
+
+		// layout + ui
+		{MODKEY, XK_v, togglebar, {0}},
+    {MODKEY, XK_0, view, {.ui = ~0}},
+    {MODKEY, XK_space, setlayout, {0}},
+    {MODKEY, XK_Tab, view, {0}}, 
+    {MODKEY, XK_s, cyclelayout, {.i = -1}},
+    {MODKEY, XK_d, cyclelayout, {.i = +1}},
+    {MODKEY, XK_f, setlayout, {.v = &layouts[1]}}, 
+    {MODKEY | ShiftMask, XK_f, togglefullscr, {0}}, 
+    
+		{0, XF86XK_AudioLowerVolume, spawn, {.v = voldown}},
     {0, XF86XK_AudioRaiseVolume, spawn, {.v = volup}},
     {0, XF86XK_AudioMute, spawn, {.v = mute}},
     {0, XF86XK_AudioPlay, spawn, {.v = pause_toggle}},
@@ -174,16 +138,16 @@ static const Key keys[] = {
     {0, XF86XK_MonBrightnessUp, spawn, {.v = brightnessup}},
     {0, XF86XK_MonBrightnessDown, spawn, {.v = brightnessdown}},
 
-    {MODKEY, XK_s, cyclelayout, {.i = -1}},
-    {MODKEY, XK_d, cyclelayout, {.i = +1}},
-    {MODKEY, XK_f, setlayout, {.v = &layouts[1]}}, // set monocle layout
-    {MODKEY | ShiftMask,
-     XK_f,
-     togglefullscr,
-     {0}}, // actually set fullscreen X11 prop
-    TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
-        TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
-            TAGKEYS(XK_9, 8){MODKEY | ShiftMask, XK_q, quit, {0}},
+		TAGKEYS(XK_1, 0)
+		TAGKEYS(XK_2, 1)
+		TAGKEYS(XK_3, 2)
+		TAGKEYS(XK_4, 3)
+    TAGKEYS(XK_5, 4)
+		TAGKEYS(XK_6, 5)
+		TAGKEYS(XK_7, 6)
+		TAGKEYS(XK_8, 7)
+    TAGKEYS(XK_9, 8)
+
 };
 
 /* button definitions */
@@ -221,4 +185,16 @@ static IPCCommand ipccommands[] = {
     IPCCOMMAND(setlayoutsafe, 1, {ARG_TYPE_PTR}),
     IPCCOMMAND(quit, 1, {ARG_TYPE_NONE}),
     IPCCOMMAND(togglebar, 1, {ARG_TYPE_NONE}),
+};
+
+static const char *colors[][3] = {
+    [SchemeNorm] = {0},
+    [SchemeSel] = {0},
+};
+
+
+static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
+static const Rule rules[] = {
+    {"iso_term", NULL, NULL, 0, 1, -1},
 };

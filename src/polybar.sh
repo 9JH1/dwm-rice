@@ -13,8 +13,8 @@ disabled=$color5
 level0=$color4 
 level1=$color5 
 level2=$color6
-level3=$alert
-scale='0.8'
+level3=$alert 
+scale='1.2'
 
 read -r -d '' POLYBAR_FONT_CONFIG << EOM
 font-3 = "Mononoki Nerd Font:style=Regular:size=$(awk -v scale="$scale" 'BEGIN {print int(17 * scale)}');$(awk -v scale="$scale" 'BEGIN {print int(4 * scale)}')"
@@ -288,7 +288,7 @@ type = internal/xworkspaces
 label-active = %icon%
 label-urgent = %icon%
 label-visible = %icon%
-label-empty = %icon%
+label-empty = ""
 label-occupied = %icon%
 
 label-active-padding = 1

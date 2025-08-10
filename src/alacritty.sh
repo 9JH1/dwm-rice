@@ -12,7 +12,7 @@ decorations="full"
 dynamic_title=true
 
 [font]
-size = 12
+size = 20
 
 [font.normal]
 family='Mononoki Nerd Font'
@@ -36,8 +36,8 @@ args = ["-c", "export ZSH_ISOLATE=$isolate && $HOME/.dwm/src/zsh.sh"]
 smooth_motion = true
 smooth_motion_factor = 0.7
 smooth_motion_spring = 0.5
-smooth_motion_max_stretch_x = 100.0
-smooth_motion_max_stretch_y = 100.0
+smooth_motion_max_stretch_x = 10.0
+smooth_motion_max_stretch_y = 10.0
 EOM
 
 ALACRITTY_PATH="/tmp/alacritty.toml"

@@ -7,3 +7,4 @@ blueman-applet &
 unclutter --timeout 0.1 & 
 lxqt-policykit-agent & 
 xset r rate 200 35 &
+alttab &
