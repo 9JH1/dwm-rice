@@ -10,7 +10,7 @@ static const int usealtbar         =  1;
 static const int nmaster           =  1;   
 static const int resizehints       =  1;
 static const int lockfullscreen    =  0;
-static const unsigned int borderpx =  0; 
+static const unsigned int borderpx =  3; 
 static const float mfact           = 0.55; 
 static const char *altbarclass     = "Polybar"; 
 static const char *alttrayname     = "snixembed"; 
@@ -36,6 +36,8 @@ static const char *brightnessdown[] = {"brightnessctl", "set", "1%-", NULL};
 static const char *pause_toggle[] = {"playerctl", "play-pause", NULL};
 static const char *forward[] = {"playerctl", "next", NULL};
 static const char *backward[] = {"playerctl", "previous", NULL};
+static const unsigned int tabModKey = 0x40;
+static const unsigned int tabCycleKey = 0x17;
 
 static const char *const autostart[] = {
 	"/home/_3hy/.dwm/src/autostart.sh", NULL,NULL
@@ -93,9 +95,8 @@ static const Key keys[] = {
     {MODKEY, XK_i, incnmaster, {.i = +1}}, 
     {MODKEY, XK_g, incnmaster, {.i = 0}},
     {MODKEY | ShiftMask, XK_i, incnmaster, {.i = -1}},
-    
-
-		// 
+   	{MODKEY, XK_o, winview, {0}}, 
+		{Mod1Mask,                     XK_Tab,    alttab,         {0} },
     {MODKEY, XK_q, killclient, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
     {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
@@ -114,7 +115,7 @@ static const Key keys[] = {
 		// window resizing
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}}, 
-    {MODKEY, XK_o, setmfact, {.f = 0.00}}, 
+    /*{MODKEY, XK_o, setmfact, {.f = 0.00}}, */
     {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}},
     {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}},
     {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},
@@ -128,7 +129,8 @@ static const Key keys[] = {
     {MODKEY, XK_d, cyclelayout, {.i = +1}},
     {MODKEY, XK_f, setlayout, {.v = &layouts[1]}}, 
     {MODKEY | ShiftMask, XK_f, togglefullscr, {0}}, 
-    
+
+		{ MODKEY,                       XK_F5,     xrdb,           {.v = NULL } }, 
 		{0, XF86XK_AudioLowerVolume, spawn, {.v = voldown}},
     {0, XF86XK_AudioRaiseVolume, spawn, {.v = volup}},
     {0, XF86XK_AudioMute, spawn, {.v = mute}},
@@ -187,11 +189,17 @@ static IPCCommand ipccommands[] = {
     IPCCOMMAND(togglebar, 1, {ARG_TYPE_NONE}),
 };
 
-static const char *colors[][3] = {
-    [SchemeNorm] = {0},
-    [SchemeSel] = {0},
+static char normbgcolor[]           = "#222222";
+static char normbordercolor[]       = "#444444";
+static char normfgcolor[]           = "#bbbbbb";
+static char selfgcolor[]            = "#eeeeee";
+static char selbordercolor[]        = "#005577";
+static char selbgcolor[]            = "#005577";
+static char *colors[][3] = {
+       /*               fg           bg           border   */
+       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
+       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
-
 
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
