@@ -35,7 +35,7 @@ EOM
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
 modules-left = left_prefix powermenu powermenu_seperator xworkspaces xworkspaces_seperator polywins left_suffix
-modules-right = right_prefix playerctl_prev playerctl_ipc playerctl playerctl_next playerctl_seperator audio audio_seperator notify notify_seperator systray tray_seperator date right_suffix
+modules-right = right_prefix playerctl_prev playerctl_ipc playerctl playerctl_next playerctl_seperator audio audio_seperator systray tray_seperator date right_suffix
 enable-ipc=true
 $POLYBAR_FONT_CONFIG
 
@@ -113,70 +113,8 @@ format-muted-suffix = " "
 type=custom/text
 label = "%{T4}%{T-}"
 format = <label>
-format-foreground=$color3 
-format-background=$color2
-
-[module/notify]
-type=custom/ipc 
-hook-0 =echo "%{T3}\$($HOME/.dwm/src/notify.sh)%{T-}"
-initial = 1 
-format = <output>
-click-left = "dunstctl set-paused toggle && polybar-msg action notify hook 0"
-format-background = $color3
-format-foreground = $module_foreground
-format-prefix = " "
-format-suffix = " "
-
-[module/notify_seperator]
-type=custom/text
-label = "%{T4}%{T-}"
-format = <label>
-format-foreground=$color1
-format-background=$color3
-
-[module/dock_prefix]
-type=custom/text
-label = "%{T4}%{T-}"
-format-background = $background_transparent
-format-foreground = $color1
-
-[module/ram_seperator]
-type=custom/text
-label = "%{T4}%{T-}"
-format = <label>
 format-foreground=$color3
-format-background=$color2 
-
-[module/cpu]
-type=internal/cpu
-interval = 5
-warn-percentage = 95
-label-warn = "%percentage%%"
-format-warn = "%{T3} %{T-}<label-warn> <bar-load>"
-format-background = $color3
-format-foreground = $module_foreground
-format-warn-foreground = $alert
-format-warn-background = $color3
-label = "%percentage%%"
-bar-load-indicator = 
-bar-load-width = 6
-bar-load-foreground-0 = $level0 
-bar-load-foreground-1 = $level1 
-bar-load-foreground-2 = $level2 
-bar-load-foreground-3 = $level3
-bar-load-fill = "%{T3}▐%{T-}" 
-bar-load-empty = "%{T3}▐%{T-}" 
-bar-load-empty-foreground = $color2
-format = "%{T3} %{T-}<label> <bar-load>"
-format-suffix = " "
-
-[module/cpu_seperator]
-type=custom/text
-label = "%{T4}%{T-}"
-format = <label>
-format-foreground=$color3 
 format-background=$color2
-
 
 [module/network]
 type = internal/network
@@ -193,41 +131,14 @@ format = <label>
 format-foreground=$color2 
 format-background=$color1
 
-[module/ram]
-type=internal/memory
-interval=5
-warn-percentage=95 
-label = %percentage_used%%
-format = "%{T3}  %{T-}<label> <bar-used>"
-format-background = $color2
-format-foreground = $module_foreground
-label-warn = !%free% left
-format-warn = "%{T3} %{T-}<label-warn> <label-warn>"
-bar-used-indicator = 
-bar-used-width = 6
-bar-used-foreground-0 = $level0 
-bar-used-foreground-1 = $level1 
-bar-used-foreground-2 = $level2 
-bar-used-foreground-3 = $level3
-bar-used-fill = "%{T3}▐%{T-}" 
-bar-used-empty = "%{T3}▐%{T-}" 
-bar-used-empty-foreground = $color1
-format-suffix = " "
-
-[module/dock_suffix]
-type = custom/text 
-format = "%{T4}%{T-}"
-format-background = $background_transparent
-format-foreground = $color3 
-
 [module/systray]
 type = internal/tray
 tray-spacing = 4pt
 format-prefix = " " 
 format-suffix = " "
 tray-size = 20
-format-background = $color1
-tray-background= $color1
+format-background = $color3 
+tray-background= $color3
 format-foreground = $module_foreground
 tray-foreground = $module_foreground
 
@@ -235,22 +146,21 @@ tray-foreground = $module_foreground
 type=custom/text
 label = "%{T4}%{T-}"
 format = <label>
-format-foreground=$color2
-format-background=$color1
+format-foreground=$color1 
+format-background=$color3
 
 [module/date]
 type = internal/date
 interval = 1
 format-foreground = $module_foreground
-format-background = $color2
-date = "%{T3}󰃭 %{T-}%{T2}%l:%M:%S%{T-}"
-date-alt = %d/%m/%Y
-
+format-background = $color1 
+date = "%{T3}󰃭 %{T-}%{T2}%l:%M%{T-}"
+date-alt = "%{T3}󰃭 %{T-}%{T2}%d/%m/%Y%{T-}"
 [module/right_suffix]
 type=custom/text
 label = "%{T4}%{T-}"
 format-background=$background_transparent
-format-foreground = $color2
+format-foreground = $color1
 
 [module/left_prefix]
 type = custom/text 
@@ -274,22 +184,22 @@ format-background = $color2
 format-foreground = $color1
 
 [module/xworkspaces]
-icon-0 = 1;󰲠
-icon-1 = 2;󰲢
-icon-2 = 3;󰲤
-icon-3 = 4;󰲦
-icon-4 = 5;󰲨
-icon-5 = 6;󰲪
-icon-6 = 7;󰲬
-icon-7 = 8;󰲮
-icon-8 = 9;󰲰
-icon-9 = 10;󰿬
+icon-0 = 1;󰲡
+icon-1 = 2;󰲣
+icon-2 = 3;󰲥
+icon-3 = 4;󰲧
+icon-4 = 5;󰲩
+icon-5 = 6;󰲫
+icon-6 = 7;󰲭
+icon-7 = 8;󰲯
+icon-8 = 9;󰲱
+
 type = internal/xworkspaces
 label-active = %icon%
-label-urgent = %icon%
-label-visible = %icon%
-label-empty = ""
-label-occupied = %icon%
+label-urgent = 
+label-visible = 
+label-empty =  
+label-occupied = 
 
 label-active-padding = 1
 label-active-underline = $color0
@@ -335,4 +245,5 @@ if [[ "$1" == "no-run" ]]; then
 	exit 
 fi 
 
+killall polybar 
 polybar -c "$POLYBAR_CONFIG_PATH" bar_main & 

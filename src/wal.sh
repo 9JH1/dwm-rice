@@ -64,7 +64,7 @@ touch $HOME/.i3wallpaper
 echo "Running PyWal"
 echo "Using image: $first_wall"
 echo "$first_wall" > $HOME/.i3wallpaper
-wal -i "$first_wall" -q -e -t -s -n -a 92
+wal -i "$first_wall" -e -t -q -n -a 92    
 echo "Done"
 
 
@@ -95,11 +95,12 @@ fi
 # start deps 
 echo "Running Deps"
 echo "Done"
-($HOME/.dwm/src/wal_deps.sh) &
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+($SCRIPT_DIR/wal_deps.sh) &
 
 # echo fix picom
 if [[ $(pgrep "picom") = "" ]];then 
 	echo "Picom exited for some reason"
 	echo "Starting Picom"
-	picom --config "$HOME/.dwm/conf/picom.conf" --experimental-backends &
+	picom --config "$SCRIPT_DIR/../conf/picom.conf" & 
 fi 

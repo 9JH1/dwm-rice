@@ -9,10 +9,9 @@ if [ ! -v $1 ]; then
 		i3lock -i /tmp/screen.png 
 		rm /tmp/screen.png
 	else 
-		i3lock -c "$hex" & 
-		systemctl suspend
+		dwm-msg run_command quit && systemctl suspend
 	fi
 else 
-	i3lock -c "$hex"
+	i3lock -c "$hex" && systemctl suspend 
 fi
 

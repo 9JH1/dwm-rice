@@ -3,9 +3,11 @@ if [[ "$1" == "-isolate" ]]; then
 	isolate=1;
 fi
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 read -r -d '' ALACRITTY_CONFIG << EOM
 [general]
-import = ['~/.dwm/conf/alacritty-extra.toml']
+import = ['/tmp/alacritty-extra.toml']
 
 [window]
 decorations="full"
@@ -30,7 +32,7 @@ style='Bold Italic'
 
 [terminal.shell]
 program = "/bin/sh"
-args = ["-c", "export ZSH_ISOLATE=$isolate && $HOME/.dwm/src/zsh.sh"]
+args = ["-c", "export ZSH_ISOLATE=$isolate && $SCRIPT_DIR/zsh.sh"]
 
 [cursor]
 smooth_motion = true

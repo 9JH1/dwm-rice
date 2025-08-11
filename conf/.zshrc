@@ -1,33 +1,96 @@
- 	#z4h settings 
-	zstyle ':z4h:' auto-update      'no'
-	zstyle ':z4h:' auto-update-days '28'
-	zstyle ':z4h:bindkey' keyboard  'pc'
-	zstyle ':z4h:' prompt-at-bottom 'no'
-	zstyle ':z4h:' term-shell-integration 'yes'
-	zstyle ':z4h:autosuggestions' forward-char 'accept'
-	zstyle ':z4h:fzf-complete' recurse-dirs 'no'
-	zstyle ':z4h:direnv'         enable 'no'
-	zstyle ':z4h:direnv:success' notify 'yes'
-	
-	if [ "$ZSH_ISOLATE" -eq  "1" ]; then
-		zstyle ':z4h:' start-tmux command ""
-	else
-		zstyle ':z4h:' start-tmux command tmux -f ~/.dwm/conf/tmux.conf -u new -A -D -t z4h
-	fi
-	
-	# define settings for greeter loading
+wal -R -e -t -q -n -a 92
+read -r -d '' FASTFETCH_CONFIG << EOF 
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "modules": [
+    "title",
+    "separator",
+		"terminal",
+		"wm",
+    "cpu",
+    "gpu",
+    "memory",
+		"colors"
+  ]
+}
+EOF
+
+source $HOME/.cache/wal/colors.sh 
+read -r -d '' TMUX_CONFIG << EOF
+set -g mouse on
+set -g allow-passthrough on
+set -g default-terminal "tmux-256color"
+set -ag terminal-overrides ",alacritty:RGB"
+set -g visual-activity off
+set -g visual-bell off
+set -g visual-silence off
+setw -g monitor-activity off
+set -g bell-action none
+set -g status-justify right
+set -g status-position top
+set -g status-left ''
+set -g status-left-length 15
+set -g status-right ''
+set -g status-right-length 50
+
+setw -g clock-mode-colour           'red'
+set -g status-right-style           'fg=black  bg=default'
+setw -g window-status-current-style 'fg=black  bg=default'
+set -g pane-active-border-style     'fg=black  bg=default'
+setw -g window-status-style         'fg=black  bg=default'
+setw -g mode-style                  'fg=black  bg=default'
+set -g pane-border-style            'fg=black  bg=default'
+set -g status-style                 'fg=black  bg=default'
+setw -g window-status-bell-style    'fg=black  bg=default'
+set -g message-style                'fg=black  bg=default'
+
+set -g status-interval 5
+set -g status-right " #[fg=green]#[fg=black,bg=green] #[bold]#[bold]#{pane_current_command} #[fg=green,bg=default] "
+set -g status-left " #[fg=blue]#[fg=black,bg=blue] #[bold]#($ZDOTDIR/../src/cpu.sh)%#[fg=blue,bg=default]"
+setw -g window-status-format "#[fg=black]#[fg=yellow,bg=black]#I #[fg=white,bg=black,bold]#W #[fg=yellow]#F#[fg=black]#[fg=black,bg=default]"
+setw -g window-status-current-format "#[fg=red]#[fg=black,bg=red]#I #[bold]#W #F#[fg=red,bg=default]"
+EOF
+
+TMUX_PATH=$(mktemp --suffix=".conf")
+echo "$TMUX_CONFIG" > "$TMUX_PATH"
+
+FASTFETCH_PATH=$(mktemp --suffix=".jsonc")
+echo "$FASTFETCH_CONFIG" > "$FASTFETCH_PATH"
+
+#z4h settings 
+zstyle ':z4h:' auto-update      'no'
+zstyle ':z4h:' auto-update-days '28'
+zstyle ':z4h:bindkey' keyboard  'pc'
+zstyle ':z4h:' prompt-at-bottom 'no'
+zstyle ':z4h:' term-shell-integration 'yes'
+zstyle ':z4h:autosuggestions' forward-char 'accept'
+zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+zstyle ':z4h:direnv'         enable 'no'
+zstyle ':z4h:direnv:success' notify 'yes'
+
+if [ "$ZSH_ISOLATE" -eq  "1" ]; then
+	zstyle ':z4h:' start-tmux command tmux -f "$TMUX_PATH"
+else 
+	zstyle ':z4h:' start-tmux command tmux -f "$TMUX_PATH" -u new -A -D -t zsh
+fi
+
+# define settings for greeter loading
+function dwm_zsh_custom_startup_screen {
 	stty -echo -icanon
 	echo -e '\033[?25l'
-	if [ -n "$TMUX" ] && [ "$(tmux display-message -p '#{pane_index}')" = "0" ] && [ "$(tmux display-message -p '#{window_index}')" = "0" ] && [ -z "$FASTFETCH_SHOWN" ]; then
-		if [ "$ZSH_ISOLATE" = "1" ]; then
-			fastfetch --logo $(cat ~/.i3wallpaper) --config "$HOME/.dwm/conf/fastfetch.jsonc" --logo-width 30
-			read > /dev/tty
-		fi
-	fi
+	fastfetch --logo $(cat ~/.i3wallpaper) --config "$FASTFETCH_PATH" --logo-width 30
+	read > /dev/tty
 	echo -e '\033[?25h'
-	stty sane
+	stty sane 
+}
 
-	z4h init
+if [ "$ZSH_ISOLATE" = "0" ];then 
+	if [ -n "$TMUX" ] && [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
+		dwm_zsh_custom_startup_screen
+	fi
+fi 
+
+z4h init
 
 # custom cd functions for better navigation
 export localcd=""
@@ -82,5 +145,5 @@ function ls {
 	lsd $@ --color=auto -r -t -l
 }
 
-
+alias clear="clear && echo"
 eval "$(zoxide init zsh)"

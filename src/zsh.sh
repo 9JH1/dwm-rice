@@ -1,3 +1,4 @@
 #!/bin/sh
-export ZDOTDIR="$HOME/.dwm/conf/"
-exec zsh
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+export ZDOTDIR="$SCRIPT_DIR/../conf/"
+exec zsh 

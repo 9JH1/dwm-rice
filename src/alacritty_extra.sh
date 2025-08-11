@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG="$HOME/.dwm/conf/alacritty-extra.toml"
+CONFIG="/tmp/alacritty-extra.toml"
 
 # Read current values
 padding_set=false
