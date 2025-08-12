@@ -172,6 +172,7 @@ static const Button buttons[] = {
 
 static const char *ipcsockpath = "/tmp/dwm.sock";
 static IPCCommand ipccommands[] = {
+		IPCCOMMAND(xrdb, 1, {ARG_TYPE_NONE}),
     IPCCOMMAND(view, 1, {ARG_TYPE_UINT}),
     IPCCOMMAND(toggleview, 1, {ARG_TYPE_UINT}),
     IPCCOMMAND(tag, 1, {ARG_TYPE_UINT}),

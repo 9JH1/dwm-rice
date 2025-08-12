@@ -8,10 +8,10 @@ $SCRIPT_DIR/alacritty.sh no-run >/dev/null &
 $SCRIPT_DIR/reloadwalgtk.sh >/dev/null &
 
 sh "$HOME/.cache/wal/colors-tty.sh" &
-xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources" &
-walcord &>/dev/null &
-reload_tmux
+(xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources" && dwm-msg run_command xrdb) &
 
-if [[ ! "$(pgrep 'qutebrowser')" = "" ]]; then
+walcord &>/dev/null &
+
+if [[ ! "$(pgrep 'qutebrowser')" = "" && -v "~/.config/qutebrowser/config.py" ]]; then
 	qutebrowser :config-source &
 fi

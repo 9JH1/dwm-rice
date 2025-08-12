@@ -13,8 +13,12 @@ import = ['/tmp/alacritty-extra.toml']
 decorations="full"
 dynamic_title=true
 
+[window.dimensions] 
+columns = 60 
+lines = 15
+
 [font]
-size = 20
+size = 15
 
 [font.normal]
 family='Mononoki Nerd Font'
@@ -32,7 +36,7 @@ style='Bold Italic'
 
 [terminal.shell]
 program = "/bin/sh"
-args = ["-c", "export ZSH_ISOLATE=$isolate && $SCRIPT_DIR/zsh.sh"]
+args = ["-c","export ZDOTDIR=$SCRIPT_DIR/../conf/ && export ZSH_ISOLATE=$isolate && zsh"]
 
 [cursor]
 smooth_motion = true
@@ -46,6 +50,7 @@ ALACRITTY_PATH="/tmp/alacritty.toml"
 ALACRITTY_COLORS=$(cat $HOME/.cache/wal/colors-alacritty.toml)
 echo "$ALACRITTY_CONFIG" > "$ALACRITTY_PATH"
 echo "$ALACRITTY_COLORS" >> "$ALACRITTY_PATH"
+echo running $SCRIPT_DIR/zsh.sh
 
 if [[ "$1" == "no-run" ]]; then
 	exit

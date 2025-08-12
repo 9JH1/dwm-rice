@@ -626,9 +626,7 @@ void attachstack(Client *c) {
   c->mon->stack = c;
 }
 
-void
-loadxrdb()
-{
+void loadxrdb(){
   Display *display;
   char * resm;
   XrmDatabase xrdb;
@@ -644,12 +642,13 @@ loadxrdb()
       xrdb = XrmGetStringDatabase(resm);
 
       if (xrdb != NULL) {
-        XRDB_LOAD_COLOR("dwm.color0", normbordercolor);
-        XRDB_LOAD_COLOR("dwm.color0", normbgcolor);
-        XRDB_LOAD_COLOR("dwm.color0", normfgcolor);
-        XRDB_LOAD_COLOR("dwm.color5", selbordercolor);
-        XRDB_LOAD_COLOR("dwm.color5", selbgcolor);
-        XRDB_LOAD_COLOR("dwm.color5", selfgcolor);
+        XRDB_LOAD_COLOR("color0", normbordercolor);
+        XRDB_LOAD_COLOR("color0", normbgcolor);
+        XRDB_LOAD_COLOR("color0", normfgcolor);
+
+        XRDB_LOAD_COLOR("color5", selbordercolor);
+        XRDB_LOAD_COLOR("color5", selbgcolor);
+        XRDB_LOAD_COLOR("color5", selfgcolor);
       }
     }
   }
@@ -657,9 +656,7 @@ loadxrdb()
   XCloseDisplay(display);
 }
 
-void
-xrdb(const Arg *arg)
-{
+void xrdb(const Arg *arg){
   loadxrdb();
   int i;
   for (i = 0; i < LENGTH(colors); i++)

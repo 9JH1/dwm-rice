@@ -243,7 +243,8 @@ POLYBAR_CONFIG_PATH=$(mktemp --suffix=".ini")
 echo "$POLYBAR_CONFIG" > "$POLYBAR_CONFIG_PATH"
 if [[ "$1" == "no-run" ]]; then 
 	exit 
-fi 
+fi
 
-killall polybar 
+pkill -TERM polybar
+
 polybar -c "$POLYBAR_CONFIG_PATH" bar_main & 

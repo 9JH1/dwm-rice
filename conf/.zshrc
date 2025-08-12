@@ -1,4 +1,3 @@
-wal -R -e -t -q -n -a 92
 read -r -d '' FASTFETCH_CONFIG << EOF 
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
@@ -21,6 +20,7 @@ set -g mouse on
 set -g allow-passthrough on
 set -g default-terminal "tmux-256color"
 set -ag terminal-overrides ",alacritty:RGB"
+set -g default-command "export ZDOTDIR=$ZDOTDIR && zsh"
 set -g visual-activity off
 set -g visual-bell off
 set -g visual-silence off
@@ -46,12 +46,12 @@ set -g message-style                'fg=black  bg=default'
 
 set -g status-interval 5
 set -g status-right " #[fg=green]#[fg=black,bg=green] #[bold]#[bold]#{pane_current_command} #[fg=green,bg=default] "
-set -g status-left " #[fg=blue]#[fg=black,bg=blue] #[bold]#($ZDOTDIR/../src/cpu.sh)%#[fg=blue,bg=default]"
+set -g status-left " #[fg=blue]#[fg=black,bg=blue] #[bold]#($ZDOTDIR/../src/cpu.sh)% #[fg=blue,bg=default]"
 setw -g window-status-format "#[fg=black]#[fg=yellow,bg=black]#I #[fg=white,bg=black,bold]#W #[fg=yellow]#F#[fg=black]#[fg=black,bg=default]"
 setw -g window-status-current-format "#[fg=red]#[fg=black,bg=red]#I #[bold]#W #F#[fg=red,bg=default]"
 EOF
 
-TMUX_PATH=$(mktemp --suffix=".conf")
+TMUX_PATH="/tmp/tmux.conf"
 echo "$TMUX_CONFIG" > "$TMUX_PATH"
 
 FASTFETCH_PATH=$(mktemp --suffix=".jsonc")
@@ -68,8 +68,8 @@ zstyle ':z4h:fzf-complete' recurse-dirs 'no'
 zstyle ':z4h:direnv'         enable 'no'
 zstyle ':z4h:direnv:success' notify 'yes'
 
-if [ "$ZSH_ISOLATE" -eq  "1" ]; then
-	zstyle ':z4h:' start-tmux command tmux -f "$TMUX_PATH"
+if [[ "$ZSH_ISOLATE" =  "1" ]]; then
+	zstyle ':z4h:' start-tmux command ""
 else 
 	zstyle ':z4h:' start-tmux command tmux -f "$TMUX_PATH" -u new -A -D -t zsh
 fi
@@ -78,17 +78,15 @@ fi
 function dwm_zsh_custom_startup_screen {
 	stty -echo -icanon
 	echo -e '\033[?25l'
-	fastfetch --logo $(cat ~/.i3wallpaper) --config "$FASTFETCH_PATH" --logo-width 30
+	fastfetch --logo $(cat ~/.wallpaper) --config "$FASTFETCH_PATH" --logo-width 30
 	read > /dev/tty
 	echo -e '\033[?25h'
 	stty sane 
 }
 
-if [ "$ZSH_ISOLATE" = "0" ];then 
-	if [ -n "$TMUX" ] && [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
-		dwm_zsh_custom_startup_screen
-	fi
-fi 
+if [ -n "$TMUX" ] && [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
+	dwm_zsh_custom_startup_screen
+fi
 
 z4h init
 

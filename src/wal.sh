@@ -16,7 +16,7 @@ if [[ "$1" = "--custom" ]];then
 		motionlayer --path "$2" --frame-out "$HOME/.frame.jpg" & 
 		sleep 1
 		first_wall="$HOME/.frame.jpg"
-		echo "$first_wall" > $HOME/.i3wallpaper
+		echo "$first_wall" > $HOME/.wallpaper
 	else 
 		echo "detected image"
 		first_wall="$2";
@@ -42,28 +42,17 @@ else
 		fi
 	else 
 		echo "No argument provided, using previous wallpaper"
-		first_wall=$(cat ~/.i3wallpaper)
+		first_wall=$(cat ~/.wallpaper)
 	fi 
 fi
 
 export XDG_CACHE_HOME="$HOME/.cache" &> /dev/null &
-touch $HOME/.i3wallpaper
-
-# OBSELETE AS NOW -e IS USED WITH PYWAL SO THIS IS NOT AN ISSUE 
-# only one dependancy is run before the rest, that is polybar 
-# when wal is run it reloads polybar but we end up reloading it 
-# manually using a kill-replace style script, if we kill it here
-# then wal will not reload it, we dont want wall to reload it 
-# because it animates the bar dissapearing twice which is not 
-# ideal for visual candy.
-# $HOME/.config/i3/src/kill_polybar.sh
-
-# plank is a visual child process so it has to go too
+touch $HOME/.wallpaper
 
 # run wal 
 echo "Running PyWal"
 echo "Using image: $first_wall"
-echo "$first_wall" > $HOME/.i3wallpaper
+echo "$first_wall" > $HOME/.wallpaper
 wal -i "$first_wall" -e -t -q -n -a 92    
 echo "Done"
 
@@ -96,7 +85,7 @@ fi
 echo "Running Deps"
 echo "Done"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-($SCRIPT_DIR/wal_deps.sh) &
+$SCRIPT_DIR/wal_deps.sh
 
 # echo fix picom
 if [[ $(pgrep "picom") = "" ]];then 
