@@ -1,3 +1,4 @@
+wal -R -q -n -t -e
 read -r -d '' FASTFETCH_CONFIG << EOF 
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
