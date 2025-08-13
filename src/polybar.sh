@@ -16,14 +16,20 @@ level2=$color6
 level3=$alert 
 scale='1.2'
 
+dwm_border_size=3
+dwm_bottom_gap=50
+polybar_border_size=4
+polybar_height=$((dwm_bottom_gap-(polybar_border_size*2)))
+
 read -r -d '' POLYBAR_FONT_CONFIG << EOM
 font-3 = "Mononoki Nerd Font:style=Regular:size=$(awk -v scale="$scale" 'BEGIN {print int(17 * scale)}');$(awk -v scale="$scale" 'BEGIN {print int(4 * scale)}')"
 font-2 = "Mononoki Nerd Font:style=Regular:size=$(awk -v scale="$scale" 'BEGIN {print int(13 * scale)}');$(awk -v scale="$scale" 'BEGIN {print int(2.1 * scale)}')"
 font-1 = "Victor Mono Nerd Font:style=Bold Italic:size=$(awk -v scale="$scale" 'BEGIN {print int(10 * scale)}');$(awk -v scale="$scale" 'BEGIN {print int(1.5 * scale)}')"
 font-0 = "Mononoki Nerd Font:style=Bold:size=$(awk -v scale="$scale" 'BEGIN {print int(10 * scale)}');$(awk -v scale="$scale" 'BEGIN {print int(2.1 * scale)}')"
 dpi = 150
-height = $(awk -v scale="$scale" 'BEGIN {print int(35 * scale)}')px
-border-size = 2pt
+;height = $(awk -v scale="$scale" 'BEGIN {print int(35 * scale)}')px
+height = $(echo "$polybar_height")px
+border-size = $(echo "$polybar_border_size")px
 line-size = 2
 background = $background_transparent
 border-color = $color4
@@ -38,6 +44,77 @@ modules-left = left_prefix powermenu powermenu_seperator xworkspaces xworkspaces
 modules-right = right_prefix playerctl_prev playerctl_ipc playerctl playerctl_next playerctl_seperator audio audio_seperator systray tray_seperator date right_suffix
 enable-ipc=true
 $POLYBAR_FONT_CONFIG
+
+[bar/bar_dock]
+bottom =  true 
+modules-right = dock_prefix ram ram_seperator cpu dock_suffix
+override-redirect = true
+$POLYBAR_FONT_CONFIG
+
+[module/dock_prefix]
+type=custom/text
+label = "%{T4}%{T-}"
+format-background = $background_transparent
+format-foreground = $color1
+
+
+[module/ram]
+type=internal/memory
+interval=5
+warn-percentage=95 
+label = %percentage_used%%
+format = "%{T3}  %{T-}<label> <bar-used>"
+format-background = $color1
+format-foreground = $module_foreground
+label-warn = !%free% left
+format-warn = "%{T3} %{T-}<label-warn> <label-warn>"
+bar-used-indicator = 
+bar-used-width = 6
+bar-used-foreground-0 = $level0 
+bar-used-foreground-1 = $level1 
+bar-used-foreground-2 = $level2 
+bar-used-foreground-3 = $level3
+bar-used-fill = "%{T3}▐%{T-}" 
+bar-used-empty = "%{T3}▐%{T-}" 
+bar-used-empty-foreground = $color1
+format-suffix = " "
+
+[module/ram_seperator]
+type=custom/text
+label = "%{T4}%{T-}"
+format = <label>
+format-foreground=$color2 
+format-background=$color1 
+
+[module/cpu]
+type=internal/cpu
+interval = 5
+warn-percentage = 95
+label-warn = "%percentage%%"
+format-warn = "%{T3} %{T-}<label-warn> <bar-load>"
+format-background = $color2
+format-foreground = $module_foreground
+format-warn-foreground = $alert
+format-warn-background = $color2
+label = "%percentage%%"
+bar-load-indicator = 
+bar-load-width = 6
+bar-load-foreground-0 = $level0 
+bar-load-foreground-1 = $level1 
+bar-load-foreground-2 = $level2 
+bar-load-foreground-3 = $level3
+bar-load-fill = "%{T3}▐%{T-}" 
+bar-load-empty = "%{T3}▐%{T-}" 
+bar-load-empty-foreground = $color2
+format = "%{T3} %{T-}<label> <bar-load>"
+format-suffix = " "
+
+[module/dock_suffix]
+type = custom/text 
+format = "%{T4}%{T-}"
+format-background = $background_transparent
+format-foreground = $color2
+
 
 [module/right_prefix]
 type=custom/text
@@ -248,3 +325,4 @@ fi
 pkill -TERM polybar
 
 polybar -c "$POLYBAR_CONFIG_PATH" bar_main & 
+polybar -c "$POLYBAR_CONFIG_PATH" bar_dock &

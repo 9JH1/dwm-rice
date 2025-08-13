@@ -1,13 +1,13 @@
 /* Key binding functions */
-/*static void incrgaps(const Arg *arg);
-static void incrigaps(const Arg *arg);
 static void defaultgaps(const Arg *arg);
+static void incrgaps(const Arg *arg);
+static void incrigaps(const Arg *arg);
 static void incrogaps(const Arg *arg);
 static void incrohgaps(const Arg *arg);
 static void incrovgaps(const Arg *arg);
 static void incrihgaps(const Arg *arg);
 static void incrivgaps(const Arg *arg);
-static void togglegaps(const Arg *arg);*/
+static void togglegaps(const Arg *arg);
 /* Layouts (delete the ones you do not need) */
 static void bstack(Monitor *m);
 static void bstackhoriz(Monitor *m);
@@ -62,7 +62,7 @@ defaultgaps(const Arg *arg)
 	setgaps(gappoh, gappov, gappih, gappiv);
 }
 
-/*void
+void
 incrgaps(const Arg *arg)
 {
 	setgaps(
@@ -71,7 +71,7 @@ incrgaps(const Arg *arg)
 		selmon->gappih + arg->i,
 		selmon->gappiv + arg->i
 	);
-}*/
+}
 
 void
 incrigaps(const Arg *arg)
@@ -799,9 +799,22 @@ tile(Monitor *m)
 
 	sx = mx = m->wx + ov;
 	sy = my = m->wy + oh;
-	mh = m->wh - 2*oh - ih * (MIN(n, m->nmaster) - 1);
-	sh = m->wh - 2*oh - ih * (n - m->nmaster - 1);
-	sw = mw = m->ww - 2*ov;
+
+	int total_vert_gap = 2 * oh + ((n > 1) ? (ih * (n - 1)) : 0);
+	int avail_height = m->wh - total_vert_gap - bottom_gap;
+
+	mh = avail_height;
+	sh = avail_height;
+
+	if (m->nmaster && n > m->nmaster) {
+		// Apply height only to master and stack separately
+		mh = avail_height - ih * (MIN(n, m->nmaster) - 1);
+		sh = avail_height - ih * (n - m->nmaster - 1);
+	} else {
+		mh = avail_height - ih * (n - 1);
+	}
+
+	sw = mw = m->ww - 2 * ov;
 
 	if (m->nmaster && n > m->nmaster) {
 		sw = (mw - iv) * (1 - m->mfact);
@@ -811,12 +824,16 @@ tile(Monitor *m)
 
 	getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
 		if (i < m->nmaster) {
-			resize(c, mx, my, mw - (2*c->bw), mh * (c->cfact / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), 0);
+			int ch = mh * (c->cfact / mfacts) + (i < mrest ? 1 : 0);
+			resize(c, mx, my, mw - (2 * c->bw), ch - (2 * c->bw), 0);
 			my += HEIGHT(c) + ih;
 		} else {
-			resize(c, sx, sy, sw - (2*c->bw), sh * (c->cfact / sfacts) + ((i - m->nmaster) < srest ? 1 : 0) - (2*c->bw), 0);
+			int ch = sh * (c->cfact / sfacts) + ((i - m->nmaster) < srest ? 1 : 0);
+			resize(c, sx, sy, sw - (2 * c->bw), ch - (2 * c->bw), 0);
 			sy += HEIGHT(c) + ih;
 		}
+	}
 }
+

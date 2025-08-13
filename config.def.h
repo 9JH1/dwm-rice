@@ -1,4 +1,5 @@
 static const unsigned int snap     = 64;
+static const unsigned int bottom_gap = 50;
 static const unsigned int gappih   = 30; 
 static const unsigned int gappiv   = 30; 
 static const unsigned int gappoh   = 30; 
