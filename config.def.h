@@ -44,6 +44,7 @@ static const char *const autostart[] = {
 	"/home/_3hy/.dwm/src/autostart.sh", NULL,NULL
 };
 
+static const char *autostartcmd[] = {autostart[0], NULL};
 
 
 #define FORCE_VSPLIT 1
@@ -84,7 +85,7 @@ static const Key keys[] = {
     {MODKEY, XK_x, spawn, {.v = lock}},
 		{MODKEY, XK_b, spawn, {.v = term_extra_opacity}},
     {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}},
-		{MODKEY | ShiftMask, XK_r, spawn, {.v = autostart[0]}},
+		{MODKEY | ShiftMask, XK_r, spawn, {.v = autostartcmd}},
     {MODKEY, XK_m, spawn, {.v = lock_alt}},
     {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}},
