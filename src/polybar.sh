@@ -35,18 +35,18 @@ border-color = $color4
 foreground = $module_foreground
 fixed-center = true
 padding = 20px
+enable-ipc=true
 EOM
 
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
 modules-left = left_prefix powermenu powermenu_seperator xworkspaces xworkspaces_seperator polywins left_suffix
 modules-right = right_prefix notify notify_seperator systray tray_seperator date right_suffix
-enable-ipc=true
 $POLYBAR_FONT_CONFIG
 
 [bar/bar_dock]
 bottom =  true 
-modules-left = right_prefix playerctl_prev playerctl_ipc playerctl playerctl_next playerctl_seperator audio dock_right_suffix
+modules-left = right_prefix playerctl_ipc playerctl playerctl_next playerctl_seperator audio dock_right_suffix
 modules-right = dock_prefix network network_seperator ram ram_seperator cpu dock_suffix 
 override-redirect = true
 $POLYBAR_FONT_CONFIG
@@ -150,26 +150,19 @@ format-background = $color1
 format-prefix = " "
 format-suffix = " "
 
-[module/playerctl_prev]
-type=custom/text
-label = "%{T3}%{T-}"
-click-left = playerctl previous
-format = "<label>"
-format-foreground = $module_foreground
-format-background = $color1
-
 [module/playerctl_ipc]
 type = custom/ipc
-hook-0 = echo "\$($HOME/.dwm/src/playerctl_icon.sh)"
+hook-0 = "$SCRIPT_DIR/playerctl_icon.sh"
 initial = 1
 click-left = playerctl play-pause && polybar-msg action playerctl_ipc hook 0 > /dev/null
+click-middle = playerctl previous
 format ="%{T3}<output>%{T-}"
-format-foreground = $color7
+format-foreground = $module_foreground
 format-background = $color1
 
 [module/playerctl]
 type=custom/script
-exec = $HOME/.dwm/src/playerctl.sh & polybar-msg action playerctl_ipc hook 0 > /dev/null
+exec = "$SCRIPT_DIR/playerctl.sh" && polybar-msg action playerctl_ipc hook 0 > /dev/null
 format ="<label>"
 interval=1
 format-prefix = " " 
@@ -215,7 +208,7 @@ type = internal/network
 interface = enp5s0
 format-connected-background = $color1 
 format-connected-foreground = $color7 
-label-connected = %{T3} %{T-}%upspeed% %{T3} %{T-}%downspeed%
+label-connected = "%{T3} %{T-}%upspeed% %{T3} %{T-}%downspeed% "
 interval = 5
 
 [module/network_seperator]

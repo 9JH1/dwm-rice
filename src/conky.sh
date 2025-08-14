@@ -46,8 +46,8 @@ conky.config = {
 
 -- Variables: https://conky.cc/variables
 conky.text = [[
-\${alignr}\${voffset 70}\${font Mononoki Nerd Font:size=50:weight=light}\${exec date +%I:%M}
-\${alignr}\${voffset -35}\${font Mononoki Nerd Font:size=30:style=italic}\${exec date +%A' '%d}
+\${alignr}\${voffset 65}\${font Mononoki Nerd Font:size=70:weight=light}\${exec date +%I:%M}
+\${alignr}\${voffset -45}\${font Mononoki Nerd Font:size=40:style=italic}\${exec date +%A' '%d}
 
 ]]
 EOF

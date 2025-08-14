@@ -77,6 +77,7 @@ fi
 
 # define settings for greeter loading
 function dwm_zsh_custom_startup_screen {
+	clear
 	stty -echo -icanon
 	echo -e '\033[?25l'
 	fastfetch --logo $(cat ~/.wallpaper) --config "$FASTFETCH_PATH" --logo-width 30

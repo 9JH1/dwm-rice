@@ -1,0 +1,2 @@
+combine all scripts into single source file  
+-> include all variables used in one single file
