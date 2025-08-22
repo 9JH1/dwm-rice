@@ -48,7 +48,7 @@ $POLYBAR_FONT_CONFIG
 bottom =  true 
 modules-left = right_prefix playerctl_ipc playerctl playerctl_next playerctl_seperator audio dock_right_suffix
 modules-right = dock_prefix network network_seperator ram ram_seperator cpu dock_suffix 
-override-redirect = true
+override-redirect = true 
 $POLYBAR_FONT_CONFIG
 
 [module/dock_prefix]

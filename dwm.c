@@ -91,6 +91,7 @@ enum {
   NetWMFullscreen,
   NetActiveWindow,
   NetWMWindowType,
+	NetWMWindowTypeDock,
   NetWMWindowTypeDialog,
   NetClientList,
   NetDesktopNames,
@@ -1320,6 +1321,15 @@ void manage(Window w, XWindowAttributes *wa) {
 
   c = ecalloc(1, sizeof(Client));
   c->win = w;
+	
+	if (getatomprop(c, netatom[NetWMWindowType]) == netatom[NetWMWindowTypeDock]){
+		XMapWindow(dpy, c->win);
+		XLowerWindow(dpy,c->win);
+		free(c);
+		return;
+	}
+
+
   /* geometry */
   c->x = c->oldx = wa->x;
   c->y = c->oldy = wa->y;
@@ -1990,7 +2000,8 @@ void setup(void) {
   netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
   netatom[NetWMWindowTypeDialog] =
       XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
-  netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);
+  netatom[NetWMWindowTypeDock] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DOCK",False);
+	netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);
   netatom[NetDesktopViewport] =
       XInternAtom(dpy, "_NET_DESKTOP_VIEWPORT", False);
   netatom[NetNumberOfDesktops] =
