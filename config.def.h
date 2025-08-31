@@ -90,7 +90,7 @@ static const Key keys[] = {
     {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}},
     {MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}},
-
+    { MODKEY,                       XK_z,                        zoom,              {0} },
 
     {MODKEY, XK_j, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
