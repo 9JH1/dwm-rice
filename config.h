@@ -9,7 +9,7 @@ static const int showbar           =  1;
 static const int topbar            =  1;
 static const int usealtbar         =  1;
 static const int nmaster           =  1;   
-static const int resizehints       =  1;
+static const int resizehints       =  0;
 static const int lockfullscreen    =  0;
 static const unsigned int borderpx =  3; 
 static const float mfact           = 0.55; 
@@ -90,7 +90,7 @@ static const Key keys[] = {
     {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}},
     {MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}},
-
+    { MODKEY,                       XK_z,                        zoom,              {0} },
 
     {MODKEY, XK_j, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},

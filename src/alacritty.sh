@@ -37,14 +37,13 @@ style='Bold Italic'
 [terminal.shell]
 program = "/bin/sh"
 args = ["-c","export ZDOTDIR=$SCRIPT_DIR/../conf/ && export ZSH_ISOLATE=$isolate && zsh"]
-
-[cursor]
-smooth_motion = true
-smooth_motion_factor = 0.7
-smooth_motion_spring = 0.5
-smooth_motion_max_stretch_x = 10.0
-smooth_motion_max_stretch_y = 10.0
 EOM
+#[cursor]
+#smooth_motion = true
+#smooth_motion_factor = 0.7
+#smooth_motion_spring = 0.5
+#smooth_motion_max_stretch_x = 10.0
+#smooth_motion_max_stretch_y = 10.0
 
 ALACRITTY_PATH="/tmp/alacritty.toml"
 ALACRITTY_COLORS=$(cat $HOME/.cache/wal/colors-alacritty.toml)

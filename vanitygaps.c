@@ -785,55 +785,66 @@ nrowgrid(Monitor *m)
 static void
 tile(Monitor *m)
 {
-	unsigned int i, n;
-	int oh, ov, ih, iv;
-	int mx = 0, my = 0, mh = 0, mw = 0;
-	int sx = 0, sy = 0, sh = 0, sw = 0;
-	float mfacts, sfacts;
-	int mrest, srest;
-	Client *c;
+    unsigned int i, n;
+    int oh, ov, ih, iv;
+    int mx = 0, my = 0, mh = 0, mw = 0;
+    int sx = 0, sy = 0, sh = 0, sw = 0;
+    float mfacts, sfacts;
+    int mrest, srest;
+    Client *c;
 
-	getgaps(m, &oh, &ov, &ih, &iv, &n);
-	if (n == 0)
-		return;
+    getgaps(m, &oh, &ov, &ih, &iv, &n);
+    if (n == 0)
+        return;
 
-	sx = mx = m->wx + ov;
-	sy = my = m->wy + oh;
+    sx = mx = m->wx + ov;
+    sy = my = m->wy + oh;
 
-	int total_vert_gap = 2 * oh + ((n > 1) ? (ih * (n - 1)) : 0);
-	int avail_height = m->wh - total_vert_gap - bottom_gap;
+    int total_vert_gap = 2 * oh + ((n > 1) ? (ih * (n - 1)) : 0);
+    int avail_height = m->wh - total_vert_gap - bottom_gap;
 
-	mh = avail_height;
-	sh = avail_height;
+    mh = avail_height;
+    sh = avail_height;
 
-	if (m->nmaster && n > m->nmaster) {
-		// Apply height only to master and stack separately
-		mh = avail_height - ih * (MIN(n, m->nmaster) - 1);
-		sh = avail_height - ih * (n - m->nmaster - 1);
-	} else {
-		mh = avail_height - ih * (n - 1);
-	}
+    if (m->nmaster && n > m->nmaster) {
+        mh = avail_height - ih * (MIN(n, m->nmaster) - 1);
+        sh = avail_height - ih * (n - m->nmaster - 1);
+    } else {
+        mh = avail_height - ih * (n - 1);
+    }
 
-	sw = mw = m->ww - 2 * ov;
+    sw = mw = m->ww - 2 * ov;
 
-	if (m->nmaster && n > m->nmaster) {
-		sw = (mw - iv) * (1 - m->mfact);
-		mw = mw - iv - sw;
-		sx = mx + mw + iv;
-	}
+    if (m->nmaster && n > m->nmaster) {
+        sw = (mw - iv) * (1 - m->mfact);
+        mw = mw - iv - sw;
+        sx = mx + mw + iv;
+    }
 
-	getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
+    getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
-		if (i < m->nmaster) {
-			int ch = mh * (c->cfact / mfacts) + (i < mrest ? 1 : 0);
-			resize(c, mx, my, mw - (2 * c->bw), ch - (2 * c->bw), 0);
-			my += HEIGHT(c) + ih;
-		} else {
-			int ch = sh * (c->cfact / sfacts) + ((i - m->nmaster) < srest ? 1 : 0);
-			resize(c, sx, sy, sw - (2 * c->bw), ch - (2 * c->bw), 0);
-			sy += HEIGHT(c) + ih;
-		}
-	}
+    for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+        if (i < m->nmaster) {
+            int ch = mh * (c->cfact / mfacts) + (i < mrest ? 1 : 0);
+            resize(c, mx, my, mw - (2 * c->bw), ch - (2 * c->bw), 0);
+
+            // Only add gap if this is NOT the last master client
+            if (i + 1 < MIN(n, m->nmaster))
+                my += HEIGHT(c) + ih;
+            else
+                my += HEIGHT(c);
+        } else {
+            int stack_index = i - m->nmaster;
+            int num_stack_clients = n - m->nmaster;
+            int ch = sh * (c->cfact / sfacts) + (stack_index < srest ? 1 : 0);
+            resize(c, sx, sy, sw - (2 * c->bw), ch - (2 * c->bw), 0);
+
+            // Only add gap if this is NOT the last stack client
+            if (stack_index + 1 < num_stack_clients)
+                sy += HEIGHT(c) + ih;
+            else
+                sy += HEIGHT(c);
+        }
+    }
 }
 
