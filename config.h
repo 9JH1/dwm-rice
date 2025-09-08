@@ -1,18 +1,14 @@
 static const unsigned int snap     = 64;
+static const int gappx             = 5;
 static const unsigned int bottom_gap = 50;
-static const unsigned int gappih   = 30; 
-static const unsigned int gappiv   = 30; 
-static const unsigned int gappoh   = 30; 
-static const unsigned int gappov   = 30; 
-static const unsigned int smartgaps=  0; 
 static const int showbar           =  1;
 static const int topbar            =  1;
 static const int usealtbar         =  1;
 static const int nmaster           =  1;   
-static const int resizehints       =  0;
+static const int resizehints       =  1;
+static const float mfact             = 0.5;
 static const int lockfullscreen    =  0;
 static const unsigned int borderpx =  3; 
-static const float mfact           = 0.55; 
 static const char *altbarclass     = "Polybar"; 
 static const char *alttrayname     = "snixembed"; 
 static const char *altbarcmd       = "$HOME/.dwm/src/polybar.sh no-run"; 
@@ -47,14 +43,13 @@ static const char *const autostart[] = {
 static const char *autostartcmd[] = {autostart[0], NULL};
 
 
-#define FORCE_VSPLIT 1
-#include "vanitygaps.c"
+//#include "vanitygaps.c"
 #include <X11/XF86keysym.h>
 
 static const Layout layouts[] = {
     {"[]=", tile},
     {"[M]", monocle},
-    {"[@]", spiral},
+    /*{"[@]", spiral},
     {"[\\]", dwindle},
     {"H[]", deck},
     {"TTT", bstack},
@@ -64,7 +59,7 @@ static const Layout layouts[] = {
     {"---", horizgrid},
     {":::", gaplessgrid},
     {"|M|", centeredmaster},
-    {">M>", centeredfloatingmaster},
+    {">M>", centeredfloatingmaster},*/
     {"><>", NULL}, 
     {NULL, NULL},
 };
@@ -86,6 +81,9 @@ static const Key keys[] = {
 		{MODKEY, XK_b, spawn, {.v = term_extra_opacity}},
     {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}},
 		{MODKEY | ShiftMask, XK_r, spawn, {.v = autostartcmd}},
+	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
+	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
     {MODKEY, XK_m, spawn, {.v = lock_alt}},
     {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}},
@@ -105,15 +103,11 @@ static const Key keys[] = {
     {MODKEY | ControlMask, XK_Return, zoom, {0}},
 		
 		// gaps 
-    {MODKEY, XK_equal, incrogaps, {.i = +1}},
+/*    {MODKEY, XK_equal, incrogaps, {.i = +1}},
     {MODKEY, XK_minus, incrogaps, {.i = -1}},
-    {MODKEY | ShiftMask, XK_equal, incrigaps, {.i = +1}},
+   {MODKEY | ShiftMask, XK_equal, incrigaps, {.i = +1}},
     {MODKEY | ShiftMask, XK_minus, incrigaps, {.i = -1}},	
-
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+*/
 		// window resizing
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}}, 

@@ -119,6 +119,11 @@ enum {
 
 typedef struct TagState TagState;
 struct TagState {
+	int gappx;            /* gaps between windows */
+	int gappih;           /* horizontal gap between windows */
+	int gappiv;           /* vertical gap between windows */
+	int gappoh;           /* horizontal outer gaps */
+	int gappov;           /* vertical outer gaps */
   int selected;
   int occupied;
   int urgent;
@@ -179,16 +184,13 @@ struct Monitor {
   char ltsymbol[16];
   char lastltsymbol[16];
   float mfact;
+	int gappx;
   int nmaster;
   int num;
   int by, bh;         /* bar geometry */
   int tx, tw;         /* bar tray geometry */
   int mx, my, mw, mh; /* screen size */
   int wx, wy, ww, wh; /* window area  */
-  int gappih;         /* horizontal gap between windows */
-  int gappiv;         /* vertical gap between windows */
-  int gappoh;         /* horizontal outer gaps */
-  int gappov;         /* vertical outer gaps */
   unsigned int seltags;
   unsigned int sellt;
   unsigned int tagset[2];
@@ -222,12 +224,14 @@ static void setcurrentdesktop(void);
 static void setdesktopnames(void);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
+static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setnumdesktops(void);
 static void setup(void);
 static void setviewport(void);
 static void seturgent(Client *c, int urg);
+static void tile(Monitor *m);
 static void showhide(Client *c);
 static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h,
@@ -422,6 +426,7 @@ static void autostart_exec() {
   }
 }
 
+
 /* function implementations */
 static void
 alttab(const Arg *arg) {
@@ -596,6 +601,9 @@ int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact) {
   }
   return *x != c->x || *y != c->y || *w != c->w || *h != c->h;
 }
+
+
+
 
 void arrange(Monitor *m) {
   if (m)
@@ -888,10 +896,7 @@ Monitor *createmon(void) {
   m->showbar = showbar;
   m->topbar = topbar;
   m->bh = bh;
-  m->gappih = gappih;
-  m->gappiv = gappiv;
-  m->gappoh = gappoh;
-  m->gappov = gappov;
+	m->gappx = gappx;
   m->lt[0] = &layouts[0];
   m->lt[1] = &layouts[1 % LENGTH(layouts)];
   strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
@@ -1531,6 +1536,15 @@ void movemouse(const Arg *arg) {
     focus(NULL);
   }
 }
+void setgaps(const Arg *arg)
+{
+	if ((arg->i == 0) || (selmon->gappx + arg->i < 0))
+		selmon->gappx = 0;
+	else
+		selmon->gappx += arg->i;
+	arrange(selmon);
+}
+
 
 Client *nexttiled(Client *c) {
   for (; c && (c->isfloating || !ISVISIBLE(c)); c = c->next)
@@ -1605,6 +1619,7 @@ Monitor *recttomon(int x, int y, int w, int h) {
 }
 
 void resize(Client *c, int x, int y, int w, int h, int interact) {
+	printf("resize called for client: x=%d, y=%d, w=%d, h=%d\n", x, y, w, h);
   if (applysizehints(c, &x, &y, &w, &h, interact))
     resizeclient(c, x, y, w, h);
 }
@@ -2053,6 +2068,33 @@ void setviewport(void) {
                   PropModeReplace, (unsigned char *)data, 2);
 }
 
+void tile(Monitor *m){
+	unsigned int i, n, h, mw, my, ty;
+	Client *c;
+
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if (n == 0)
+		return;
+
+	if (n > m->nmaster)
+		mw = m->nmaster ? m->ww * m->mfact : 0;
+	else
+		mw = m->ww - m->gappx;
+	for (i = 0, my = ty = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+			if (i < m->nmaster) {
+			h = (m->wh - my) / (MIN(n, m->nmaster) - i) - m->gappx;
+			resize(c, m->wx + m->gappx, m->wy + my, mw - (2*c->bw) - m->gappx, h - (2*c->bw), 0);
+			if (my + HEIGHT(c) + m->gappx < m->wh)
+				my += HEIGHT(c) + m->gappx;
+		} else {
+			h = (m->wh - ty) / (n - i) - m->gappx;
+			resize(c, m->wx + mw + m->gappx, m->wy + ty, m->ww - mw - (2*c->bw) - 2*m->gappx, h - (2*c->bw), 0);
+			if (ty + HEIGHT(c) + m->gappx < m->wh)
+				ty += HEIGHT(c) + m->gappx;
+		}
+}
+
+
 void setupepoll(void) {
   epoll_fd = epoll_create1(0);
   dpy_fd = ConnectionNumber(dpy);
@@ -2325,11 +2367,12 @@ void updatebarpos(Monitor *m) {
   m->wy = m->my;
   m->wh = m->mh;
   if (m->showbar) {
-    m->wh -= m->bh;
+    m->wh -= 2 * m->bh;  /* Reserve space for top and bottom bars */
     m->by = m->topbar ? m->wy : m->wy + m->wh;
-    m->wy = m->topbar ? m->wy + m->bh : m->wy;
-  } else
+    m->wy = m->topbar ? m->wy + m->bh : m->wy;  /* Top bar offset */
+  } else {
     m->by = -m->bh;
+  }
 }
 
 void updateclientlist(void) {
