@@ -1,5 +1,5 @@
 static const unsigned int snap     = 64;
-static const int gappx             = 5;
+static const int gappx             = 35;
 static const unsigned int bottom_gap = 50;
 static const int showbar           =  1;
 static const int topbar            =  1;
@@ -81,9 +81,6 @@ static const Key keys[] = {
 		{MODKEY, XK_b, spawn, {.v = term_extra_opacity}},
     {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}},
 		{MODKEY | ShiftMask, XK_r, spawn, {.v = autostartcmd}},
-	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
-	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
     {MODKEY, XK_m, spawn, {.v = lock_alt}},
     {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}},
@@ -103,12 +100,11 @@ static const Key keys[] = {
     {MODKEY | ControlMask, XK_Return, zoom, {0}},
 		
 		// gaps 
-/*    {MODKEY, XK_equal, incrogaps, {.i = +1}},
-    {MODKEY, XK_minus, incrogaps, {.i = -1}},
-   {MODKEY | ShiftMask, XK_equal, incrigaps, {.i = +1}},
-    {MODKEY | ShiftMask, XK_minus, incrigaps, {.i = -1}},	
-*/
-		// window resizing
+		{MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
+		{MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
+		{MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0.00}},
+	
+	// window resizing
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}}, 
     /*{MODKEY, XK_o, setmfact, {.f = 0.00}}, */

@@ -21,7 +21,6 @@ conky.config = {
 
 		-- 50 is the bottom gap width plus the padding of 5 px
     gap_y = 55,
-    own_window_transparent = true,
 		minimum_height = 5,
     minimum_width = 5,
     net_avg_samples = 2,
@@ -34,7 +33,6 @@ conky.config = {
     own_window = true,
 		own_window_type = 'override',
     own_window_class = 'Conky',
-    own_window_hints = 'undecorated,sticky,below,skip_taskbar,skip_pager',
     show_graph_range = false,
     show_graph_scale = false,
     stippled_borders = 0,
@@ -42,6 +40,9 @@ conky.config = {
     uppercase = false,
     use_spacer = 'none',
     use_xft = true,
+		own_window_transparent = true,
+		own_window_argb_visual = true,
+		own_window_argb_value = 145
 }
 
 -- Variables: https://conky.cc/variables
