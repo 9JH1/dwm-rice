@@ -401,7 +401,7 @@ struct NumTags {
 
 static pid_t *autostart_pids;
 static size_t autostart_len;
-static int altbar_toggle_val;
+int altbar_toggle_val = 0;
 
 /* execute command from autostart array */
 static void autostart_exec() {
