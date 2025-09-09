@@ -1,4 +1,4 @@
-static const unsigned int snap     = 32;
+static const unsigned int snap     = 16;
 static const int gappx             = 35;
 static const int showbar           =  1;
 static const int topbar            =  1;
