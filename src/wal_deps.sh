@@ -14,6 +14,6 @@ sh "$HOME/.cache/wal/colors-tty.sh" &
 
 walcord &>/dev/null &
 
-if [[ ! "$(pgrep 'qutebrowser')" = "" && -v "~/.config/qutebrowser/config.py" ]]; then
+if [[ ! "$(pgrep 'qutebrowser')" = "" ]]; then
 	qutebrowser :config-source &
 fi

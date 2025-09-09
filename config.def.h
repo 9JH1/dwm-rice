@@ -1,6 +1,5 @@
-static const unsigned int snap     = 64;
+static const unsigned int snap     = 32;
 static const int gappx             = 35;
-static const unsigned int bottom_gap = 50;
 static const int showbar           =  1;
 static const int topbar            =  1;
 static const int usealtbar         =  1;
