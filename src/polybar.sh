@@ -40,7 +40,7 @@ EOM
 
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
-modules-left = left_prefix powermenu powermenu_seperator xworkspaces xworkspaces_seperator polywins left_suffix
+modules-left = left_prefix powermenu powermenu_seperator xworkspaces xworkspaces_seperator xwindow left_suffix
 modules-right = right_prefix notify notify_seperator systray tray_seperator date right_suffix
 $POLYBAR_FONT_CONFIG
 
@@ -67,7 +67,6 @@ format-background = $color1
 format-foreground = $color7
 format-prefix = " "
 format-suffix = " "
-
 
 [module/notify_seperator]
 type=custom/text
@@ -276,7 +275,7 @@ label = "%{T4}%{T-}"
 format-background = $color2 
 format-foreground = $color1
 
-[module/xworkspaces]
+[module/xworkspaces_OLD]
 icon-0 = 1;󰲡
 icon-1 = 2;󰲣
 icon-2 = 3;󰲥
@@ -306,13 +305,22 @@ format-foreground = $module_foreground
 format-background = $color2 
 workspace-count = 10
 
+[module/xworkspaces]
+type = custom/script
+exec = $SCRIPT_DIR/workspace.sh
+tail = true
+format-foreground = $module_foreground
+format-background = $color2
+label = %output%
+format = <label>
+
 [module/xworkspaces_seperator]
 type=custom/text
 label = "%{T4}%{T-}"
 format-background = $color3
 format-foreground = $color2 
 
-[module/polywins]
+[module/xwindow]
 type = internal/xwindow
 label = "%{T2}%class%%{T-}"
 label-padding = 0
@@ -321,7 +329,7 @@ format-prefix = " "
 format = "<label>"
 format-foreground = $module_foreground
 format-background = $color3
-label-empty = "Welcome %{T2}$USER%{T-}"
+label-empty = "Desktop"
 label-underline = $module_foreground
 
 [module/left_suffix]
