@@ -2,7 +2,7 @@
 
 source ~/.cache/wal/colors.sh
 
-active_b="$color2"
+active_b="$color3"
 active_f="$background"
 active_u="$color7"
 inactive_b="$color2"
@@ -32,12 +32,12 @@ dwm-msg subscribe tag_change_event | jq -c --unbuffered 'select(.tag_change_even
 		for(( i=1; i<=9; i++ ));do 
 		bitwise=$((2**(i-1)))
 			if [[ "$new_selected" == "$bitwise" ]];then
-				out="%{-u}%{B$inactive_b}%{F$inactive_f}$out %{B$active_b}%{F$active_f}%{u$active_u}%{+u}${tag_titles[$((i-1))]}%{-u B$inactive_b F$inactive_f}";
+				out="%{-u}%{B$inactive_b}%{F$inactive_f}$out%{B$active_b}%{F$active_f}%{u$active_u}%{+u}${tag_titles[$((i-1))]}%{-u B$inactive_b F$inactive_f}";
 				final=$bitwise;
 			elif [[ "$new_selected" == "$stack_tag" ]];then 
 				out="$stack_title";
 				final="$stack_tag"
-			else out="$out ${tag_titles[$((i-1))]}"; fi
+			else out="$out${tag_titles[$((i-1))]}"; fi
 		done
 		echo "$out"
   fi
