@@ -237,6 +237,7 @@ static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h,
                           int interact);
 static void arrange(Monitor *m);
+static void togglealtbar(void);
 static void autostart_exec(void);
 static void togglefullscr(const Arg *arg);
 static void arrangemon(Monitor *m);
@@ -400,6 +401,7 @@ struct NumTags {
 
 static pid_t *autostart_pids;
 static size_t autostart_len;
+static int altbar_toggle_val;
 
 /* execute command from autostart array */
 static void autostart_exec() {
@@ -500,6 +502,18 @@ alttab(const Arg *arg) {
 	return;
 }
 
+void togglealtbar(){
+	if(altbar_toggle_val){
+		int size = sprintf(NULL,"killall %s",altbarclass);
+		char command[size];
+		sprintf(command,"killall %s",altbarclass);
+		system(command);
+		altbar_toggle_val = 0;
+	} else {
+		spawnbar();
+		altbar_toggle_val = 1;
+	}
+}
 
 void applyrules(Client *c) {
   const char *class, *instance;

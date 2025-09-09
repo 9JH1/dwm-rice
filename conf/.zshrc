@@ -47,7 +47,7 @@ set -g message-style                'fg=black  bg=default'
 
 set -g status-interval 5
 set -g status-right " #[fg=green]#[fg=black,bg=green] #[bold]#[bold]#{pane_current_command} #[fg=green,bg=default] "
-set -g status-left " #[fg=blue]#[fg=black,bg=blue] #[bold]#($ZDOTDIR/../src/cpu.sh)% #[fg=blue,bg=default]"
+set -g status-left " #[fg=blue]#[fg=black,bg=blue] #[bold]#(ps -p #{pane_pid} -o etime=)% #[fg=blue,bg=default]"
 setw -g window-status-format "#[fg=black]#[fg=yellow,bg=black]#I #[fg=white,bg=black,bold]#W #[fg=yellow]#F#[fg=black]#[fg=black,bg=default]"
 setw -g window-status-current-format "#[fg=red]#[fg=black,bg=red]#I #[bold]#W #F#[fg=red,bg=default]"
 EOF
