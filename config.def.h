@@ -8,7 +8,7 @@ static const int resizehints       =  0;
 static const float mfact             = 0.5;
 static const int lockfullscreen    =  0;
 static const unsigned int borderpx =  3; 
-static const char *altbarclass     = "polybar"; 
+static const char *altbarclass     = "Polybar"; 
 static const char *alttrayname     = "snixembed"; 
 static const char *altbarcmd       = "$HOME/.dwm/src/polybar.sh no-run"; 
 static const char *fonts[]         = {"monospace:size=20"};
@@ -112,7 +112,7 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},
 
 		// layout + ui
-		{MODKEY, XK_v, togglealtbar, {0}},
+		{MODKEY, XK_v, togglebar, {0}},
     {MODKEY, XK_0, view, {.ui = ~0}},
     {MODKEY, XK_space, setlayout, {0}},
     {MODKEY, XK_Tab, view, {0}}, 
