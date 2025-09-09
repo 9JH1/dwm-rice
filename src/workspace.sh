@@ -2,9 +2,9 @@
 
 source ~/.cache/wal/colors.sh
 
-active_b="$color3"
+active_b="$color2"
 active_f="$background"
-active_u="$color7"
+active_u="$background"
 inactive_b="$color2"
 inactive_f="$background"
 
@@ -35,7 +35,7 @@ dwm-msg subscribe tag_change_event | jq -c --unbuffered 'select(.tag_change_even
             # Normal tags: Loop 1-9, add only if occupied, highlight if selected
             for (( i=1; i<=9; i++ )); do
                 bitwise=$((1 << (i-1)))
-                if (( new_occupied & bitwise )); then
+                if (( new_occupied & bitwise || new_selected & bitwise )); then
                     if (( new_selected & bitwise )); then
                         # Active/selected occupied tag
                         out+="%{-u}%{B$active_b}%{F$active_f}%{u$active_u}%{+u}${tag_titles[$((i-1))]}%{-u}%{B-}%{F-}"
