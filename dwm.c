@@ -237,7 +237,7 @@ static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h,
                           int interact);
 static void arrange(Monitor *m);
-static void togglealtbar(void);
+static void togglealtbar(const Arg *arg);
 static void autostart_exec(void);
 static void togglefullscr(const Arg *arg);
 static void arrangemon(Monitor *m);
@@ -502,12 +502,13 @@ alttab(const Arg *arg) {
 	return;
 }
 
-void togglealtbar(){
+void togglealtbar(const Arg *arg){
 	if(altbar_toggle_val){
-		int size = sprintf(NULL,"killall %s",altbarclass);
-		char command[size];
-		sprintf(command,"killall %s",altbarclass);
+		int size = snprintf(NULL,0,"killall %s",altbarclass);
+		char *command = (char)malloc(size+1);
+		snprintf(command,size+1,"killall %s",altbarclass);
 		system(command);
+		free(command);
 		altbar_toggle_val = 0;
 	} else {
 		spawnbar();
