@@ -505,7 +505,7 @@ alttab(const Arg *arg) {
 
 void togglealtbar(const Arg *arg){
 	if(altbar_toggle_val){
-		int size = snprintf(NULL,0,"killall %s",tolower(altbarclass));
+		int size = snprintf(NULL,0,"killall %s");
 		char *command = (char *)malloc(size+1);
 		snprintf(command,size+1,"killall %s",altbarclass);
 		system(command);
