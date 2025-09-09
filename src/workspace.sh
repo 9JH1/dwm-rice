@@ -7,14 +7,14 @@ active_f="$background"
 active_u="$background"
 inactive_b="$color2"
 inactive_f="$background"
-alert_u = "#ff0000"
+alert_u="#ff0000"
 
 stack_tag=511
 stack_title=" "
 tag_titles=("󰬺" "󰬻" "󰬼" "󰬽" "󰬾" "󰬿" "󰭀" "󰭁" "󰭂")
 
 # switch workspaces quikly 
-(dwm-msg run_command view 0 &>/dev/null && dwm-msg run_command view 0 &>/dev/null) &
+(sleep 0.1 && dwm-msg run_command view 16 &>/dev/null && dwm-msg run_command view 1 &>/dev/null) &
 
 # show workspaces
 dwm-msg subscribe tag_change_event | jq -c --unbuffered 'select(.tag_change_event) | .tag_change_event' | while IFS= read -r event; do
