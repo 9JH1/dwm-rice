@@ -1399,7 +1399,7 @@ void managealtbar(Window win, XWindowAttributes *wa) {
 
   m->barwin = win;
   m->by = wa->y;
-  bh = m->bh = wa->height;
+  bh = m->bh = (wa->height * 2);
   updatebarpos(m);
   arrange(m);
   XSelectInput(dpy, win,
@@ -2204,6 +2204,7 @@ void togglebar(const Arg *arg) {
                       selmon->bh);
   arrange(selmon);
 }
+
 void
 winview(const Arg* arg){
 	Window win, win_r, win_p, *win_c;
@@ -2367,9 +2368,9 @@ void updatebarpos(Monitor *m) {
   m->wy = m->my;
   m->wh = m->mh;
   if (m->showbar) {
-    m->wh -= 2 * m->bh;  /* Reserve space for top and bottom bars */
+    m->wh -= m->bh; 
     m->by = m->topbar ? m->wy : m->wy + m->wh;
-    m->wy = m->topbar ? m->wy + m->bh : m->wy;  /* Top bar offset */
+    m->wy = m->topbar ? m->wy + m->bh : m->wy;  
   } else {
     m->by = -m->bh;
   }

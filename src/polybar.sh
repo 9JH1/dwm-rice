@@ -322,7 +322,7 @@ format-foreground = $color2
 
 [module/xwindow]
 type = internal/xwindow
-label = "%{T2}%class%%{T-}"
+label = "%{T2}%title%%{T-}"
 label-padding = 0
 label-maxlen = 20 
 format-prefix = " "
