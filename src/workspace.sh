@@ -14,7 +14,7 @@ stack_title=" "
 tag_titles=("󰬺" "󰬻" "󰬼" "󰬽" "󰬾" "󰬿" "󰭀" "󰭁" "󰭂")
 
 # switch workspaces quikly 
-(sleep 0.1 && dwm-msg run_command view 16 &>/dev/null && dwm-msg run_command view 1 &>/dev/null) &
+(sleep 0.1 && dwm-msg run_command view 0 &>/dev/null && dwm-msg run_command view 0 &>/dev/null) &
 
 # show workspaces
 dwm-msg subscribe tag_change_event | jq -c --unbuffered 'select(.tag_change_event) | .tag_change_event' | while IFS= read -r event; do
