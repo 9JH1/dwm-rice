@@ -47,9 +47,9 @@ setw -g window-status-bell-style    'fg=black  bg=default'
 set -g message-style                'fg=black  bg=default'
 
 set -g status-interval 5
-set -g status-right "#[fg=black,bg=green] #[bold]#[bold]#{pane_current_command} "
-setw -g window-status-format "#[fg=yellow,bg=black]#I #[fg=white,bg=black,bold]#W #[fg=yellow]#F#[fg=black] "
-setw -g window-status-current-format "#[fg=black,bg=red]#I #[bold]#W #F "
+set -g status-left "#[fg=black,bg=green]  #[bold]#[bold]#{pane_current_command} "
+setw -g window-status-format "#[fg=yellow,bg=black] #I #[fg=white,bg=black,bold]#W #[fg=yellow]#F "
+setw -g window-status-current-format "#[fg=black,bg=red] #I #[bold]#W #F "
 EOF
 
 TMUX_PATH="/tmp/tmux.conf"

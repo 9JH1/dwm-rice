@@ -85,7 +85,7 @@ fi
 echo "Running Deps"
 echo "Done"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-$SCRIPT_DIR/wal_deps.sh
+$SCRIPT_DIR/wal_deps.sh &>/dev/null
 
 # echo fix picom
 if [[ $(pgrep "picom") = "" ]];then 
