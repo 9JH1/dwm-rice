@@ -13,7 +13,7 @@ if [[ "$1" = "--custom" ]];then
 	if is_video "$2";then
 		echo "detected video"
 		# VIDEO WALLPAPER SECION (https://github.com/9jh1/C -> projects/motionlayer/src)
-		motionlayer --path "$2" --frame-out "$HOME/.frame.jpg" & 
+		motionlayer --path "$2" --frame-out "$HOME/.frame.jpg" --zoom 0 & 
 		sleep 1
 		first_wall="$HOME/.frame.jpg"
 		echo "$first_wall" > $HOME/.wallpaper
@@ -91,5 +91,5 @@ $SCRIPT_DIR/wal_deps.sh &>/dev/null
 if [[ $(pgrep "picom") = "" ]];then 
 	echo "Picom exited for some reason"
 	echo "Starting Picom"
-	picom --config "$SCRIPT_DIR/../conf/picom.conf" & 
+	picom --config "$SCRIPT_DIR/../conf/picom.conf" &
 fi 

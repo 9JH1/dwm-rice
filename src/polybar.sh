@@ -1,3 +1,12 @@
+if [ "$1" = "--toggle" ];then 
+	if [ -n "$(pgrep 'polybar')" ];then 
+		echo "polybar is running. killing.."
+		killall polybar 
+		exit
+	fi 
+	echo "polybar not running. starting.." 
+fi
+
 source ~/.cache/wal/colors.sh
 opacity="45"
 background=$color0 
@@ -14,11 +23,8 @@ level0=$color0
 level1=$color0 
 level2=$color7 
 level3=$alert 
-
-dwm_border_size=3
-dwm_bottom_gap=50
-polybar_border_size=4
-polybar_height=$((dwm_bottom_gap-(dwm_border_size*2)))
+polybar_height=40;
+polybar_border_size=3;
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 read -r -d '' POLYBAR_FONT_CONFIG << EOM
@@ -41,13 +47,13 @@ EOM
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
 modules-left = left_prefix powermenu powermenu_seperator xworkspaces xworkspaces_seperator xwindow left_suffix
-modules-right = right_prefix notify notify_seperator systray tray_seperator date right_suffix
+modules-right = right_prefix network network_seperator systray tray_seperator date right_suffix
 $POLYBAR_FONT_CONFIG
 
 [bar/bar_dock]
 bottom =  true 
-modules-left = right_prefix playerctl_ipc playerctl playerctl_next playerctl_seperator audio dock_right_suffix
-modules-right = dock_prefix network network_seperator ram ram_seperator cpu dock_suffix 
+modules-left = right_prefix playerctl_ipc playerctl playerctl_next playerctl_seperator audio audio_seperator load dock_right_suffix
+modules-right = dock_prefix notify notify_seperator ram ram_seperator cpu dock_suffix 
 override-redirect = true 
 $POLYBAR_FONT_CONFIG
 
@@ -68,7 +74,7 @@ format-foreground = $color7
 format-prefix = " "
 format-suffix = " "
 
-[module/notify_seperator]
+[module/network_seperator]
 type=custom/text
 label = "%{T4}%{T-}"
 format = <label>
@@ -144,7 +150,7 @@ type=custom/text
 label = "%{T3}󰒭%{T-}"
 click-left = playerctl next
 format = "<label>"
-format-foreground = $module_foreground
+format-foreground = $color7
 format-background = $color1
 format-prefix = " "
 format-suffix = " "
@@ -156,7 +162,7 @@ initial = 1
 click-left = playerctl play-pause && polybar-msg action playerctl_ipc hook 0 > /dev/null
 click-middle = playerctl previous
 format ="%{T3}<output>%{T-}"
-format-foreground = $module_foreground
+format-foreground = $color7
 format-background = $color1
 
 [module/playerctl]
@@ -199,18 +205,28 @@ format-muted-suffix = " "
 type=custom/text
 label = "%{T4}%{T-}"
 format = <label>
-format-foreground=$color2
-format-background=$color1
+format-foreground=$color3
+format-background=$color2
+
+[module/load]
+type = custom/script 
+exec = "$SCRIPT_DIR/load.sh"
+interval = 5
+label = %output%
+format-prefix = " "
+format = " <label>"
+format-foreground = $module_foreground 
+format-background = $color3
 
 [module/network]
 type = internal/network
 interface = enp5s0
 format-connected-background = $color1 
 format-connected-foreground = $color7 
-label-connected = "%{T3} %{T-}%upspeed% %{T3} %{T-}%downspeed% "
+label-connected = "%{T3}󰶣 %{T-}%upspeed% %{T3}󰶡 %{T-}%downspeed% "
 interval = 5
 
-[module/network_seperator]
+[module/notify_seperator]
 type=custom/text
 label = "%{T4}%{T-}"
 format = <label>
@@ -252,7 +268,7 @@ format-foreground = $color3
 type=custom/text
 label = "%{T4}%{T-}"
 format-background=$background_transparent
-format-foreground = $color2
+format-foreground = $color3
 
 [module/left_prefix]
 type = custom/text 
@@ -274,36 +290,6 @@ type=custom/text
 label = "%{T4}%{T-}"
 format-background = $color2 
 format-foreground = $color1
-
-[module/xworkspaces_OLD]
-icon-0 = 1;󰲡
-icon-1 = 2;󰲣
-icon-2 = 3;󰲥
-icon-3 = 4;󰲧
-icon-4 = 5;󰲩
-icon-5 = 6;󰲫
-icon-6 = 7;󰲭
-icon-7 = 8;󰲯
-icon-8 = 9;󰲱
-
-type = internal/xworkspaces
-label-active = %icon%
-label-urgent = 
-label-visible = 
-label-empty =  
-label-occupied = 
-
-label-active-padding = 1
-label-active-underline = $color0
-label-occupied-padding = 1
-label-urgent-underline = $alert
-label-urgent-padding = 1
-label-empty-padding = 1
-format-prefix = " "
-format-suffix = " "
-format-foreground = $module_foreground
-format-background = $color2 
-workspace-count = 10
 
 [module/xworkspaces]
 type = custom/script

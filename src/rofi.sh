@@ -3,7 +3,6 @@ source ~/.cache/wal/colors.sh
 opacity_hex="30"
 background_opacity=$(echo $background)$opacity_hex 
 color2=$(echo $color2)$opacity_hex 
-color3_accent=$(echo $color3)$opacity_hex 
 color1=$(echo $color1)$opacity_hex
 
 read -r -d '' ROFI_CONFIG << EOM
@@ -13,7 +12,7 @@ read -r -d '' ROFI_CONFIG << EOM
 	bg1: $color2;
 	fg0: $color8;
 	fg1: $color8;
-	accent-color: $color3_accent;
+	accent-color: $color3;
 	urgent-color: $color1;
 	background-color: transparent;
 	text-color: @fg0;
@@ -25,7 +24,7 @@ read -r -d '' ROFI_CONFIG << EOM
 
 window {
     location:   center;
-    width:      580;
+    width:      680;
     background-color: @bg1;
 }
 

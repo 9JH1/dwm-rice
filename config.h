@@ -1,5 +1,5 @@
-static const unsigned int snap     = 16;
-static const int gappx             = 35;
+static const unsigned int snap     = 0;
+static const int gappx             = 32;
 static const int showbar           =  1;
 static const int topbar            =  1;
 static const int usealtbar         =  1;
@@ -13,6 +13,7 @@ static const char *alttrayname     = "snixembed";
 static const char *altbarcmd       = "$HOME/.dwm/src/polybar.sh no-run"; 
 static const char *fonts[]         = {"monospace:size=20"};
 static const char *dmenucmd[]      = {"/home/_3hy/.dwm/src/rofi.sh", NULL};
+static const char *togglebaralt[]    = {"/home/_3hy/.dwm/src/polybar.sh","--toggle",NULL};
 static const char *termcmd[]       = {"/home/_3hy/.dwm/src/alacritty.sh", NULL};
 static const char *termcmdalt[]    = {"/home/_3hy/.dwm/src/alacritty.sh", "-isolate", NULL};
 static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh","--exclude-hidden", NULL};
@@ -48,17 +49,6 @@ static const char *autostartcmd[] = {autostart[0], NULL};
 static const Layout layouts[] = {
     {"[]=", tile},
     {"[M]", monocle},
-    /*{"[@]", spiral},
-    {"[\\]", dwindle},
-    {"H[]", deck},
-    {"TTT", bstack},
-    {"===", bstackhoriz},
-    {"HHH", grid},
-    {"###", nrowgrid},
-    {"---", horizgrid},
-    {":::", gaplessgrid},
-    {"|M|", centeredmaster},
-    {">M>", centeredfloatingmaster},*/
     {"><>", NULL}, 
     {NULL, NULL},
 };
@@ -91,7 +81,7 @@ static const Key keys[] = {
     {MODKEY, XK_i, incnmaster, {.i = +1}}, 
     {MODKEY, XK_g, incnmaster, {.i = 0}},
     {MODKEY | ShiftMask, XK_i, incnmaster, {.i = -1}},
-   	{MODKEY, XK_o, winview, {0}}, 
+   	/*{MODKEY, XK_o, winview, {0}}, */
 		{Mod1Mask,                     XK_Tab,    alttab,         {0} },
     {MODKEY, XK_q, killclient, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
@@ -103,16 +93,16 @@ static const Key keys[] = {
 		{MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
 		{MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0.00}},
 	
-	// window resizing
+		// window resizing
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}}, 
-    /*{MODKEY, XK_o, setmfact, {.f = 0.00}}, */
+    {MODKEY, XK_o, setmfact, {.f = 0.00}}, 
     {MODKEY | ShiftMask, XK_h, setcfact, {.f = +0.25}},
     {MODKEY | ShiftMask, XK_l, setcfact, {.f = -0.25}},
     {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},
 
 		// layout + ui
-		{MODKEY, XK_v, togglebar, {0}},
+		{MODKEY, XK_v, spawn, {.v = togglebaralt }},
     {MODKEY, XK_0, view, {.ui = ~0}},
     {MODKEY, XK_space, setlayout, {0}},
     {MODKEY, XK_Tab, view, {0}}, 

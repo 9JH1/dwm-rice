@@ -1,2 +1,15 @@
 combine all scripts into single source file  
 -> include all variables used in one single file
+
+remove tmp files at ~ (zshrc wal) 
+
+rework wallpaper selection
+catagorys -> 
+1. non hidden
+2. universal
+3. hidden 
+4. walltaker 
+5. video only 
+6. image only 
+
+have options to either randomize or select
