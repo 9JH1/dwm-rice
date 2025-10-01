@@ -19,6 +19,7 @@ static const char *termcmdalt[]    = {"/home/_3hy/.dwm/src/alacritty.sh", "-isol
 static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh","--exclude-hidden", NULL};
 static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh", "--include-hidden", NULL};
 static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
+static const char *boomer[] = {"boomer",NULL};
 static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
 static const char *term_extra_border[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh", "-padding", NULL};
 static const char *term_extra_opacity[] = {"/home/_3hy/.dwm/src/alacritty_extra.sh", "-opacity", NULL};
@@ -74,8 +75,7 @@ static const Key keys[] = {
     {MODKEY | ControlMask, XK_x, spawn, {.v = lock_alt_alt}},
     {MODKEY | ShiftMask, XK_q, spawn, {.v = forcequit}},
     {MODKEY | ShiftMask, XK_b, spawn, {.v = term_extra_border}},
-    { MODKEY,                       XK_z,                        zoom,              {0} },
-
+		{ MODKEY, XK_z, spawn, {.v = boomer}},
     {MODKEY, XK_j, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
     {MODKEY, XK_i, incnmaster, {.i = +1}}, 

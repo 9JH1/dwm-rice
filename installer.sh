@@ -1,7 +1,7 @@
 function install_dwm_rice {
 
 	echo "installing non aur packages"
-	sudo pacman -Sy --needed git unzip git polybar rofi pipewire pipewire-pulse yajl dunst conky playerctl tmux zsh zoxide fastfetch lsd maim xclip xorg-xrandr xorg-xset xwallpaper feh alacritty dunst --noconfirm 
+	sudo pacman -Sy --needed jq git unzip git polybar rofi pipewire pipewire-pulse yajl dunst conky playerctl tmux zsh zoxide fastfetch lsd maim xclip xorg-xrandr xorg-xset xwallpaper feh alacritty dunst --noconfirm 
 
 	if ! command -v yay &>/dev/null; then
 		echo "installing yay"
