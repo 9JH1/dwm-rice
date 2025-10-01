@@ -8,3 +8,4 @@ This Config has full pywal support and animations provided by the official picom
 ![img](img/img1.png)
 ![img](img/img2.png)
 ![img](img/img3.png)
+![img](img/img4,png)
