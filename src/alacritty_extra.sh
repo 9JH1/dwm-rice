@@ -42,8 +42,10 @@ else
     echo "[window]" >> "$CONFIG"
     if [[ $opacity == "0.5" ]]; then
         echo "opacity=1" >> "$CONFIG"
+				killall picom
     else
         echo "opacity=0.5" >> "$CONFIG"
+				picom --config ~/.dwm/conf/picom.conf
     fi
 fi
 
