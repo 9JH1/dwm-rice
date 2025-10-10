@@ -40,11 +40,11 @@ else
 	fi
 	if [[ -n "$1" ]]; then
   	if [[ "$1" = "--exclude-hidden" ]]; then
-  		wallpaper=$(find -L "$WALLPAPER_DIR" -type f -not -path "*/.*/*" | grep -v ".git" | shuf -n 1)
+  		wallpaper=$(find -L "$WALLPAPER_DIR" -type f -not -path "*/.*/**" | grep -v ".git" | shuf -n 1)
 			$HOME/.dwm/src/wal.sh --custom "$wallpaper";
 			exit 
   	else
-			wallpaper=$(find -L "$WALLPAPER_DIR" -type f -path "*/.*/*" | grep -v ".git" | shuf -n 1)
+			wallpaper=$(find -L "$WALLPAPER_DIR" -type f -path "*/.*/**" | grep -v ".git" | shuf -n 1)
 			$HOME/.dwm/src/wal.sh --custom "$wallpaper"
 			exit
 		fi
@@ -60,8 +60,8 @@ touch $HOME/.wallpaper
 echo "$first_wall" > $HOME/.wallpaper
 log_file=$(mktemp --suffix=.txt)
 wal -i "$first_wall" -e -t -n -a 92 > $log_file   
-cat $log_file
-if [ "$?" != "0" ];then
+if [ "$?" -ne "0" ];then
+	cat $log_file
 	notify-send "Wal Error Occured"
 	xdg-open "$log_file"
 	killall motionlayer

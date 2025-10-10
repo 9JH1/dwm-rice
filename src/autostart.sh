@@ -2,6 +2,7 @@ killall nm-applet &
 killall blueman-applet &
 killall unclutter & 
 killall lxqt-policykit-agent &
+killall protonvpn-app &
 wait 
 
 xset r rate 150 50 &
@@ -10,6 +11,7 @@ xrandr --output DisplayPort-0 --primary --mode 1920x1080 --pos 0x0 --rotate norm
 $SCRIPT_DIR/wal.sh  && notify-send "Reloading autostart"
 nm-applet & 
 blueman-applet & 
+protonvpn-app &
 unclutter --timeout 0.1 & 
 lxqt-policykit-agent & 
 plank &

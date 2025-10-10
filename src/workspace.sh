@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# Load pywal colors
 source ~/.cache/wal/colors.sh
 
+# Color and formatting variables
 active_b="$color2"
 active_f="$background"
 active_u="$background"
@@ -9,34 +11,34 @@ inactive_b="$color2"
 inactive_f="$background"
 alert_u="#ff0000"
 
+# Tag definitions
 stack_tag=511
 stack_title=" "
 tag_titles=("󰬺" "󰬻" "󰬼" "󰬽" "󰬾" "󰬿" "󰭀" "󰭁" "󰭂")
 
-echo "$stack_title"
+# Function to draw workspaces for a given monitor
+function draw_workspaces {
+  local event=$1
+  local monitor=$(echo "$event" | jq -r '.monitor_number // 0' 2>/dev/null)
+  local new_selected=$(echo "$event" | jq -r '.new_state.selected // 0' 2>/dev/null)
+  local new_occupied=$(echo "$event" | jq -r '.new_state.occupied // 0' 2>/dev/null)
+  local new_urgent=$(echo "$event" | jq -r '.new_state.urgent // 0' 2>/dev/null)
 
-# show workspaces
-dwm-msg subscribe tag_change_event | jq -c --unbuffered 'select(.tag_change_event) | .tag_change_event' | while IFS= read -r event; do
-	[[ -z "$event" ]] && continue
-
-	monitor=$(echo "$event" | jq -r '.monitor_number' 2>/dev/null)
-	new_selected=$(echo "$event" | jq -r '.new_state.selected // 0' 2>/dev/null)
-  new_occupied=$(echo "$event" | jq -r '.new_state.occupied // 0' 2>/dev/null)
-  new_urgent=$(echo "$event" | jq -r '.new_state.urgent // 0' 2>/dev/null)
+  # Only process if monitor is valid
   if [[ -n "$monitor" && "$monitor" != "null" ]]; then
-  	out=""
-  	if (( new_selected == stack_tag )); then
-    	# Special case: Scratchpad selected, show only it (highlighted)
+    local out=""
+    if (( new_selected == stack_tag )); then
+      # Special case: Scratchpad selected, show only it (highlighted)
       out="%{-u}%{B$active_b}%{F$active_f}%{u$active_u}%{+u}$stack_title%{-u}%{B-}%{F-}"
     else
       # Normal tags: Loop 1-9, add only if occupied, highlight if selected
       for (( i=1; i<=9; i++ )); do
-        bitwise=$((1 << (i-1)))
+        local bitwise=$((1 << (i-1)))
         if (( new_occupied & bitwise | new_selected & bitwise )); then
-        	if (( new_selected & bitwise )); then
+          if (( new_selected & bitwise )); then
             # Active/selected occupied tag
             out+="%{-u}%{B$active_b}%{F$active_f}%{u$active_u}%{+u}${tag_titles[$((i-1))]}%{-u}%{B-}%{F-}"
-					else
+          else
             # Inactive occupied tag
             out+="%{-u}%{B$inactive_b}%{F$inactive_f}${tag_titles[$((i-1))]}%{-u}%{B-}%{F-}"
           fi
@@ -45,6 +47,44 @@ dwm-msg subscribe tag_change_event | jq -c --unbuffered 'select(.tag_change_even
     fi
     # If no output (e.g., no occupied tags and not scratchpad), echo empty or default
     [[ -z "$out" ]] && out=" "
-  	echo "$out"
+    echo "$out"
   fi
+}
+
+# Function to get current state for a monitor
+function get_monitor_state {
+  local monitor=$1
+  # Query dwm for the current state of the specified monitor
+  local state=$(dwm-msg get_monitors | jq -r ".[] | select(.num == $monitor) | .tag_state")
+  if [[ -n "$state" && "$state" != "null" ]]; then
+    echo "$state"
+  else
+    echo "{}"
+  fi
+}
+
+# Main event loop
+dwm-msg subscribe tag_change_event monitor_added_event monitor_removed_event | jq -c --unbuffered \
+  'select(.tag_change_event or .monitor_added_event or .monitor_removed_event) | 
+   if .tag_change_event then {type: "tag_change", data: .tag_change_event}
+   elif .monitor_added_event then {type: "monitor_added", data: .monitor_added_event}
+   else {type: "monitor_removed", data: .monitor_removed_event} end' | \
+while IFS= read -r event; do
+  event_type=$(echo "$event" | jq -r '.type')
+  case "$event_type" in
+    "tag_change")
+      # Handle tag change event
+      draw_workspaces "$(echo "$event" | jq -r '.data')"
+      ;;
+    "monitor_added" | "monitor_removed")
+      # Handle monitor change: Get current state for each connected monitor
+      monitors=$(dwm-msg get_monitors | jq -r '.[].num')
+      for monitor in $monitors; do
+        state=$(get_monitor_state "$monitor")
+        if [[ -n "$state" ]]; then
+          draw_workspaces "$state"
+        fi
+      done
+      ;;
+  esac
 done

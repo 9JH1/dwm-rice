@@ -17,6 +17,14 @@ dynamic_title=true
 columns = 60 
 lines = 15
 
+[cursor.style]
+shape = "Underline"
+blinking = "On"
+
+[cursor]
+blink_interval = 400 
+
+
 [font]
 size = 15
 
