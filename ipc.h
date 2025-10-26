@@ -11,6 +11,8 @@
 #define IPC_MAGIC "DWM-IPC"
 #define IPC_MAGIC_ARR { 'D', 'W', 'M', '-', 'I', 'P', 'C'}
 #define IPC_MAGIC_LEN 7 // Not including null char
+#define DWM_IPC_CMD_GETCFACT          (DWM_IPC_CMD_LAST + 0)
+
 
 #define IPCCOMMAND(FUNC, ARGC, TYPES)                                          \
   { #FUNC, {FUNC }, ARGC, (ArgType[ARGC])TYPES }

@@ -1,53 +1,68 @@
 #!/bin/bash
 
 CONFIG="/tmp/alacritty-extra.toml"
+touch "$CONFIG"
+
+padding_amount=20
+opacity_level=100
+padding_set=false
+opacity=false
+picom=false 
 
 # Read current values
-padding_set=false
-opacity="1"
+if grep -q "[window.padding]" "$CONFIG"; then
+  padding_set=true
+fi
 
-if grep -q "y=40" "$CONFIG"; then
-    padding_set=true
+if grep -q "#opacity" "$CONFIG"; then
+  picom=true 
 fi
-if grep -q "opacity=0.5" "$CONFIG"; then
-    opacity="0.5"
-fi
+
+if grep -q "[window]" "$CONFIG"; then 
+	opacity=true 
+fi 
+
+function write(){
+	if $padding_set; then
+  	echo "[window.padding]" > "$CONFIG"
+    echo "y=$padding_amount" >> "$CONFIG"
+    echo "x=$padding_amount" >> "$CONFIG"
+	else 
+		echo "" > "$CONFIG"
+	fi
+
+	if $opacity; then 
+		echo "[window]" >> "$CONFIG"
+		echo "opacity = $opacity_level" >> "$CONFIG" 
+	fi
+
+	if $picom; then 
+		echo "#opacity" >> "$CONFIG"
+	fi
+}
 
 if [[ $1 == "-padding" ]]; then
-    echo "changing padding"
-    # Write config with preserved opacity
-    echo "[window]" > "$CONFIG"
-    echo "opacity=$opacity" >> "$CONFIG"
+  echo "changing padding"
+	if $padding_set;then 
+		padding_set=false
+	else 
+		padding_set=true
+	fi
+	write 
 
-    echo "[window.padding]" >> "$CONFIG"
-    if $padding_set; then
-        echo "y=0" >> "$CONFIG"
-        echo "x=0" >> "$CONFIG"
-    else
-        echo "y=40" >> "$CONFIG"
-        echo "x=40" >> "$CONFIG"
-    fi
-else
-    echo "setting opacity"
-    # Write config with preserved padding
-    echo "[window.padding]" > "$CONFIG"
-    if $padding_set; then
-        echo "y=40" >> "$CONFIG"
-        echo "x=40" >> "$CONFIG"
-    else
-        echo "y=0" >> "$CONFIG"
-        echo "x=0" >> "$CONFIG"
-    fi
+elif [ "$1" == "-selector" ];then 
+	opacity_level=$(echo -e "0.0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9\n1.0" | fzf --prompt="Select opacity: " --height=10)
+	write 
 
-    echo "[window]" >> "$CONFIG"
-    if [[ $opacity == "0.5" ]]; then
-        echo "opacity=1" >> "$CONFIG"
-				killall picom
-    else
-        echo "opacity=0.5" >> "$CONFIG"
-				picom --config ~/.dwm/conf/picom.conf
-    fi
+else 
+  if $picom; then
+		killall picom
+		picom=false
+	else 
+		(picom --config ~/.dwm/conf/picom.conf &>/dev/null) &
+		picom=true
+  fi
+
+	write
 fi
-
-cat "$CONFIG"
 

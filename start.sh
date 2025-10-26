@@ -1,9 +1,6 @@
-set -xe
 cat config.def.h > config.h 
 sudo make clean install 
-rm -f dwm dwm-msg
-cd ~ 
-startx
-cd -
+rm -f dwm dwm-msg 
 
-(git add . && git commit -m "$(date)" && git push) &>/dev/null
+dwm_conf="/tmp/dwm_log_out"
+startx > "$dwm_conf"

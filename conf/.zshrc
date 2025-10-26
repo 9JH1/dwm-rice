@@ -34,6 +34,18 @@ set -g status-left ''
 set -g status-left-length 15
 set -g status-right ''
 set -g status-right-length 50
+set -g default-command "${SHELL}"
+
+unbind-key -n C-Left
+unbind-key -n C-Right  
+unbind-key -n C-Up
+unbind-key -n C-Down
+
+bind-key h select-pane -L # move left
+bind-key j select-pane -D # move down
+bind-key k select-pane -U # move up
+bind-key l select-pane -R # move right
+
 
 setw -g clock-mode-colour           'red'
 set -g status-right-style           'fg=black  bg=default'
@@ -91,7 +103,6 @@ if [ -n "$TMUX" ] && [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then
 fi
 
 z4h init
-
 # custom cd functions for better navigation
 export localcd=""
 function cd(){
@@ -138,12 +149,30 @@ function cdr() {
 	[[ $dirs ]] && cd -- "${dirs[RANDOM%${#dirs[@]}]}"
 }
 
+# turn off text-wrap
+
 # Define aliases.
 alias tree='tree -a -I .git'
+alias ls='ls --color=auto'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias pacman='pacman --color=auto'
+alias yay='yay --color=auto'
+alias sudo='sudo '
 
 function ls {
 	lsd $@ --color=auto -r -t -l
 }
 
-alias clear="clear && echo"
+function set_alacritty_opacity() {
+	$ZDOTDIR../src/alacritty_extra.sh -selector
+	zle reset-prompt
+}
+
+zle -N set_alacritty_opacity
+bindkey '^L' set_alacritty_opacity
+
 eval "$(zoxide init zsh)"

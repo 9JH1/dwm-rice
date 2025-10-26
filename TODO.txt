@@ -13,3 +13,5 @@ catagorys ->
 6. image only 
 
 have options to either randomize or select
+
+get ipc of the nmaster value
