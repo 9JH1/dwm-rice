@@ -3,18 +3,11 @@
 # Load pywal colors
 source ~/.cache/wal/colors.sh
 
-# Color and formatting variables
-active_b="$color2"
-active_f="$background"
-active_u="$background"
-inactive_b="$color2"
-inactive_f="$background"
-alert_u="#ff0000"
-
 # Tag definitions
 stack_tag=511
 stack_title=" "
-tag_titles=("󰬺" "󰬻" "󰬼" "󰬽" "󰬾" "󰬿" "󰭀" "󰭁" "󰭂")
+tag_titles=("1" "2" "3" "4" "5" "6" "7" "8" "9")
+padding=5 # padding in px
 
 # Function to draw workspaces for a given monitor
 function draw_workspaces {
@@ -29,7 +22,7 @@ function draw_workspaces {
     local out=""
     if (( new_selected == stack_tag )); then
       # Special case: Scratchpad selected, show only it (highlighted)
-      out="%{-u}%{B$active_b}%{F$active_f}%{u$active_u}%{+u}$stack_title%{-u}%{B-}%{F-}"
+      out="$stack_title"
     else
       # Normal tags: Loop 1-9, add only if occupied, highlight if selected
       for (( i=1; i<=9; i++ )); do
@@ -37,11 +30,12 @@ function draw_workspaces {
         if (( new_occupied & bitwise | new_selected & bitwise )); then
           if (( new_selected & bitwise )); then
             # Active/selected occupied tag
-            out+="%{-u}%{B$active_b}%{F$active_f}%{u$active_u}%{+u}${tag_titles[$((i-1))]}%{-u}%{B-}%{F-}"
+            out+="%{B$color5}%{F$color0}%{O$padding}${tag_titles[$((i-1))]}%{O$padding}%{B- F-}"
           else
             # Inactive occupied tag
-            out+="%{-u}%{B$inactive_b}%{F$inactive_f}${tag_titles[$((i-1))]}%{-u}%{B-}%{F-}"
+            out+="%{O$padding}${tag_titles[$((i-1))]}%{O$padding}"
           fi
+
         fi
       done
     fi

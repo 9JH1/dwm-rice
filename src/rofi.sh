@@ -7,14 +7,17 @@ color1=$(echo $color1)$opacity_hex
 
 read -r -d '' ROFI_CONFIG << EOM
 * {
-	font: "Mononoki Nerd Font 14";
-	bg0: $background_opacity;
-	bg1: $color2;
-	fg0: $color8;
-	fg1: $color8;
+	bg0: #00000000;
+	bg1: $background_opacity;
+	fg0: $color7;
+	fg1: $background;
 	accent-color: $color3;
 	urgent-color: $color1;
-	background-color: transparent;
+	
+	font: "Victor Mono Nerd Font Bold Italic 17";	
+	//font: "Mononoki Nerd Font 20";
+	
+	background-color: @bg0;
 	text-color: @fg0;
 
 	margin: 0;
@@ -26,10 +29,12 @@ window {
     location:   center;
     width:      680;
     background-color: @bg1;
+		border: 3px;
+		border-color: $color5;
 }
 
 inputbar {
-    spacing:    8px;
+    spacing:    4px;
     padding:    8px;
 
     background-color:   @bg1;
@@ -48,13 +53,12 @@ textbox {
 listview {
     lines:      6;
     columns:    1;
-
     fixed-height:   false;
 }
 
 element {
     padding:    4px 8px;
-    spacing:    8px;
+    spacing:    4px;
 }
 
 element normal normal {
@@ -74,7 +78,7 @@ element alternate active {
 }
 
 element selected {
-    text-color: @bg0;
+    text-color: @fg1;
 }
 
 element selected normal, element selected active {
@@ -86,7 +90,7 @@ element selected urgent {
 }
 
 element-icon {
-    size:   1.5em;
+    size:   1em;
 }
 
 element-text {
@@ -95,4 +99,4 @@ element-text {
 EOM
 ROFI_PATH=$(mktemp --suffix=".rasi")
 echo "$ROFI_CONFIG" > "$ROFI_PATH"
-rofi -show drun -theme "$ROFI_PATH" -show-icons -display-drun ""  -dpi 110
+rofi -show drun -theme "$ROFI_PATH" -show-icons -display-drun ""  -dpi 100

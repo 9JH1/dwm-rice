@@ -97,7 +97,8 @@ static const Key keys[] = {
 
 
     {MODKEY | ShiftMask, XK_i, incnmaster, {.i = -1}},
-    /*{MODKEY, XK_o, winview, {0}}, */
+
+		/*{MODKEY, XK_o, winview, {0}}, */
     {Mod1Mask, XK_Tab, alttab, {0}},
     {MODKEY, XK_q, killclient, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
@@ -118,16 +119,16 @@ static const Key keys[] = {
 		{MODKEY, key_right, setmfact, {.f = +0.05}},
     
 		// tiled resize vertical 
-		{MODKEY | ShiftMask, key_left, setcfact, {.f = +0.25}},
-    {MODKEY | ShiftMask, key_right, setcfact, {.f = -0.25}},
+		{MODKEY, key_up, setcfact, {.f = +0.25}},
+    {MODKEY, key_down, setcfact, {.f = -0.25}},
     
 		// resets
 		{MODKEY, XK_o, setmfact, {.f = 0.00}},
     {MODKEY | ShiftMask, XK_o, setcfact, {.f = 0.00}},
    
 		// movement
-		{MODKEY, key_down, focusstack, {.i = +1}},
-    {MODKEY, key_up, focusstack, {.i = -1}},
+		{MODKEY | ShiftMask, key_down, focusstack, {.i = +1}},
+    {MODKEY | ShiftMask, key_up, focusstack, {.i = -1}},
 
 		{ MODKEY|ControlMask,			key_down,	moveresize,		{.v = (int []){ 0, -10, 0, 20 }}},
 		{ MODKEY|ControlMask,			key_up,		moveresize,		{.v = (int []){ 0, 10, 0, -20 }}},
