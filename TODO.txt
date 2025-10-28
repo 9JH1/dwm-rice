@@ -14,4 +14,6 @@ catagorys ->
 
 have options to either randomize or select
 
-get ipc of the nmaster value
+get ipc of the cfact and mfact values. preferably cfact. 
+
+fix alacritty_extra.sh bugs
