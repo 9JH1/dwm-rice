@@ -642,9 +642,9 @@ void loadxrdb() {
         XRDB_LOAD_COLOR("color0", normbgcolor);
         XRDB_LOAD_COLOR("color0", normfgcolor);
 
-        XRDB_LOAD_COLOR("color5", selbordercolor);
-        XRDB_LOAD_COLOR("color5", selbgcolor);
-        XRDB_LOAD_COLOR("color5", selfgcolor);
+        XRDB_LOAD_COLOR("color1", selbordercolor);
+        XRDB_LOAD_COLOR("color1", selbgcolor);
+        XRDB_LOAD_COLOR("color1", selfgcolor);
       }
     }
   }

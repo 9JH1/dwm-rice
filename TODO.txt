@@ -17,3 +17,5 @@ have options to either randomize or select
 get ipc of the cfact and mfact values. preferably cfact. 
 
 fix alacritty_extra.sh bugs
+
+add bold font to polybar and use it on all highlighted modules 

@@ -17,7 +17,7 @@ level2=$color3
 level3=$color6
 foreground_alt=$color0
 foreground=$color4
-accent=$color5
+accent=$color1
 
 #: accent module padding
 padding_num=10
@@ -83,7 +83,6 @@ type=internal/memory
 interval=5
 warn-percentage=95 
 label = %percentage_used%%
-format = "%{T3} %{T-}<label> <bar-used>"
 label-warn = !%free% left
 bar-used-indicator = 
 bar-used-width = 6
@@ -92,8 +91,9 @@ bar-used-foreground-1 = $level1
 bar-used-foreground-2 = $level2 
 bar-used-foreground-3 = $level3
 bar-used-fill = "%{T3}█%{T-}" 
-bar-used-empty = " " 
-bar-used-empty-foreground = $color1
+bar-used-empty = "%{T3}█%{T-}" 
+bar-used-empty-foreground = $accent
+format = "%{T3} %{T-}<label> <bar-used>"
 
 [module/cpu]
 type=internal/cpu
@@ -108,8 +108,9 @@ bar-load-foreground-1 = $level1
 bar-load-foreground-2 = $level2 
 bar-load-foreground-3 = $level3
 bar-load-fill = "%{T3}█%{T-}" 
-bar-load-empty = " " 
-bar-load-empty-foreground = $color2
+bar-load-empty = "%{T3}█%{T-}" 
+bar-load-empty-foreground = $accent
+
 format = "%{T3} %{T-}<label> <bar-load>"
 $POLYBAR_HIGHLIGHT_MODULE
 
