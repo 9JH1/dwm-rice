@@ -29,8 +29,8 @@
 /* macros */
 #define BUTTONMASK (ButtonPressMask | ButtonReleaseMask)
 #define CLEANMASK(mask)                                                        \
-  (mask & ~(numlockmask | LockMask) &                                          \
-   (ShiftMask | ControlMask | Mod1Mask | Mod2Mask | Mod3Mask | Mod4Mask |      \
+(mask & ~(numlockmask | LockMask) &                                          \
+(ShiftMask | ControlMask | Mod1Mask | Mod2Mask | Mod3Mask | Mod4Mask |      \
     Mod5Mask))
 #define INTERSECT(x, y, w, h, m)                                               \
   (MAX(0, MIN((x) + (w), (m)->mx + (m)->mw) - MAX((x), (m)->mx)) *             \
@@ -1483,7 +1483,6 @@ tagandview(const Arg *arg)
 
 void focustagmon(const Arg *arg){
 	if(selmon->sel && arg->i){
-		tagmon(arg);
 		focusmon(arg);
 	}
 }
