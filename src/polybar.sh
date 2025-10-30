@@ -23,7 +23,7 @@ accent=$color1
 padding_num=10
 padding="%{O$padding_num}"
 
-polybar_height=30;
+polybar_height=35;
 polybar_border_size=3;
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
