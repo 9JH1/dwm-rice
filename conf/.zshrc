@@ -38,21 +38,12 @@ bind-key k select-pane -U # move up
 bind-key l select-pane -R # move right
 
 
-setw -g clock-mode-colour           'red'
-set -g status-right-style           'fg=black  bg=default'
-setw -g window-status-current-style 'fg=black  bg=default'
-set -g pane-active-border-style     'fg=black  bg=default'
-setw -g window-status-style         'fg=black  bg=default'
-setw -g mode-style                  'fg=black  bg=default'
-set -g pane-border-style            'fg=black  bg=default'
-set -g status-style                 'fg=black  bg=default'
-setw -g window-status-bell-style    'fg=black  bg=default'
-set -g message-style                'fg=black  bg=default'
+set -g focus-events on
+set -g status-style bg=default
+set -g status-left-length 99
+set -g status-right-length 99
+set -g status-justify absolute-centre
 
-set -g status-interval 5
-set -g status-left "#[fg=black,bg=green]  #[bold]#[bold]#{pane_current_command} "
-setw -g window-status-format "#[fg=yellow,bg=black] #I #[fg=white,bg=black,bold]#W #[fg=yellow]#F "
-setw -g window-status-current-format "#[fg=black,bg=red] #I #[bold]#W #F "
 EOF
 
 TMUX_PATH="/tmp/tmux.conf"
@@ -83,7 +74,7 @@ function dwm_zsh_custom_startup_screen {
 	clear
 	stty -echo -icanon
 	echo -e '\033[?25l'
-	fastfetch --logo $(cat ~/.wallpaper) --config "$FASTFETCH_PATH" --logo-width 50
+	fastfetch --logo "$(cat ~/.wallpaper)" --config "$FASTFETCH_PATH" --logo-width 50
 	read > /dev/tty
 	echo -e '\033[?25h'
 	stty sane 

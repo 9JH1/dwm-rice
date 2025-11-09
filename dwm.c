@@ -73,6 +73,7 @@ enum {
   NetWMState,
   NetWMCheck,
   NetWMFullscreen,
+	NetWMWindowTypeDesktop,
   NetActiveWindow,
   NetWMWindowType,
   NetWMWindowTypeDock,
@@ -622,6 +623,7 @@ void attachstack(Client *c) {
   c->mon->stack = c;
 }
 
+// causes pause on second load
 void loadxrdb() {
   Display *display;
   char *resm;
@@ -1308,21 +1310,45 @@ void killclient(const Arg *arg) {
 
 void manage(Window w, XWindowAttributes *wa) {
   Client *c, *t = NULL;
-  Window trans = None;
+  Window trans = None; // ;3 mrrrrrp
   XWindowChanges wc;
+	Monitor *m = selmon;
 
   c = ecalloc(1, sizeof(Client));
   c->win = w;
 
-  if (getatomprop(c, netatom[NetWMWindowType]) ==
-      netatom[NetWMWindowTypeDock]) {
-    XMapWindow(dpy, c->win);
-    XLowerWindow(dpy, c->win);
-    free(c);
-    return;
-  }
+	if (getatomprop(c, netatom[NetWMWindowType]) == netatom[NetWMWindowTypeDesktop]) {
+		/* 1. No border */
+		c->bw = 0;
 
-  /* geometry */
+		/* 2. Not floating → cannot be moved/resized */
+		c->isfloating = 0;
+
+		/* 3. Geometry is the one we received */
+		c->x = wa->x;  c->y = wa->y;
+		c->w = wa->width;  c->h = wa->height;
+		c->oldbw = c->bw;
+
+		/* 4. Map it */
+		XMapWindow(dpy, c->win);
+
+		/* 5. Insert into the monitor’s client list (no frame) */
+		c->mon = m;
+		c->next = m->clients;
+		m->clients = c;
+
+		/* 6. Lower it immediately (still under the root) */
+		XLowerWindow(dpy, c->win);
+
+		/* 7. Force a restack on this monitor */
+		restack(m);
+
+		/* Nothing else to do */
+		return;
+	}
+
+
+	/* geometry */
   c->x = c->oldx = wa->x;
   c->y = c->oldy = wa->y;
   c->w = c->oldw = wa->width;
@@ -2035,6 +2061,7 @@ void setup(void) {
   netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
   netatom[NetWMWindowTypeDialog] =
       XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+	netatom[NetWMWindowTypeDesktop] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
   netatom[NetWMWindowTypeDock] =
       XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
   netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);

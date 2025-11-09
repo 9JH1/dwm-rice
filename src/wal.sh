@@ -63,7 +63,6 @@ wal -i "$first_wall" -e -t -n -a 92 > $log_file
 if [ "$?" -ne "0" ];then
 	cat $log_file
 	notify-send "Wal Error Occured"
-	xdg-open "$log_file"
 	killall motionlayer
 	exit
 fi 

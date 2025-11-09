@@ -7,76 +7,165 @@ if [ "$1" = "--toggle" ];then
 	echo "polybar not running. starting.." 
 fi
 
+#basic variables
 source ~/.cache/wal/colors.sh
-opacity="80"
-background_transparent="#$opacity${background:1}"
-border_color=$color4
-level0=$color1 
-level1=$color2  
-level2=$color3 
-level3=$color6
-foreground_alt=$color0
-foreground=$color4
-accent=$color1
+opacity=70 
+opacity=$(((opacity * 255) / 100))
+background_transparent="#"$(printf "%X" "$opacity")"${background:1}"
 
-#: accent module padding
-padding_num=10
-padding="%{O$padding_num}"
 
+border_color=$color0
+foreground=$color7
+padding="2"
 polybar_height=35;
 polybar_border_size=3;
+accent_icon_sat=0.0
+accent_icon_dim=0.0
+accent_icon_hue=0
+accent_color=$color6
+tray_icon_scale="70%"
+regular_font="Mononoki Nerd Font:style=Bold:size=14;4" 
+bold_font="Victor Mono Nerd Font:style=Bold Italic:size=14;3"
+icon_font="Mononoki Nerd Font:style=Regular:size=15;3.2"
+dpi=100
+
+saturate_hex() {
+    local hex="$1" s="$2" b="$3" h="$4"
+    hex="${hex#\#}"
+    [[ "$hex" =~ ^[0-9A-Fa-f]{6}$ ]] || { echo "error: bad hex" >&2; return 1; }
+
+    local r=$((16#${hex:0:2}))
+    local g=$((16#${hex:2:2}))
+    local bb=$((16#${hex:4:2}))  # avoid conflict with var 'b'
+
+    # === NEW: treat 0.0 as "no change" (1.0) ===
+    (( $(awk "BEGIN{print ($s == 0)}") )) && s=1.0
+    (( $(awk "BEGIN{print ($b == 0)}") )) && b=1.0
+
+    local newhex
+    newhex=$(awk -v r="$r" -v g="$g" -v b="$bb" \
+                 -v s_mul="$s" -v b_mul="$b" -v h_add="$h" '
+    function myabs(x) { return x < 0 ? -x : x }
+
+    BEGIN {
+        R = r/255; G = g/255; B = b/255;
+
+        Cmax = (R > G ? (R > B ? R : B) : (G > B ? G : B));
+        Cmin = (R < G ? (R < B ? R : B) : (G < B ? G : B));
+        delta = Cmax - Cmin;
+
+        # Hue
+        if (delta == 0) H = 0;
+        else if (Cmax == R) H = 60 * ((G-B)/delta) + (G < B ? 360 : 0);
+        else if (Cmax == G) H = 60 * ((B-R)/delta + 2);
+        else H = 60 * ((R-G)/delta + 4);
+
+        # Lightness
+        L = (Cmax + Cmin)/2;
+
+        # Saturation
+        if (delta == 0) S = 0;
+        else S = delta / (1 - myabs(2*L - 1));
+
+        # Apply modifiers
+        S *= s_mul;
+        if (S > 1) S = 1;
+        L *= b_mul;
+        if (L > 1) L = 1; if (L < 0) L = 0;
+        H = (H + h_add) % 360;
+
+        # HSL → RGB
+        if (S == 0) {
+            R = G = B = L;
+        } else {
+            C = (1 - myabs(2*L - 1)) * S;
+            X = C * (1 - myabs(int(H/60) % 2 - 1));
+            m = L - C/2;
+
+            h60 = int(H/60);
+            if (h60 == 0) { Rp=C; Gp=X; Bp=0; }
+            else if (h60 == 1) { Rp=X; Gp=C; Bp=0; }
+            else if (h60 == 2) { Rp=0; Gp=C; Bp=X; }
+            else if (h60 == 3) { Rp=0; Gp=X; Bp=C; }
+            else if (h60 == 4) { Rp=X; Gp=0; Bp=C; }
+            else { Rp=C; Gp=0; Bp=X; }
+
+            R = Rp + m; G = Gp + m; B = Bp + m;
+        }
+
+        r = int(R*255 + 0.5);
+        g = int(G*255 + 0.5);
+        b = int(B*255 + 0.5);
+
+        printf "#%02X%02X%02X\n", r, g, b;
+    }')
+    printf '%s\n' "$newhex"
+}
+
+# extra vars
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-
-
+ac0=$(saturate_hex "$color2" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
+ac1=$(saturate_hex "$color3" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
+ac2=$(saturate_hex "$color4" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
+ac3=$(saturate_hex "$color5" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
 
 read -r -d '' POLYBAR_FONT_CONFIG << EOM
-font-3 = "MonaspaceRN NFM:style=Bold:size=15;3.2"      
-font-2 = "Mononoki Nerd Font:style=Regular:size=15;3.2"      
-font-1 = "Victor Mono Nerd Font:style=Bold Italic:size=13;4"
-font-0 = "Mononoki Nerd Font:style=Bold:size=14;4"         
-dpi = 100
+font-2 = $icon_font 
+font-1 = $bold_font 
+font-0 = $icon_font
+dpi = $dpi
 height = $(echo "$polybar_height")px
 border-size = $(echo "$polybar_border_size")px
 line-size = 2
 background = $background_transparent
-module-margin = 1.5
+module-margin = 1
 border-color = $border_color
 foreground = $foreground
 fixed-center = true
-padding = 20px
+padding = $padding
 enable-ipc=true
+;; width = 80%
+;; offset-x = 10%
 EOM
 
-read -r -d '' POLYBAR_HIGHLIGHT_MODULE << EOM 
-format-prefix = "$padding"
-format-suffix = "$padding"
-format-foreground = $foreground_alt
-format-background = $border_color 
-EOM
+border_color=$accent_color
 
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
-modules-left = powermenu xworkspaces 
-modules-center = xwindow
-modules-right = network systray date
+modules-left = powermenu cpu ram filesystem network
+modules-right = systray date 
+modules-center = xworkspaces
 $POLYBAR_FONT_CONFIG
 
 [bar/bar_dock]
 bottom =  true 
-modules-left = audio load
-modules-center = playerctl
-modules-right = notify ram cpu
-override-redirect = true 
+modules-left = playerctl_prev playerctl_ipc playerctl_next playerctl
+modules-right = audio load notify xwindow
 $POLYBAR_FONT_CONFIG
 
+[module/network]
+type = internal/network
+interface = enp5s0
+label-connected = "%{T3}%{F$ac0}󰤨 %{T- F-} %downspeed%"
+interval = 5
+format-connected = "<label-connected>"
+
+[module/filesystem]
+type = internal/fs
+mount-0 = /
+interval = 10
+fixed-values = true
+spacing = $((padding * 2))
+warn-percentage = 75
+label-mounted = %free%
+format-mounted = "%{F$ac3}%{T3} %{F- T-} <label-mounted>"
 
 [module/notify]
 type=custom/ipc 
-hook-0 =echo "%{T3}\$($SCRIPT_DIR/notify.sh)%{T-}"
+hook-0 = echo "%{T3}%{F$ac3}\$($SCRIPT_DIR/notify.sh)%{T- F-}"
 initial = 1 
 format = <output>
 click-left = "dunstctl set-paused toggle && polybar-msg action notify hook 0"
-$POLYBAR_HIGHLIGHT_MODULE
 
 [module/ram]
 type=internal/memory
@@ -84,16 +173,7 @@ interval=5
 warn-percentage=95 
 label = %percentage_used%%
 label-warn = !%free% left
-bar-used-indicator = 
-bar-used-width = 6
-bar-used-foreground-0 = $level0 
-bar-used-foreground-1 = $level1 
-bar-used-foreground-2 = $level2 
-bar-used-foreground-3 = $level3
-bar-used-fill = "%{T3}█%{T-}" 
-bar-used-empty = "%{T3}█%{T-}" 
-bar-used-empty-foreground = $accent
-format = "%{T3} %{T-}<label> <bar-used>"
+format = "%{T3}%{F$ac1}  %{F-}%{T-}<label>"
 
 [module/cpu]
 type=internal/cpu
@@ -101,84 +181,68 @@ interval = 5
 warn-percentage = 95
 label-warn = "%percentage%%"
 label = "%percentage%%"
-bar-load-indicator = 
-bar-load-width = 6
-bar-load-foreground-0 = $level0 
-bar-load-foreground-1 = $level1 
-bar-load-foreground-2 = $level2 
-bar-load-foreground-3 = $level3
-bar-load-fill = "%{T3}█%{T-}" 
-bar-load-empty = "%{T3}█%{T-}" 
-bar-load-empty-foreground = $accent
+format = "%{T3}%{F$ac0}  %{F-}%{T-}<label>"
 
-format = "%{T3} %{T-}<label> <bar-load>"
-$POLYBAR_HIGHLIGHT_MODULE
+[module/playerctl_ipc]
+type = custom/ipc
+hook-0 = "$SCRIPT_DIR/playerctl_icon.sh"
+initial = 1
+click-left = playerctl play-pause && polybar-msg action playerctl_ipc hook 0 > /dev/null
+click-middle = playerctl previous
+format ="%{F$border_color}%{T3}<output>%{T- F-}"
 
 [module/playerctl]
-type = custom/ipc
-hook-0 = "$SCRIPT_DIR/playerctl.sh"
-initial = 1
-click-left = playerctl previous && polybar-msg action playerctl hook 0 > /dev/null
-click-middle = playerctl play-pause && polybar-msg action playerctl hook 0 > /dev/null 
-click-right = playerctl next && polybar-msg action playerctl hook 0 > /dev/null
-format ="%{T3}<output>%{T-}"
-format-foreground = $accent
+type=custom/script
+exec = "$SCRIPT_DIR/playerctl.sh" && polybar-msg action playerctl_ipc hook 0 > /dev/null
+format ="%{F$ac0}<label>%{F-}"
+interval=1
+click-left = playerctl play-pause && polybar-msg action playerctl_ipc hook 0 > /dev/null
 
 [module/audio]
 type = internal/pulseaudio
-label-volume = "%percentage%%"
-label-muted = "%{T3}󰖁 %{T-}"
-ramp-volume-0 = "%{T3}󰕿 %{T-}"
-ramp-volume-1 = "%{T3}󰖀 %{T-}"
-ramp-volume-2 = "%{T3}󰕾 %{T-}"
-format-volume = "<ramp-volume><label-volume>"
-format-volume-prefix = $padding
-format-volume-suffix = $padding 
-format-volume-background = $border_color 
-format-volume-foreground = $background
-
-format-muted-prefix = $padding  
-format-muted-suffix = $padding
-format-muted-background = $border_color
-foramt-muted-foreground = $background
+label-volume = %percentage%%
+label-muted = 󰖁
+ramp-volume-0 = 󰕿
+ramp-volume-1 = 󰖀
+ramp-volume-2 = 󰕾
+format-volume = "%{T3}%{F$ac0}<ramp-volume>%{T- F-} <label-volume>"
+format-muted = "%{T3}%{F$ac0}<label-muted>%{T- F-} 0%"
 
 [module/load]
 type = custom/script 
 exec = "$SCRIPT_DIR/load.sh"
 interval = 5
 label = %output%
-format = "<label>"
-
-[module/network]
-type = internal/network
-interface = enp5s0
-label-connected = "%upspeed% | %downspeed%"
-interval = 5
-format-connected = "<label-connected>"
-format-connected-prefix = $padding 
-format-connected-suffix = $padding 
-format-connected-background = $border_color 
-format-connected-foreground = $background
+format = "%{F$ac0}%{T3}%{F- T-} <label>"
 
 [module/systray]
 type = internal/tray
 tray-spacing = 4pt
-tray-size = 25
+tray-size = $tray_icon_scale
 tray-foreground = $module_foreground
 
 [module/date]
 type = internal/date
-interval = 1
-date = "%{T3}󰃭 %{T-}%l:%M"
-date-alt = "%{T3}󰃭 %{T-}%B %d, %Y"
-$POLYBAR_HIGHLIGHT_MODULE
+interval = 60
+date = "%{F$border_color}%{T2}%I:%M %d/%m/%Y%{T- F-}"
+
+[module/playerctl_next]
+type=custom/text 
+label = 󰒭
+click-left = playerctl next && polybar-msg action playerctl hook 0 > /dev/null
+format = "%{F$border_color}%{T3}<label>%{T- F-}"
+
+[module/playerctl_prev]
+type = custom/text 
+label = 󰒮
+click-left = playerctl previous && polybar-msg action playerctl hook 0 > /dev/null
+format = "%{F$border_color}%{T3}<label>%{T- F-}"
 
 [module/powermenu]
 type = custom/script
 exec = ~/.dwm/src/symbol.sh
-format = %{T2}<label>%{T-}
+format = %{F$border_color}%{T2}<label>%{T- F-}
 tail = true
-$POLYBAR_HIGHLIGHT_MODULE
 
 [module/xworkspaces]
 type = custom/script
@@ -187,14 +251,20 @@ tail = true
 label = %output%
 format = <label>
 
+[module/xmonitor]
+type = custom/script 
+exec = $SCRIPT_DIR/monitor.sh 
+tail = true 
+label = %output%
+format = <label>
+
 [module/xwindow]
 type = internal/xwindow
-label = "%{T2}%instance%%{T-}"
+label = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$border_color}%{T2}%instance%"
 label-padding = 0
-label-maxlen = 70 
+label-maxlen = 100
 format = "<label>"
-label-empty = "Desktop"
-format-foreground = $accent
+label-empty = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$border_color}%{T2}Desktop%{T- F-}"
 EOM
 
 POLYBAR_CONFIG_PATH=$(mktemp --suffix=".ini")
@@ -210,8 +280,14 @@ pkill -TERM polybar
 polybar -c "$POLYBAR_CONFIG_PATH" bar_main & 
 polybar -c "$POLYBAR_CONFIG_PATH" bar_dock &
 
-# start ipc loop 
-while [ 1 ];do 
-	 polybar-msg action playerctl hook 0
+pid=$!
+while [ 1 ];do
+	ps -p $pid > /dev/null 
+	if [ $? -eq 0 ];then 
+	 polybar-msg action playerctl hook 0 &>/dev/null
 	 sleep 1
+ else 
+	 echo "Exiting polybar script"
+	 exit 
+	fi
 done 
