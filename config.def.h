@@ -1,6 +1,6 @@
-
+static const int altbar_extra_padding = 10;
 static const unsigned int snap = 0;
-static const int gappx = 32;
+static const int gappx = 10;
 static const int showbar = 1;
 static const int topbar = 1;
 static const int usealtbar = 1;

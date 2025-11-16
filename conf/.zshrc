@@ -131,8 +131,6 @@ function cdr() {
 	[[ $dirs ]] && cd -- "${dirs[RANDOM%${#dirs[@]}]}"
 }
 
-# turn off text-wrap
-
 # Define aliases.
 alias tree='tree -a -I .git'
 alias ls='ls --color=auto'

@@ -6,16 +6,21 @@ fi
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 read -r -d '' ALACRITTY_CONFIG << EOM
-[general]
-import = ['/tmp/alacritty-extra.toml']
+
 
 [window]
-decorations="full"
+decorations="None"
 dynamic_title=true
+dynamic_padding = true 
+opacity = 0.8
 
 [window.dimensions] 
 columns = 60 
 lines = 15
+
+[window.padding]
+x = 10 
+y = 10
 
 [cursor.style]
 shape = "Underline"
@@ -24,19 +29,22 @@ blinking = "On"
 [cursor]
 blink_interval = 400 
 
-
 [font]
 size = 15
 
 [font.normal]
 family='Mononoki Nerd Font'
-style="bold"
+style='Bold'
 
 [font.bold]
-family='MonaspiceRN NFM'
-style="bold"
+family='Mononoki Nerd Font'
+style='Bold'
 
 [font.italic]
+family='Victor Mono Nerd Font'
+style='Bold Italic'
+
+[font.bold_italic]
 family='Victor Mono Nerd Font'
 style='Bold Italic'
 
@@ -45,6 +53,9 @@ style='Bold Italic'
 [terminal.shell]
 program = "/bin/sh"
 args = ["-c","export ZDOTDIR=$SCRIPT_DIR/../conf/ && export ZSH_ISOLATE=$isolate && zsh"]
+
+[general]
+import = ['/tmp/alacritty-extra.toml']
 EOM
 #[cursor]
 #smooth_motion = true

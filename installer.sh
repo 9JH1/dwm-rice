@@ -13,7 +13,7 @@ function install_dwm_rice {
 	fi 
 
 	echo "installing aur packages"
-	yay -S --needed picom-ft-udev ueberzugpp i3lock-color python-pywal16 pywalfox walcord picom --noconfirm
+	yay -S --needed picom ueberzugpp i3lock-color python-pywal16 walcord picom --noconfirm
 
 	echo "applying fonts"
 	mkdir ~/.fonts 
@@ -25,8 +25,13 @@ function install_dwm_rice {
 	cd C/motionlayer/src
 	./comp 
 	sudo mv motionlayer /usr/bin/motionlayer
+	
+	echo "installing oomox (gtk themeing)"
+	cd ~/.themes 
+	git clone https://github.com/themix-project/oomox-gtk-theme
+	cd -
 }
 
-echo "Installing dwm rice"
+echo "Installing.."
 time install_dwm_rice
 echo "Done"

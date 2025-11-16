@@ -11,5 +11,5 @@ if [[ "$(playerctl metadata --format '-' 2>/dev/null)" == *-* ]]; then
 	echo "%{T2}$artist - $title%{T-}"
 
 else 
-	echo ""
+	echo "Nothing Playing"
 fi

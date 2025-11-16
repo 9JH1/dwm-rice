@@ -296,7 +296,6 @@ static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void setlayout(const Arg *arg);
 static void setcfact(const Arg *arg);
-static void setlayoutsafe(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
 static void setupepoll(void);
@@ -766,6 +765,7 @@ void cleanupmon(Monitor *mon) {
 void clientmessage(XEvent *e) {
   XClientMessageEvent *cme = &e->xclient;
   Client *c = wintoclient(cme->window);
+	unsigned int i;
 
   if (!c)
     return;
@@ -776,8 +776,14 @@ void clientmessage(XEvent *e) {
                         || (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ &&
                             !c->isfullscreen)));
   } else if (cme->message_type == netatom[NetActiveWindow]) {
-    if (c != selmon->sel && !c->isurgent)
-      seturgent(c, 1);
+		for (i = 0; i < LENGTH(tags) && !((1 << i) & c->tags); i++);
+		if(i < LENGTH(tags)){
+			const Arg a = {.ui = 1 << i};
+				selmon = c->mon;
+				view(&a);
+				focus(c);
+				restack(selmon);
+		}
   }
 }
 
@@ -1318,35 +1324,34 @@ void manage(Window w, XWindowAttributes *wa) {
   c->win = w;
 
 	if (getatomprop(c, netatom[NetWMWindowType]) == netatom[NetWMWindowTypeDesktop]) {
-		/* 1. No border */
-		c->bw = 0;
+    c->isfloating = 1;  // Must be floating
+    c->bw = 0;          // No border
 
-		/* 2. Not floating → cannot be moved/resized */
-		c->isfloating = 0;
+    // Get monitor with bars
+    c->mon = m;
 
-		/* 3. Geometry is the one we received */
-		c->x = wa->x;  c->y = wa->y;
-		c->w = wa->width;  c->h = wa->height;
-		c->oldbw = c->bw;
+    // Full width, height between top and bottom bar
+    c->x = m->mx;
+    c->y = m->my + m->bh;                    // below top bar
+    c->w = m->mw;
+    c->h = m->mh - (m->bh * 2);               // subtract both bars
 
-		/* 4. Map it */
-		XMapWindow(dpy, c->win);
+    c->oldx = c->x; c->oldy = c->y;
+    c->oldw = c->w; c->oldh = c->h;
+    c->oldbw = 0;
 
-		/* 5. Insert into the monitor’s client list (no frame) */
-		c->mon = m;
-		c->next = m->clients;
-		m->clients = c;
+    // Apply geometry
+    XMoveResizeWindow(dpy, c->win, c->x, c->y, c->w, c->h);
+    XSetWindowBorderWidth(dpy, c->win, 0);
 
-		/* 6. Lower it immediately (still under the root) */
-		XLowerWindow(dpy, c->win);
+    // Map and lower below floating windows, above tiled
+    XMapWindow(dpy, c->win);
+    XLowerWindow(dpy, c->win);
 
-		/* 7. Force a restack on this monitor */
-		restack(m);
-
-		/* Nothing else to do */
+    // Insert into client lists
+    attach(c);         // add to m->clients
 		return;
 	}
-
 
 	/* geometry */
   c->x = c->oldx = wa->x;
@@ -1412,7 +1417,7 @@ void managealtbar(Window win, XWindowAttributes *wa) {
 
   m->barwin = win;
   m->by = wa->y;
-  bh = m->bh = wa->height;
+  bh = m->bh = wa->height + altbar_extra_padding;
   updatebarpos(m);
   arrange(m);
   XSelectInput(dpy, win,
@@ -1980,16 +1985,6 @@ void setcfact(const Arg *arg) {
     return;
   c->cfact = f;
   arrange(selmon);
-}
-
-void setlayoutsafe(const Arg *arg) {
-  const Layout *ltptr = (Layout *)arg->v;
-  if (ltptr == 0)
-    setlayout(arg);
-  for (int i = 0; i < LENGTH(layouts); i++) {
-    if (ltptr == &layouts[i])
-      setlayout(arg);
-  }
 }
 
 /* arg > 1.0 will set mfact absolutely */

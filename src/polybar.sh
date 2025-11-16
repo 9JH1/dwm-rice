@@ -7,28 +7,8 @@ if [ "$1" = "--toggle" ];then
 	echo "polybar not running. starting.." 
 fi
 
-#basic variables
+# Imports and declarations
 source ~/.cache/wal/colors.sh
-opacity=70 
-opacity=$(((opacity * 255) / 100))
-background_transparent="#"$(printf "%X" "$opacity")"${background:1}"
-
-
-border_color=$color0
-foreground=$color7
-padding="2"
-polybar_height=35;
-polybar_border_size=3;
-accent_icon_sat=0.0
-accent_icon_dim=0.0
-accent_icon_hue=0
-accent_color=$color6
-tray_icon_scale="70%"
-regular_font="Mononoki Nerd Font:style=Bold:size=14;4" 
-bold_font="Victor Mono Nerd Font:style=Bold Italic:size=14;3"
-icon_font="Mononoki Nerd Font:style=Regular:size=15;3.2"
-dpi=100
-
 saturate_hex() {
     local hex="$1" s="$2" b="$3" h="$4"
     hex="${hex#\#}"
@@ -102,12 +82,40 @@ saturate_hex() {
     printf '%s\n' "$newhex"
 }
 
-# extra vars
+# Opacity
+opacity=80 
+opacity=$(((opacity * 255) / 100))
+background_transparent="#"$(printf "%X" "$opacity")"${background:1}"
+
+# Basic Colors
+border_color=$color0
+foreground=$color7
+accent_color=$color6
+foreground_dim=$color1
+
+# Advanced Settings
+padding="2"
+polybar_height=35;
+polybar_border_size=3;
+accent_icon_sat=0.5
+accent_icon_dim=0.0
+accent_icon_hue=0
+tray_icon_scale="60%"
+dpi=100
+
+# Fonts
+regular_font="Mononoki Nerd Font:style=Bold:size=14;4" 
+bold_font="Victor Mono Nerd Font:style=Bold Italic:size=14;3"
+icon_font="Mononoki Nerd Font:style=Regular:size=15;3.2"
+
+# Post Values
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ac0=$(saturate_hex "$color2" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
 ac1=$(saturate_hex "$color3" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
 ac2=$(saturate_hex "$color4" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
 ac3=$(saturate_hex "$color5" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
+foreground_dim=$(saturate_hex "$foreground_dim" 1.0 1.5 0)
+accent_color=$(saturate_hex "$accent_color" 1.0 1.0 0)
 
 read -r -d '' POLYBAR_FONT_CONFIG << EOM
 font-2 = $icon_font 
@@ -115,32 +123,33 @@ font-1 = $bold_font
 font-0 = $icon_font
 dpi = $dpi
 height = $(echo "$polybar_height")px
-border-size = $(echo "$polybar_border_size")px
+;; border-size = $(echo "$polybar_border_size")px
+;; border-color = $border_color
+width = $((1920-20))px
+offset-x = 10px
+offset-y = 10px
+
 line-size = 2
 background = $background_transparent
 module-margin = 1
-border-color = $border_color
 foreground = $foreground
 fixed-center = true
 padding = $padding
 enable-ipc=true
-;; width = 80%
-;; offset-x = 10%
 EOM
 
-border_color=$accent_color
 
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
-modules-left = powermenu cpu ram filesystem network
-modules-right = systray date 
+modules-left = powermenu s cpu s ram s filesystem s network
+modules-right = systray s date
 modules-center = xworkspaces
 $POLYBAR_FONT_CONFIG
 
 [bar/bar_dock]
 bottom =  true 
 modules-left = playerctl_prev playerctl_ipc playerctl_next playerctl
-modules-right = audio load notify xwindow
+modules-right = audio s load s notify s xwindow
 $POLYBAR_FONT_CONFIG
 
 [module/network]
@@ -167,6 +176,12 @@ initial = 1
 format = <output>
 click-left = "dunstctl set-paused toggle && polybar-msg action notify hook 0"
 
+[module/s]
+type=custom/text 
+label= "|"
+format = <label>
+format-foreground = $accent_color
+
 [module/ram]
 type=internal/memory
 interval=5
@@ -189,7 +204,7 @@ hook-0 = "$SCRIPT_DIR/playerctl_icon.sh"
 initial = 1
 click-left = playerctl play-pause && polybar-msg action playerctl_ipc hook 0 > /dev/null
 click-middle = playerctl previous
-format ="%{F$border_color}%{T3}<output>%{T- F-}"
+format ="%{F$foreground_dim}%{T3}<output>%{T- F-}"
 
 [module/playerctl]
 type=custom/script
@@ -220,28 +235,31 @@ type = internal/tray
 tray-spacing = 4pt
 tray-size = $tray_icon_scale
 tray-foreground = $module_foreground
+tray-transparent = true
+tray-background = #00000000
 
 [module/date]
 type = internal/date
 interval = 60
-date = "%{F$border_color}%{T2}%I:%M %d/%m/%Y%{T- F-}"
+date = "%{F$foreground_dim}%{T2}%I:%M%{T- F-}"
+date-alt = "%{F$foreground_dim}%{T2}%d/%m/%Y%{T- F-}"
 
 [module/playerctl_next]
 type=custom/text 
 label = 󰒭
 click-left = playerctl next && polybar-msg action playerctl hook 0 > /dev/null
-format = "%{F$border_color}%{T3}<label>%{T- F-}"
+format = "%{F$foreground_dim}%{T3}<label>%{T- F-}"
 
 [module/playerctl_prev]
 type = custom/text 
 label = 󰒮
 click-left = playerctl previous && polybar-msg action playerctl hook 0 > /dev/null
-format = "%{F$border_color}%{T3}<label>%{T- F-}"
+format = "%{F$foreground_dim}%{T3}<label>%{T- F-}"
 
 [module/powermenu]
 type = custom/script
 exec = ~/.dwm/src/symbol.sh
-format = %{F$border_color}%{T2}<label>%{T- F-}
+format = %{F$foreground_dim}%{T2}<label>%{T- F-}
 tail = true
 
 [module/xworkspaces]
@@ -260,14 +278,20 @@ format = <label>
 
 [module/xwindow]
 type = internal/xwindow
-label = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$border_color}%{T2}%instance%"
+label = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$foreground_dim}%{T2}%instance%"
 label-padding = 0
 label-maxlen = 100
 format = "<label>"
-label-empty = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$border_color}%{T2}Desktop%{T- F-}"
+label-empty = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$foreground_dim}%{T2}Desktop%{T- F-}"
 EOM
 
-POLYBAR_CONFIG_PATH=$(mktemp --suffix=".ini")
+POLYBAR_CONFIG_PATH="$HOME/.cache/polybar.ini"
+
+if [ ! -f "$POLYBAR_CONFIG_PATH" ];then  
+	touch "$POLYBAR_CONFIG_PATH"
+fi
+
+
 echo "$POLYBAR_CONFIG" > "$POLYBAR_CONFIG_PATH"
 if [[ "$1" == "no-run" ]]; then 
 	exit 

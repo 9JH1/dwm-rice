@@ -1,21 +1,3 @@
-combine all scripts into single source file  
--> include all variables used in one single file
+fix paths in scripts 
 
-remove tmp files at ~ (zshrc wal) 
-
-rework wallpaper selection
-catagorys -> 
-1. non hidden
-2. universal
-3. hidden 
-4. walltaker 
-5. video only 
-6. image only 
-
-have options to either randomize or select
-
-get ipc of the cfact and mfact values. preferably cfact. 
-
-fix alacritty_extra.sh bugs +1
-
-add bold font to polybar and use it on all highlighted modules 
+remove borders of polybar when in monicle mode
