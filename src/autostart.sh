@@ -13,7 +13,13 @@ $SCRIPT_DIR/wal.sh  && notify-send "Reloading autostart"
 unclutter --timeout 0.1 &>/dev/null &
 lxqt-policykit-agent &>/dev/null &
 nm-applet &
-(nemo-desktop; notify-send "desktop exited" ) &
+
+#(
+#	while [[ "$(ps aux | grep "dwm$" | wc -l)" -eq 1 ]];do 
+#		sleep 1;
+		nemo-desktop 
+#	done
+#) & 
 
 #$HOME/Pictures/Wallpapers/.walltaker/walltaker.sh --id "53412" &
 
