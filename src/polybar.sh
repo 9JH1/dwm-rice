@@ -142,7 +142,7 @@ EOM
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
 modules-left = powermenu s cpu s ram s filesystem s network
-modules-right = systray s date
+modules-right = systray s xkeyboard s date
 modules-center = xworkspaces
 $POLYBAR_FONT_CONFIG
 
@@ -151,6 +151,14 @@ bottom =  true
 modules-left = playerctl_prev playerctl_ipc playerctl_next playerctl
 modules-right = audio s load s notify s xwindow
 $POLYBAR_FONT_CONFIG
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+blacklist-1 = caps lock
+
+
+label-layout = %layout%-%variant%
 
 [module/network]
 type = internal/network

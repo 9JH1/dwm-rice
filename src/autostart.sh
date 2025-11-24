@@ -13,25 +13,30 @@ $SCRIPT_DIR/wal.sh  && notify-send "Reloading autostart"
 unclutter --timeout 0.1 &>/dev/null &
 lxqt-policykit-agent &>/dev/null &
 nm-applet &
+setxkbmap -layout "us,us" -variant ",dvorak" -option "" -option "grp:alt_shift_toggle"
 
 #(
 #	while [[ "$(ps aux | grep "dwm$" | wc -l)" -eq 1 ]];do 
 #		sleep 1;
-		nemo-desktop 
+		nemo-desktop &
 #	done
 #) & 
 
+
+
 #$HOME/Pictures/Wallpapers/.walltaker/walltaker.sh --id "53412" &
 
+new_time=$(date | tr ' ' '_')
+base_dl_dir="/drive/.downloads/"
+main_dl_dir="/drive/.downloads/Downloads/"
 
-#reset downloads 
-new_date="$(date | tr ' ' '_')"
+new_dl_dir="$base_dl_dir$new_time"_DOWNLOADS
 
-mkdir "/drive/.downloads" &>/dev/null
-rm ~/Downloads &>/dev/null
+# Move and remove old downloads
+mv ~/Downloads/* "$main_dl_dir"
+rm ~/Downloads
+find "$base_dl_dir" -depth -type d -exec rmdir {} \; 
 
-# remove empty download folders
-find /drive/.downloads/ -depth -mindepth 1 -type d -empty -exec rmdir {} \;
-
-mkdir "/drive/.downloads/Downloads_$new_date"
-ln -s "/drive/.downloads/Downloads_$new_date" ~/Downloads
+# Create new downloads folder 
+mkdir "$new_dl_dir"
+ln -s "$new_dl_dir" ~/Downloads
