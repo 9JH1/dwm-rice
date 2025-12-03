@@ -135,7 +135,6 @@ fi
 
 # run dependancies
 
-
 # start dunst 
 $SCRIPT_DIR/dunst.sh &>/dev/null &
 
@@ -144,6 +143,7 @@ $SCRIPT_DIR/polybar.sh &>/dev/null &
 
 # reload alacritty 
 $SCRIPT_DIR/alacritty.sh no-run &>/dev/null & 
+
 
 # use walcord to set discord colors 
 walcord &>/dev/null &

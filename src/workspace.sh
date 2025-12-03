@@ -30,7 +30,7 @@ function draw_workspaces {
         if (( new_occupied & bitwise | new_selected & bitwise )); then
           if (( new_selected & bitwise )); then
             # Active/selected occupied tag
-            out+="%{F$color0}%{B$color1}%{O$padding}${tag_titles[$((i-1))]}%{O$padding}%{F- B-}"
+            out+="%{T3}%{F$color0}%{B$color1}%{O$padding}${tag_titles[$((i-1))]}%{O$padding}%{F- B- T-}"
           else
             # Inactive occupied tag
             out+="%{O$padding}%{F$color7}${tag_titles[$((i-1))]}%{F-}%{O$padding}"

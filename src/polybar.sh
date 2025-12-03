@@ -95,17 +95,17 @@ foreground_dim=$color1
 
 # Advanced Settings
 padding="2"
-polybar_height=35;
+polybar_height=30;
 polybar_border_size=3;
 accent_icon_sat=0.5
 accent_icon_dim=0.0
 accent_icon_hue=0
-tray_icon_scale="60%"
+tray_icon_scale="80%"
 dpi=100
 
 # Fonts
-regular_font="Mononoki Nerd Font:style=Bold:size=14;4" 
-bold_font="Victor Mono Nerd Font:style=Bold Italic:size=14;3"
+regular_font="Terminus:size=20;3.5" 
+bold_font="Terminus:style=Bold:size=20;3.5"
 icon_font="Mononoki Nerd Font:style=Regular:size=15;3.2"
 
 # Post Values
@@ -120,7 +120,7 @@ accent_color=$(saturate_hex "$accent_color" 1.0 1.0 0)
 read -r -d '' POLYBAR_FONT_CONFIG << EOM
 font-2 = $icon_font 
 font-1 = $bold_font 
-font-0 = $icon_font
+font-0 = $regular_font
 dpi = $dpi
 height = $(echo "$polybar_height")px
 border-size = $(echo "$polybar_border_size")px
@@ -149,7 +149,7 @@ $POLYBAR_FONT_CONFIG
 [bar/bar_dock]
 bottom =  true 
 modules-left = playerctl_prev playerctl_ipc playerctl_next playerctl
-modules-right = audio s load s notify s xwindow
+modules-right = audio s load s notify s xwindow s xmonitor
 $POLYBAR_FONT_CONFIG
 
 [module/xkeyboard]
@@ -236,15 +236,13 @@ type = custom/script
 exec = "$SCRIPT_DIR/load.sh"
 interval = 5
 label = %output%
-format = "%{F$ac0}%{T3}%{F- T-} <label>"
+format = "%{F$ac0}%{T3} %{F- T-} <label>"
 
 [module/systray]
 type = internal/tray
 tray-spacing = 4pt
 tray-size = $tray_icon_scale
 tray-foreground = $module_foreground
-tray-transparent = true
-tray-background = #00000000
 
 [module/date]
 type = internal/date
@@ -277,20 +275,22 @@ tail = true
 label = %output%
 format = <label>
 
+[module/xwindow]
+type = internal/xwindow
+label-padding = 0
+label-maxlen = 100
+label = %instance%
+format= "%{T3}%{F$ac3}󱂬 %{F- T-}%{T2}<label>%{T-}"
+
+label-empty = "Desktop"
+format-empty = "%{T3}%{F$ac3}󱂬 %{F- T-}%{T2}<label-empty>%{T-}"
+
 [module/xmonitor]
 type = custom/script 
 exec = $SCRIPT_DIR/monitor.sh 
 tail = true 
 label = %output%
-format = <label>
-
-[module/xwindow]
-type = internal/xwindow
-label = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$foreground_dim}%{T2}%instance%"
-label-padding = 0
-label-maxlen = 100
-format = "<label>"
-label-empty = "%{T3}%{F$ac3}󱂬 %{F- T-}%{F$foreground_dim}%{T2}Desktop%{T- F-}"
+format = "%{F$foreground_dim}%{T2}<label>%{T- F-}"
 EOM
 
 POLYBAR_CONFIG_PATH="$HOME/.cache/polybar.ini"
