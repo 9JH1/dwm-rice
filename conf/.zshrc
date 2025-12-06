@@ -1,4 +1,3 @@
-wal -R -q -n -t -e
 read -r -d '' FASTFETCH_CONFIG << EOF 
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
@@ -6,12 +5,16 @@ read -r -d '' FASTFETCH_CONFIG << EOF
 }
 EOF
 
+# set -g default-terminal "tmux-256color"
+# set -ag terminal-overrides ",alacritty:RGB"
+
 source $HOME/.cache/wal/colors.sh 
 read -r -d '' TMUX_CONFIG << EOF
 set -g mouse on
 set -g allow-passthrough on
-set -g default-terminal "tmux-256color"
-set -ag terminal-overrides ",alacritty:RGB"
+
+set -g default-terminal "xterm-256color"
+set -ga terminal-overrides ",st:RGB"
 set -g default-command "export ZDOTDIR=$ZDOTDIR && zsh"
 set -g visual-activity off
 set -g visual-bell off

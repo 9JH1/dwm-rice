@@ -639,13 +639,13 @@ void loadxrdb() {
       xrdb = XrmGetStringDatabase(resm);
 
       if (xrdb != NULL) {
-        XRDB_LOAD_COLOR("color0", normbordercolor);
-        XRDB_LOAD_COLOR("color0", normbgcolor);
-        XRDB_LOAD_COLOR("color0", normfgcolor);
+        XRDB_LOAD_COLOR("color1", normbordercolor);
+        XRDB_LOAD_COLOR("color1", normbgcolor);
+        XRDB_LOAD_COLOR("color1", normfgcolor);
 
-        XRDB_LOAD_COLOR("color5", selbordercolor);
-        XRDB_LOAD_COLOR("color5", selbgcolor);
-        XRDB_LOAD_COLOR("color5", selfgcolor);
+        XRDB_LOAD_COLOR("background", selbordercolor);
+        XRDB_LOAD_COLOR("background", selbgcolor);
+        XRDB_LOAD_COLOR("background", selfgcolor);
       }
     }
   }

@@ -89,16 +89,16 @@ background_transparent="#"$(printf "%X" "$opacity")"${background:1}"
 
 # Basic Colors
 border_color=$color0
-foreground=$color7
+foreground=$foreground
 accent_color=$color6
-foreground_dim=$color1
+foreground_dim=$color3
 
 # Advanced Settings
 padding="2"
 polybar_height=30;
 polybar_border_size=3;
-accent_icon_sat=0.5
-accent_icon_dim=0.0
+accent_icon_sat=0.6
+accent_icon_dim=1
 accent_icon_hue=0
 tray_icon_scale="80%"
 dpi=100
@@ -111,7 +111,7 @@ icon_font="Mononoki Nerd Font:style=Regular:size=15;3.2"
 # Post Values
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ac0=$(saturate_hex "$color2" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
-ac1=$(saturate_hex "$color3" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
+ac1=$(saturate_hex "$color6" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
 ac2=$(saturate_hex "$color4" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
 ac3=$(saturate_hex "$color5" $accent_icon_sat $accent_icon_dim $accent_icon_hue)
 foreground_dim=$(saturate_hex "$foreground_dim" 1.0 1.5 0)
@@ -280,10 +280,10 @@ type = internal/xwindow
 label-padding = 0
 label-maxlen = 100
 label = %instance%
-format= "%{T3}%{F$ac3}󱂬 %{F- T-}%{T2}<label>%{T-}"
+format= "%{T3}%{F$ac3}󱂬 %{F- T-}<label>"
 
 label-empty = "Desktop"
-format-empty = "%{T3}%{F$ac3}󱂬 %{F- T-}%{T2}<label-empty>%{T-}"
+format-empty = "%{T3}%{F$ac3}󱂬 %{F- T-}<label-empty>"
 
 [module/xmonitor]
 type = custom/script 

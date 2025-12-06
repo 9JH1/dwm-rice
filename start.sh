@@ -16,6 +16,9 @@ cd code/dmenu
 build_suckless
 cd -
 
+cd code/st
+build_suckless
+
 cd ~
 startx
 cd -

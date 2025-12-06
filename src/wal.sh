@@ -96,7 +96,8 @@ fi
 echo "$first_wall" > $HOME/.wallpaper
 
 export XDG_CACHE_HOME="$HOME/.cache" &> /dev/null &
-wal -i "$first_wall" -e -t -n -a 92 > $log_file   
+wal -i "$first_wall" -e -t -n -a 92 --saturate 1 > $log_file   
+
 
 # check wal code
 if [ "$?" -ne "0" ];then
@@ -153,8 +154,12 @@ if [[ ! "$(pgrep 'qutebrowser')" = "" ]]; then
 	qutebrowser :config-source &>/dev/null &
 fi
 
+
+
 # reload xrdb colors
-xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources" && dwm-msg run_command xrdb
+xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources"
+dwm-msg run_command xrdb
+pidof st | xargs kill -s USR1
 
 # reload gtk colors 
 if [[ -e "/home/$USER/.themes/oomox-gtk-theme/change_color.sh" ]]; then 
