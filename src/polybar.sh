@@ -83,7 +83,7 @@ saturate_hex() {
 }
 
 # Opacity
-opacity=80 
+opacity=70 
 opacity=$(((opacity * 255) / 100))
 background_transparent="#"$(printf "%X" "$opacity")"${background:1}"
 
@@ -91,14 +91,14 @@ background_transparent="#"$(printf "%X" "$opacity")"${background:1}"
 border_color=$color0
 foreground=$foreground
 accent_color=$color6
-foreground_dim=$color3
+foreground_dim=$color6
 
 # Advanced Settings
 padding="2"
 polybar_height=30;
 polybar_border_size=3;
-accent_icon_sat=0.6
-accent_icon_dim=1
+accent_icon_sat=0
+accent_icon_dim=0
 accent_icon_hue=0
 tray_icon_scale="80%"
 dpi=100
@@ -141,15 +141,15 @@ EOM
 
 read -r -d '' POLYBAR_CONFIG << EOM
 [bar/bar_main]
-modules-left = powermenu s cpu s ram s filesystem s network
-modules-right = systray s xkeyboard s date
+modules-left = powermenu s cpu s ram s load 
+modules-right = systray s notify s xkeyboard s date
 modules-center = xworkspaces
 $POLYBAR_FONT_CONFIG
 
 [bar/bar_dock]
 bottom =  true 
 modules-left = playerctl_prev playerctl_ipc playerctl_next playerctl
-modules-right = audio s load s notify s xwindow s xmonitor
+modules-right = network s audio s filesystem s xwindow s xmonitor
 $POLYBAR_FONT_CONFIG
 
 [module/xkeyboard]
@@ -199,11 +199,10 @@ label-warn = !%free% left
 format = "%{T3}%{F$ac1}  %{F-}%{T-}<label>"
 
 [module/cpu]
-type=internal/cpu
-interval = 5
-warn-percentage = 95
-label-warn = "%percentage%%"
-label = "%percentage%%"
+interval=5
+type=custom/script 
+exec = "$SCRIPT_DIR/cpu.sh"
+tail = true
 format = "%{T3}%{F$ac0}  %{F-}%{T-}<label>"
 
 [module/playerctl_ipc]

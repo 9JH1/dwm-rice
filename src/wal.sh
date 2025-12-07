@@ -41,63 +41,42 @@ fi
 # kill video wallpapers
 killall motionlayer &>/dev/null
 
-
-# redirect or get wallpaper
+# Determine type of wallpaper
 if [[ "$1" = "--custom" ]];then
-
-	# set video wallpaper 
 	if is_video "$2";then
 		echo "detected video"
 		motionlayer --path "$2" --frame-out "$cache_frame" & 
 		first_wall="$cache_frame"
 		sleep 0.5
 	
-	# set image wallpaper 
 	elif is_image "$2"; then
 		echo "detected image"
 		first_wall="$2";
 
-	# error occured
 	else 
 		echo "Couldent load file: $2"
 		notify-send "Wal Script Error:" "Couldent Load File: $2, check wal.sh is_image and is_video functions to see if the file ext is supported"
 		exit
 	fi
 
-# no arguments where run with wal script
-else 
-	if [[ -n "$1" ]]; then
-		num_wallpapers=$(ls -l "$WALLPAPER_DIR" | wc -l)
-
-		if [ $num_wallpapers -lt 1 ];then 
-			echo "No wallpapers in $WALLPAPER_DIR"
-			notify-send "Wal Script Error" "No wallpapers in $WALLPAPER_DIR"
-		fi
-
-		# redirect with a random wallpaper
-  	if [[ "$1" = "--exclude-hidden" ]]; then
-  		wallpaper=$(find -L "$WALLPAPER_DIR" -type f -not -path "*/.*/**" | grep -v ".git" | shuf -n 1)
-			"$SCRIPT_DIR/wal.sh" --custom "$wallpaper";
-			exit 
-  	else
-			wallpaper=$(find -L "$WALLPAPER_DIR" -type f -path "*/.*/**" | grep -v ".git" | shuf -n 1)
-			"$SCRIPT_DIR/wal.sh" --custom "$wallpaper"
-			exit
-		fi
+else	
+	old_wall=$(cat "$cache_file" | sha1sum)
+	# Prompt for new wallpaper
+	if [[ -n "$1" ]]; then 
+		st -c "iso_term" -e sh -c "ranger --choosefile \"$cache_file\" \"$WALLPAPER_DIR\" --cmd=\"sort random\""		
+		[[ "$(cat "$cache_file" | sha1sum)" = "$old_wall" ]] && exit
+	fi
 	
-	# use the last set wallpaper
-	else 
-		first_wall=$(cat ~/.wallpaper)
-	fi 
+	# Use old wallpaper
+	first_wall=$(cat "$cache_file")
 fi
-
 
 # run wal  
 echo "$first_wall" > $HOME/.wallpaper
 
 export XDG_CACHE_HOME="$HOME/.cache" &> /dev/null &
-wal -i "$first_wall" -e -t -n -a 92 --saturate 1 > $log_file   
-
+wal -i "$first_wall" -e -t -n -a 92 --saturate 1  --contrast 20 > $log_file   
+cat $log_file
 
 # check wal code
 if [ "$?" -ne "0" ];then

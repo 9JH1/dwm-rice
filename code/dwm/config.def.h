@@ -21,8 +21,6 @@ static const char *termcmdalt[] = {"/home/_3hy/.dwm/src/term.sh",
                                    "-isolate", NULL};
 static const char *wallpaper_safe[] = {"/home/_3hy/.dwm/src/wal.sh",
                                        "--exclude-hidden", NULL};
-static const char *wallpaper[] = {"/home/_3hy/.dwm/src/wal.sh",
-                                  "--include-hidden", NULL};
 static const char *screenshot[] = {"/home/_3hy/.dwm/src/screenshot.sh", NULL};
 static const char *boomer[] = {"boomer", NULL};
 static const char *forcequit[] = {"/home/_3hy/.dwm/src/forcequit.sh", NULL};
@@ -80,7 +78,6 @@ static const Key keys[] = {
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
     {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmdalt}},
     {MODKEY, XK_t, spawn, {.v = wallpaper_safe}},
-    {MODKEY | ShiftMask, XK_t, spawn, {.v = wallpaper}},
     {MODKEY, XK_x, spawn, {.v = lock}},
     {MODKEY | ShiftMask, XK_s, spawn, {.v = screenshot}},
     {MODKEY | ShiftMask, XK_r, spawn, {.v = autostartcmd}},

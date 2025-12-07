@@ -8,7 +8,9 @@ EOF
 # set -g default-terminal "tmux-256color"
 # set -ag terminal-overrides ",alacritty:RGB"
 
-source $HOME/.cache/wal/colors.sh 
+# source $HOME/.cache/wal/colors.sh 
+wal -w -t -e -s
+
 read -r -d '' TMUX_CONFIG << EOF
 set -g mouse on
 set -g allow-passthrough on
@@ -46,30 +48,19 @@ set -g status-style bg=default
 set -g status-left-length 99
 set -g status-right-length 99
 set -g status-justify absolute-centre
-
 EOF
 
 TMUX_PATH="/tmp/tmux.conf"
 echo "$TMUX_CONFIG" > "$TMUX_PATH"
 
+
 FASTFETCH_PATH=$(mktemp --suffix=".jsonc")
 echo "$FASTFETCH_CONFIG" > "$FASTFETCH_PATH"
 
-#z4h settings 
-zstyle ':z4h:' auto-update      'no'
-zstyle ':z4h:' auto-update-days '28'
-zstyle ':z4h:bindkey' keyboard  'pc'
-zstyle ':z4h:' prompt-at-bottom 'no'
-zstyle ':z4h:' term-shell-integration 'yes'
-zstyle ':z4h:autosuggestions' forward-char 'accept'
-zstyle ':z4h:fzf-complete' recurse-dirs 'no'
-zstyle ':z4h:direnv'         enable 'no'
-zstyle ':z4h:direnv:success' notify 'yes'
-
-if [[ "$ZSH_ISOLATE" =  "1" ]]; then
-	zstyle ':z4h:' start-tmux command ""
-else 
-	zstyle ':z4h:' start-tmux command tmux -f "$TMUX_PATH" -u new -A -D -t zsh
+if [ -n "$TMUX" ] && [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
+	dwm_zsh_custom_startup_screen
+elif [[ ! "$ZSH_ISOLATE" =  "1" ]]; then
+	tmux -f "$TMUX_PATH" -u new -A -D
 fi
 
 # define settings for greeter loading
@@ -83,11 +74,7 @@ function dwm_zsh_custom_startup_screen {
 	stty sane 
 }
 
-if [ -n "$TMUX" ] && [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
-	dwm_zsh_custom_startup_screen
-fi
 
-z4h init
 # custom cd functions for better navigation
 export localcd=""
 function cd(){
@@ -99,20 +86,12 @@ function n(){
 	nvim "$@"
 }
 
-function cds(){
-	localcd="$(cat ~/.pwd.tmp)"
-}
+
 function cdd(){
 	cd "$localcd"
 }
 
-# move to last cd'd dir
-cds
-
-function linecount(){
-	ls -R | wc -l
-}
-
+localcd="$(cat ~/.pwd.tmp)"
 function true-colors(){
 awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
     s="/\\";
@@ -149,13 +128,5 @@ alias sudo='sudo '
 function ls {
 	lsd $@ --color=auto -r -t -l
 }
-
-function set_alacritty_opacity() {
-	$ZDOTDIR../src/alacritty_extra.sh -selector
-	zle reset-prompt
-}
-
-zle -N set_alacritty_opacity
-bindkey '^L' set_alacritty_opacity
 
 eval "$(zoxide init zsh)"

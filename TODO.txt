@@ -1,0 +1,2 @@
+re-write wallpaper script using fuzzyfinder st and ranger for selection
+ranger --choosefile

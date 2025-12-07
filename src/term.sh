@@ -1,4 +1,5 @@
 #!/bin/bash
+# "export ZDOTDIR='$SCRIPT_DIR/../conf/' && export ZSH_ISOLATE=$isolate && exec zsh"
 
 isolate=0;
 [[ "$1" == "-isolate" ]] && isolate=1;
@@ -13,7 +14,7 @@ st_args=();
 
 st_args+=(
     -f "Terminus:size=15"
-    -e bash -c "export ZDOTDIR='$SCRIPT_DIR/../conf/' && export ZSH_ISOLATE=$isolate && exec zsh"
+    -e bash -c "export BASH_START_FLAG=1 && bash" 
 )
 
 
