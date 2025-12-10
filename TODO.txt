@@ -1,2 +1,4 @@
-re-write wallpaper script using fuzzyfinder st and ranger for selection
-ranger --choosefile
+add smart cd to bashrc 
+- if command is cd write to local var if next command is also cv then dont write until next command then write.
+
+add color settings from old .zshrc to bashrc

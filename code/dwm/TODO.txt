@@ -1,3 +1,0 @@
-fix paths in scripts 
-
-remove borders of polybar when in monicle mode
