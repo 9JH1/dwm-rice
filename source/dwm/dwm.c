@@ -2466,7 +2466,7 @@ zoom(const Arg *arg)
 void 
 handle_sig()
 {
-	xrdb((Arg *){.v = NULL});
+	xrdb(&(Arg){.v = NULL});
 }
 
 
