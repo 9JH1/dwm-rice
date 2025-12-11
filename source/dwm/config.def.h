@@ -2,6 +2,7 @@
 #include <X11/XF86keysym.h>
 
 // Basic Variables 
+static const unsigned int gappx    = 6;        /* gaps between windows */
 static const unsigned int snap     = 0;
 static const int gappx             = 10;
 static const int showbar           = 1;
@@ -18,6 +19,11 @@ static char normbordercolor[] = "#444444";
 static char normfgcolor[] = "#bbbbbb";
 static char selfgcolor[] = "#eeeeee";
 static char selbordercolor[] = "#005577";
+static const char *const autostart[] = {
+	"st", NULL,
+	NULL /* terminate */
+};
+
 static char selbgcolor[] = "#005577";
 
 // Arrays
@@ -40,7 +46,7 @@ static const char *wallpaper[]    = { "/home/_3hy/.dwm/script/background.sh", "-
 static const char *screenshot[]   = { "/home/_3hy/.dwm/script/screenshot.sh", NULL};
 static const char *zoom[]         = { "boomer", NULL};
 static const char *forcequit[]    = { "/home/_3hy/.dwm/script/forcequit.sh", NULL};
-static const char *picomtoggle[]  = { "/home/_3hy/.dwm/script/picom.sh", NULL};
+static const char *compositor[]  = { "/home/_3hy/.dwm/script/picom.sh", NULL};
 static const char *lock[]         = { "/home/_3hy/.dwm/script/lockscreen.sh", "--suspend",  NULL};
 static const char *lock_alt[]     = { "/home/_3hy/.dwm/script/lockscreen.sh", "--freeze", NULL};
 static const char *autostartcmd[] = {autostart[0], NULL};
@@ -70,20 +76,18 @@ static const Layout layouts[] = {
 
 // Keys!
 static const Key keys[] = {
-		// Spawn keybinds
-    {MODKEY,               XK_r,      spawn, {.v = dmenucmd}},
-    {MODKEY,               XK_Return, spawn, {.v = termcmd}},
-    {MODKEY | ShiftMask,   XK_Return, spawn, {.v = termcmdalt}},
-    {MODKEY,               XK_t,      spawn, {.v = wallpaper_safe}},
+	// Spawn keybinds
+    {MODKEY,               XK_r,      spawn, {.v = dmenu}},
+    {MODKEY,               XK_Return, spawn, {.v = terminal}},
+    {MODKEY | ShiftMask,   XK_Return, spawn, {.v = terminal_alt}},
+    {MODKEY,               XK_t,      spawn, {.v = wallpaper}},
     {MODKEY,               XK_x,      spawn, {.v = lock}},
+    {MODKEY,               XK_m,      spawn, {.v = lock_alt}},
     {MODKEY | ShiftMask,   XK_s,      spawn, {.v = screenshot}},
     {MODKEY | ShiftMask,   XK_r,      spawn, {.v = autostartcmd}},
-    {MODKEY,               XK_m,      spawn, {.v = lock_alt}},
-		{MODKEY | ShiftMask,   XK_b,      spawn, {.v = picomtoggle}},
-    {MODKEY | ControlMask, XK_x,      spawn, {.v = lock_alt_alt}},
+	{MODKEY | ShiftMask,   XK_b,      spawn, {.v = compositor}},
     {MODKEY | ShiftMask,   XK_q,      spawn, {.v = forcequit}},
-    {MODKEY,               XK_z,      spawn, {.v = boomer}},
-    {MODKEY,               XK_v,      spawn, {.v = togglebaralt}},
+    {MODKEY,               XK_z,      spawn, {.v = zoom}},
 
     // Gaps
     {MODKEY,             XK_minus, setgaps, {.i = -1}},
@@ -91,37 +95,37 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_equal, setgaps, {.i = 0.00}},
 
     // NMaster 
-		{MODKEY | ShiftMask, XK_i, incnmaster, {.i = -1}},
+	{MODKEY | ShiftMask, XK_i, incnmaster, {.i = -1}},
     {MODKEY,             XK_i, incnmaster, {.i = +1}},
     {MODKEY,             XK_g, incnmaster, {.i = 0}},
 
-		// MFacts
+	// MFacts
     {MODKEY,             key_left,  setmfact, {.f = -0.05}},
-		{MODKEY,             key_right, setmfact, {.f = +0.05}},
+	{MODKEY,             key_right, setmfact, {.f = +0.05}},
     {MODKEY | ShiftMask, XK_o,      setcfact, {.f = 0.00}},
     
-		// CFact
-		{MODKEY, key_up,   setcfact, {.f = +0.25}},
+	// CFact
+	{MODKEY, key_up,   setcfact, {.f = +0.25}},
     {MODKEY, key_down, setcfact, {.f = -0.25}},
-		{MODKEY, XK_o,     setmfact, {.f = 0.00}},
+	{MODKEY, XK_o,     setmfact, {.f = 0.00}},
     
-		// Movement
-		{MODKEY | ShiftMask, key_down, focusstack, {.i = +1}},
+	// Movement
+	{MODKEY | ShiftMask, key_down, focusstack, {.i = +1}},
     {MODKEY | ShiftMask, key_up,   focusstack, {.i = -1}},
 
-		// Window Resize
-		{ MODKEY|ControlMask, key_down,	 moveresize, {.v = (int []){ 0, -10, 0, 20 }}}.
-		{ MODKEY|ControlMask,	key_up,		 moveresize, {.v = (int []){ 0, 10, 0, -20 }}},
-		{ MODKEY|ControlMask,	key_right, moveresize, {.v = (int []){ -10, 0, 20, 0 }}},
-		{ MODKEY|ControlMask,	key_left,	 moveresize, {.v = (int []){ 10, 0, -20, 0 }}},
+	// Window Resize
+	{MODKEY|ControlMask, key_down,	moveresize, {.v = (int []){ 0, -10, 0, 20 }}}.
+	{MODKEY|ControlMask, key_up,	moveresize, {.v = (int []){ 0, 10, 0, -20 }}},
+	{MODKEY|ControlMask, key_right, moveresize, {.v = (int []){ -10, 0, 20, 0 }}},
+	{MODKEY|ControlMask, key_left,	moveresize, {.v = (int []){ 10, 0, -20, 0 }}},
 		
-		// Window properties
+	// Window properties
     {MODKEY,               XK_q,       killclient,     {0}},
     {MODKEY | ShiftMask,   XK_space,   togglefloating, {0}},
     {MODKEY | ControlMask, XK_Return,  zoom,           {0}},
 
-		// Layout
-		{MODKEY,             XK_s,     cyclelayout, {.i = -1}},
+	// Layout
+	{MODKEY,             XK_s,     cyclelayout, {.i = -1}},
     {MODKEY,             XK_d,     cyclelayout, {.i = +1}},
     {MODKEY,             XK_f,     setlayout,   {.v = &layouts[1]}},
     {MODKEY | ShiftMask, XK_0,     tag,         {.ui = ~0}},
@@ -130,26 +134,26 @@ static const Key keys[] = {
     {MODKEY,             XK_Tab,   view,        {0}},
 
     // Misc
-    {MODKEY | ShiftMask, XK_f, togglefullscr, {0}},
-		{MODKEY, XK_F5, xrdb, {.v = NULL}},
+	{MODKEY,             XK_F5, xrdb,           {.v = NULL}},
+	{MODKEY | ShiftMask, XK_f,  togglefullscr,  {0} },
 		
-		// Monitor 
-		{MODKEY, XK_comma, focusmon, {.i = -1}},
-    {MODKEY, XK_period, focusmon, {.i = +1}},
-    {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
-    {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
-		{MODKEY | ControlMask, XK_comma, focustagmon, {.i = -1}},
-		{MODKEY | ControlMask, XK_period, focustagmon, {.i = +1}},
+	// Monitor 
+	{MODKEY,               XK_comma,  focusmon,    {.i = -1}},
+    {MODKEY,               XK_period, focusmon,    {.i = +1}},
+    {MODKEY | ShiftMask,   XK_comma,  tagmon,      {.i = -1}},
+    {MODKEY | ShiftMask,   XK_period, tagmon,      {.i = +1}},
+	{MODKEY | ControlMask, XK_comma,  focustagmon, {.i = -1}},
+	{MODKEY | ControlMask, XK_period, focustagmon, {.i = +1}},
     
-		// Tags
-		TAGKEYS(XK_1, 0), 
-		TAGKEYS(XK_2, 1),
-		TAGKEYS(XK_3, 2),
-		TAGKEYS(XK_4, 3),
+	// Tags
+	TAGKEYS(XK_1, 0), 
+	TAGKEYS(XK_2, 1),
+	TAGKEYS(XK_3, 2),
+	TAGKEYS(XK_4, 3),
     TAGKEYS(XK_5, 4),
-		TAGKEYS(XK_6, 5),
-		TAGKEYS(XK_7, 6),
-		TAGKEYS(XK_8, 7),
+	TAGKEYS(XK_6, 5),
+	TAGKEYS(XK_7, 6),
+	TAGKEYS(XK_8, 7),
     TAGKEYS(XK_9, 8)
 };
 
