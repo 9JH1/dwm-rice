@@ -1,17 +1,19 @@
-#include "../join.h"
 #include <X11/XF86keysym.h>
 
 // Basic Variables 
-static const unsigned int gappx    = 6;        /* gaps between windows */
+static const unsigned int gappx    = 10;
 static const unsigned int snap     = 0;
-static const int gappx             = 10;
 static const int showbar           = 1;
 static const int topbar            = 1;
 static const int nmaster           = 1;
 static const int resizehints       = 0;
 static const float mfact           = 0.5;
 static const int lockfullscreen    = 0;
+static const int refreshrate       = 120; 
 static const unsigned int borderpx = 3;
+static char dmenumon[2]            = "0"; 
+static const int statusmon         = 'A'; 
+
 
 // Colors
 static char normbgcolor[] = "#222222";
@@ -19,16 +21,11 @@ static char normbordercolor[] = "#444444";
 static char normfgcolor[] = "#bbbbbb";
 static char selfgcolor[] = "#eeeeee";
 static char selbordercolor[] = "#005577";
-static const char *const autostart[] = {
-	"st", NULL,
-	NULL /* terminate */
-};
-
 static char selbgcolor[] = "#005577";
 
 // Arrays
-static const char *fonts[]           = { font };
-static const char *const autostart[] = {"/home/_3hy/.dwm/src/autostart.sh", NULL, NULL};
+static const char *fonts[]           = { "Terminus:size=16" };
+static const char *const autostart[] = {"/home/_3hy/.dwm/script/startup.sh", NULL, NULL};
 static char *colors[][3] = {
     [SchemeNorm] = {normfgcolor, normbgcolor, normbordercolor},
     [SchemeSel] = {selfgcolor, selbgcolor, selbordercolor},
@@ -39,14 +36,14 @@ static const Rule rules[] = {
 };
 
 // Spawn vars
-static const char *dmenu[]        = { "/home/_3hy/.dwm/script/launcher.sh", NULL};
-static const char *terminal[]     = { "/home/_3hy/.dwm/script/terminal.sh", NULL};
-static const char *terminal_alt[] = { "/home/_3hy/.dwm/script/terminal.sh", "-isolate", NULL};
+static const char *dmenucmd[]     = { "/home/_3hy/.dwm/script/launcher.sh", NULL};
+static const char *termcmd[]      = { "/home/_3hy/.dwm/script/terminal.sh", NULL};
+static const char *termcmdalt[]   = { "/home/_3hy/.dwm/script/terminal.sh", "-isolate", NULL};
 static const char *wallpaper[]    = { "/home/_3hy/.dwm/script/background.sh", "--select", NULL};
 static const char *screenshot[]   = { "/home/_3hy/.dwm/script/screenshot.sh", NULL};
-static const char *zoom[]         = { "boomer", NULL};
+static const char *zoomcmd[]      = { "/home/_3hy/.dwm/script/zoom.sh", NULL};
 static const char *forcequit[]    = { "/home/_3hy/.dwm/script/forcequit.sh", NULL};
-static const char *compositor[]   = { "/home/_3hy/.dwm/script/picom.sh", NULL};
+static const char *compositor[]   = { "/home/_3hy/.dwm/script/compositor.sh", NULL};
 static const char *lock[]         = { "/home/_3hy/.dwm/script/lockscreen.sh", "--suspend",  NULL};
 static const char *lock_alt[]     = { "/home/_3hy/.dwm/script/lockscreen.sh", "--freeze", NULL};
 static const char *autostartcmd[] = {autostart[0], NULL};
@@ -67,7 +64,7 @@ static const Layout layouts[] = {
     {NULL, NULL},
 };
 
-/* key definitions */
+// Definitions
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY, TAG)                                                      \
   {MODKEY, KEY, view, {.ui = 1 << TAG}},                                       \
@@ -77,17 +74,17 @@ static const Layout layouts[] = {
 // Keys!
 static const Key keys[] = {
 	// Spawn keybinds
-    {MODKEY,             XK_r,      spawn, {.v = dmenu}},
-    {MODKEY,             XK_Return, spawn, {.v = terminal}},
-    {MODKEY | ShiftMask, XK_Return, spawn, {.v = terminal_alt}},
+    {MODKEY,             XK_r,      spawn, {.v = dmenucmd}},
+    {MODKEY,             XK_Return, spawn, {.v = termcmd}},
+    {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmdalt}},
     {MODKEY,             XK_t,      spawn, {.v = wallpaper}},
     {MODKEY,             XK_x,      spawn, {.v = lock}},
     {MODKEY,             XK_m,      spawn, {.v = lock_alt}},
     {MODKEY | ShiftMask, XK_s,      spawn, {.v = screenshot}},
     {MODKEY | ShiftMask, XK_r,      spawn, {.v = autostartcmd}},
-	{MODKEY | ShiftMask, XK_b,      spawn, {.v = compositor}},
+		{MODKEY | ShiftMask, XK_b,      spawn, {.v = compositor}},
     {MODKEY | ShiftMask, XK_q,      spawn, {.v = forcequit}},
-    {MODKEY,             XK_z,      spawn, {.v = zoom}},
+    {MODKEY,             XK_z,      spawn, {.v = zoomcmd}},
 
     // Gaps
     {MODKEY,             XK_minus, setgaps, {.i = -1}},
@@ -114,15 +111,16 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, key_up,   focusstack, {.i = -1}},
 
 	// Window Resize
-	{MODKEY|ControlMask, key_down,	moveresize, {.v = (int []){ 0, -10, 0, 20 }}}.
+	{MODKEY|ControlMask, key_down,	moveresize, {.v = (int []){ 0, -10, 0, 20 }}},
 	{MODKEY|ControlMask, key_up,	moveresize, {.v = (int []){ 0, 10, 0, -20 }}},
 	{MODKEY|ControlMask, key_right, moveresize, {.v = (int []){ -10, 0, 20, 0 }}},
 	{MODKEY|ControlMask, key_left,	moveresize, {.v = (int []){ 10, 0, -20, 0 }}},
 		
 	// Window properties
-    {MODKEY,               XK_q,       killclient,     {0}},
-    {MODKEY | ShiftMask,   XK_space,   togglefloating, {0}},
-    {MODKEY | ControlMask, XK_Return,  zoom,           {0}},
+	{MODKEY | ControlMask, XK_q,      quit,           {0}},
+    {MODKEY,               XK_q,      killclient,     {0}},
+    {MODKEY | ShiftMask,   XK_space,  togglefloating, {0}},
+    {MODKEY | ControlMask, XK_Return, zoom,           {0}},
 
 	// Layout
 	{MODKEY,             XK_s,     cyclelayout, {.i = -1}},
@@ -135,7 +133,8 @@ static const Key keys[] = {
 
     // Misc
 	{MODKEY,             XK_F5, xrdb,           {.v = NULL}},
-	{MODKEY | ShiftMask, XK_f,  togglefullscr,  {0} },
+	{MODKEY | ShiftMask, XK_f,  togglefullscr,  {0}},
+	{MODKEY,             XK_v,  togglebar,      {0}},
 		
 	// Monitor 
 	{MODKEY,               XK_comma,  focusmon,    {.i = -1}},

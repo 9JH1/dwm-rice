@@ -5,5 +5,5 @@ cat config.def.h > config.h
 sudo make clean install
 set +x
 git add . 
-git commit -m "$date"
+git commit -m "auto_dwm_$(date)"
 git push
