@@ -12,8 +12,6 @@ static const int lockfullscreen    = 0;
 static const int refreshrate       = 120; 
 static const unsigned int borderpx = 3;
 static char dmenumon[2]            = "0"; 
-static const int statusmon         = 'A'; 
-
 
 // Colors
 static char normbgcolor[] = "#222222";
@@ -65,7 +63,7 @@ static const Layout layouts[] = {
 };
 
 // Definitions
-#define MODKEY Mod4Mask
+#define MODKEY Mod1Mask
 #define TAGKEYS(KEY, TAG)                                                      \
   {MODKEY, KEY, view, {.ui = 1 << TAG}},                                       \
   {MODKEY | ControlMask, KEY, tagandview, {.ui = 1 << TAG}},               \

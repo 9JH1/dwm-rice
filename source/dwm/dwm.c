@@ -2463,9 +2463,17 @@ zoom(const Arg *arg)
 	pop(c);
 }
 
+void 
+handle_sig()
+{
+	xrdb((Arg *){.v = NULL});
+}
+
+
 int
 main(int argc, char *argv[])
 {
+
 	if (argc == 2 && !strcmp("-v", argv[1]))
 		die("dwm-"VERSION);
 	else if (argc != 1)
@@ -2474,9 +2482,11 @@ main(int argc, char *argv[])
 		fputs("warning: no locale support\n", stderr);
 	if (!(dpy = XOpenDisplay(NULL)))
 		die("dwm: cannot open display");
+	
 	checkotherwm();
-        XrmInitialize();
-        loadxrdb();
+  XrmInitialize();
+  loadxrdb();
+	signal(SIGUSR1, handle_sig);
 	autostart_exec();
 	setup();
 #ifdef __OpenBSD__
