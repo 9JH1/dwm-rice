@@ -46,7 +46,7 @@ static const char *wallpaper[]    = { "/home/_3hy/.dwm/script/background.sh", "-
 static const char *screenshot[]   = { "/home/_3hy/.dwm/script/screenshot.sh", NULL};
 static const char *zoom[]         = { "boomer", NULL};
 static const char *forcequit[]    = { "/home/_3hy/.dwm/script/forcequit.sh", NULL};
-static const char *compositor[]  = { "/home/_3hy/.dwm/script/picom.sh", NULL};
+static const char *compositor[]   = { "/home/_3hy/.dwm/script/picom.sh", NULL};
 static const char *lock[]         = { "/home/_3hy/.dwm/script/lockscreen.sh", "--suspend",  NULL};
 static const char *lock_alt[]     = { "/home/_3hy/.dwm/script/lockscreen.sh", "--freeze", NULL};
 static const char *autostartcmd[] = {autostart[0], NULL};
@@ -77,17 +77,17 @@ static const Layout layouts[] = {
 // Keys!
 static const Key keys[] = {
 	// Spawn keybinds
-    {MODKEY,               XK_r,      spawn, {.v = dmenu}},
-    {MODKEY,               XK_Return, spawn, {.v = terminal}},
-    {MODKEY | ShiftMask,   XK_Return, spawn, {.v = terminal_alt}},
-    {MODKEY,               XK_t,      spawn, {.v = wallpaper}},
-    {MODKEY,               XK_x,      spawn, {.v = lock}},
-    {MODKEY,               XK_m,      spawn, {.v = lock_alt}},
-    {MODKEY | ShiftMask,   XK_s,      spawn, {.v = screenshot}},
-    {MODKEY | ShiftMask,   XK_r,      spawn, {.v = autostartcmd}},
-	{MODKEY | ShiftMask,   XK_b,      spawn, {.v = compositor}},
-    {MODKEY | ShiftMask,   XK_q,      spawn, {.v = forcequit}},
-    {MODKEY,               XK_z,      spawn, {.v = zoom}},
+    {MODKEY,             XK_r,      spawn, {.v = dmenu}},
+    {MODKEY,             XK_Return, spawn, {.v = terminal}},
+    {MODKEY | ShiftMask, XK_Return, spawn, {.v = terminal_alt}},
+    {MODKEY,             XK_t,      spawn, {.v = wallpaper}},
+    {MODKEY,             XK_x,      spawn, {.v = lock}},
+    {MODKEY,             XK_m,      spawn, {.v = lock_alt}},
+    {MODKEY | ShiftMask, XK_s,      spawn, {.v = screenshot}},
+    {MODKEY | ShiftMask, XK_r,      spawn, {.v = autostartcmd}},
+	{MODKEY | ShiftMask, XK_b,      spawn, {.v = compositor}},
+    {MODKEY | ShiftMask, XK_q,      spawn, {.v = forcequit}},
+    {MODKEY,             XK_z,      spawn, {.v = zoom}},
 
     // Gaps
     {MODKEY,             XK_minus, setgaps, {.i = -1}},
