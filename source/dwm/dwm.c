@@ -1137,10 +1137,6 @@ killclient(const Arg *arg)
 		XKillClient(dpy, selmon->sel->win);
 		XSync(dpy, False);
 		XSetErrorHandler(xerror);
-	if (c->iscentered) {
-		c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
-		c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
-	}
 		XUngrabServer(dpy);
 	}
 }
