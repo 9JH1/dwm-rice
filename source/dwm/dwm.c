@@ -812,6 +812,10 @@ dirtomon(int dir)
 void
 drawbar(Monitor *m)
 {
+
+	char string_1[] = "test123";
+	char string_2[] = "test321";
+
 	int x = 0, w, tw = 0;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
@@ -848,11 +852,16 @@ drawbar(Monitor *m)
 		x += w;
 	}
 
-	// first status 
 	if (m == selmon) {
+		
+		// first status 
 		drw_setscheme(drw, scheme[SchemeSel]);
-		tw = TEXTW(stext) - lrpad;
-		drw_text(drw, m->ww - center_x, 0, m->ww - (m->ww - center_x), bh, 0, stext, 0);
+		tw = TEXTW(string_1) - lrpad;
+		drw_text(drw, m->ww - tw, 0, tw, bh, 0, string_1, 0);
+
+		// second status 
+		tw = TEXTW(string_2) - lrpad;
+		drw_text(drw, center_x - tw, 0, tw, bh, 0, string_2, 0);
 	}
 
 	// second status
