@@ -170,5 +170,5 @@ static const Button buttons[] = {
 };
 
 static Signal signals[] = {
-	{ 1             drawbars,       NULL},
+	{ 1,             drawbars,       NULL},
 };
