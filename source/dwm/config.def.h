@@ -173,7 +173,7 @@ static const Button buttons[] = {
 void 
 xrdb_set(const Arg *arg)
 {
-	xrdb();
+	xrdb(arg);
 }
 
 
