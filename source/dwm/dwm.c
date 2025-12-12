@@ -848,12 +848,14 @@ drawbar(Monitor *m)
 		x += w;
 	}
 
-	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
+	// first status 
+	if (m == selmon) {
 		drw_setscheme(drw, scheme[SchemeSel]);
-		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
-		drw_text(drw, m->ww - center_x, 0, tw, bh, 0, stext, 0);
+		tw = TEXTW(stext) - lrpad;
+		drw_text(drw, m->ww - center_x, 0, m->ww - (m->ww - center_x), bh, 0, stext, 0);
 	}
+
+	// second status
 
 	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
 }
