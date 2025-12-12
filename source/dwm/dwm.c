@@ -1157,6 +1157,8 @@ fake_signal(void)
 				}
 			}
 
+			printf("fsignal - %d\n", signum);
+
 			// Check if a signal was found, and if so handle it
 			if (signum)
 				for (i = 0; i < LENGTH(signals); i++)
@@ -2536,17 +2538,9 @@ zoom(const Arg *arg)
 	pop(c);
 }
 
-void 
-handle_sig()
-{
-	drawbars();
-}
-
-
 int
 main(int argc, char *argv[])
 {
-
 	if (argc == 2 && !strcmp("-v", argv[1]))
 		die("dwm-"VERSION);
 	else if (argc != 1)
@@ -2559,7 +2553,6 @@ main(int argc, char *argv[])
 	checkotherwm();
   XrmInitialize();
   loadxrdb();
-	signal(SIGUSR1, handle_sig);
 	autostart_exec();
 	setup();
 #ifdef __OpenBSD__
