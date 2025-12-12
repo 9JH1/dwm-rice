@@ -777,9 +777,6 @@ createmon(void)
 	{
 		first_mon_flagged = 1;
 	m->bh = bh;
-		m->isprimary = 1;
-	} else 
-		m->isprimary = 0;
 
 	m->tagset[0] = m->tagset[1] = 1;
 	m->mfact = mfact;
