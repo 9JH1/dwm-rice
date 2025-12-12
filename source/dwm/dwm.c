@@ -855,7 +855,7 @@ drawbar(Monitor *m)
 	if (m == selmon) {
 		
 		// first status 
-		drw_setscheme(drw, scheme[SchemeSel]);
+		drw_setscheme(drw, scheme[SchemeNorm]);
 		tw = TEXTW(string_1) - lrpad;
 		drw_text(drw, m->ww - tw, 0, tw, bh, 0, string_1, 0);
 
