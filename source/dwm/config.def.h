@@ -113,7 +113,7 @@ static const Key keys[] = {
 	{MODKEY|ControlMask, key_up,	moveresize, {.v = (int []){ 0, 10, 0, -20 }}},
 	{MODKEY|ControlMask, key_right, moveresize, {.v = (int []){ -10, 0, 20, 0 }}},
 	{MODKEY|ControlMask, key_left,	moveresize, {.v = (int []){ 10, 0, -20, 0 }}},
-		
+	
 	// Window properties
 	{MODKEY | ControlMask, XK_q,      quit,           {0}},
     {MODKEY,               XK_q,      killclient,     {0}},
@@ -167,4 +167,16 @@ static const Button buttons[] = {
     {ClkTagBar,     0,      Button3, toggleview,     {0}},
     {ClkTagBar,     MODKEY, Button1, tag,            {0}},
     {ClkTagBar,     MODKEY, Button3, toggletag,      {0}}
+};
+
+
+void 
+xrdb_set(const Arg *arg)
+{
+	xrdb();
+}
+
+
+static Signal signals[] = {
+	{ 1,            xrdb,      {.v = NULL}},
 };
