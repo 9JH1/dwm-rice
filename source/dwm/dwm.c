@@ -1157,13 +1157,14 @@ fake_signal(void)
 				}
 			}
 
-			printf("fsignal - %d\n", signum);
 
 			// Check if a signal was found, and if so handle it
 			if (signum)
 				for (i = 0; i < LENGTH(signals); i++)
-					if (signum == signals[i].signum && signals[i].func)
+					if (signum == signals[i].signum && signals[i].func){
+						printf("fsignal - %d\n", signum);
 						signals[i].func(&(signals[i].arg));
+					}
 
 			// A fake signal was sent
 			return 1;
@@ -1208,12 +1209,13 @@ loadxrdb()
       xrdb = XrmGetStringDatabase(resm);
 
       if (xrdb != NULL) {
-        XRDB_LOAD_COLOR("dwm.normbordercolor", normbordercolor);
-        XRDB_LOAD_COLOR("dwm.normbgcolor", normbgcolor);
-        XRDB_LOAD_COLOR("dwm.normfgcolor", normfgcolor);
-        XRDB_LOAD_COLOR("dwm.selbordercolor", selbordercolor);
-        XRDB_LOAD_COLOR("dwm.selbgcolor", selbgcolor);
-        XRDB_LOAD_COLOR("dwm.selfgcolor", selfgcolor);
+        XRDB_LOAD_COLOR("background", normbordercolor);
+        XRDB_LOAD_COLOR("background", normbgcolor);
+        XRDB_LOAD_COLOR("background", normfgcolor);
+
+        XRDB_LOAD_COLOR("color1", selbordercolor);
+        XRDB_LOAD_COLOR("color1", selbgcolor);
+        XRDB_LOAD_COLOR("color1", selfgcolor);
       }
     }
   }
