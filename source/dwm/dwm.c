@@ -152,6 +152,7 @@ struct Monitor {
 	char ltsymbol[16];
 	char lastltsymbol[16];
 	float mfact;
+	int isprimary;
 	int nmaster;
 	int num;
 	int by, bh;           /* bar geometry */
@@ -164,9 +165,12 @@ struct Monitor {
 	unsigned int tagset[2];
 	int showbar;
 	int topbar;
-	Client *clients;
+	Client *clientso;
+	TagState tagstate;
 	Client *sel;
 	Client *stack;
+	Client *lastsetl;
+	const Layout *lastlt;
 	Monitor *next;
 	Window barwin;
 	Window traywin;
