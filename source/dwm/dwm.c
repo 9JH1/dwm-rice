@@ -165,11 +165,11 @@ struct Monitor {
 	unsigned int tagset[2];
 	int showbar;
 	int topbar;
-	Client *clientso;
+	Client *clients;
 	TagState tagstate;
 	Client *sel;
 	Client *stack;
-	Client *lastsetl;
+	Client *lastsel;
 	const Layout *lastlt;
 	Monitor *next;
 	Window barwin;
