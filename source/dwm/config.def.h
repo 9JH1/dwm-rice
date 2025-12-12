@@ -14,12 +14,12 @@ static const unsigned int borderpx = 3;
 static char dmenumon[2]            = "0"; 
 
 // Colors
-static char normbgcolor[] = "#222222";
-static char normbordercolor[] = "#444444";
-static char normfgcolor[] = "#bbbbbb";
-static char selfgcolor[] = "#eeeeee";
-static char selbordercolor[] = "#005577";
-static char selbgcolor[] = "#005577";
+static char normbgcolor[] = "#ff0000";
+static char normbordercolor[] = "#00ff00";
+static char normfgcolor[] = "#0000ff";
+static char selfgcolor[] = "#ffff00";
+static char selbordercolor[] = "#00ffff";
+static char selbgcolor[] = "#ff00ff";
 
 // Arrays
 static const char *fonts[]           = { "Terminus:size=16" };
