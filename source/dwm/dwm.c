@@ -1211,11 +1211,11 @@ loadxrdb()
       if (xrdb != NULL) {
         XRDB_LOAD_COLOR("background", normbordercolor);
         XRDB_LOAD_COLOR("background", normbgcolor);
-        XRDB_LOAD_COLOR("background", normfgcolor);
+        XRDB_LOAD_COLOR("color1", normfgcolor);
 
         XRDB_LOAD_COLOR("color1", selbordercolor);
         XRDB_LOAD_COLOR("color1", selbgcolor);
-        XRDB_LOAD_COLOR("color1", selfgcolor);
+        XRDB_LOAD_COLOR("background", selfgcolor);
       }
     }
   }
