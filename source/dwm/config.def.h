@@ -5,10 +5,10 @@ static const unsigned int gappx    = 10;
 static const unsigned int snap     = 0;
 static const int showbar           = 0;
 static const int topbar            = 1;
-static const int usealtbar          = 1;
-static const char *altbarclass      = "Polybar";
-static const char *alttrayname      = "tray";
-static const char *altbarcmd        = "/home/_3hy/.dwm/script/bar.sh &"; 
+static const int usealtbar         = 1;
+static const char *altbarclass     = "Polybar";
+static const char *alttrayname     = "snixembed";
+static const char *altbarcmd       = "/home/_3hy/.dwm/script/bar.sh no-run"; 
 static const int nmaster           = 1;
 static const int resizehints       = 0;
 static const float mfact           = 0.5;
@@ -18,12 +18,12 @@ static const unsigned int borderpx = 3;
 static char dmenumon[2]            = "0"; 
 
 // Colors
-static char normbgcolor[] = "#ff0000";
+static char normbgcolor[]     = "#ff0000";
 static char normbordercolor[] = "#00ff00";
-static char normfgcolor[] = "#0000ff";
-static char selfgcolor[] = "#ffff00";
-static char selbordercolor[] = "#00ffff";
-static char selbgcolor[] = "#ff00ff";
+static char normfgcolor[]     = "#0000ff";
+static char selfgcolor[]      = "#ffff00";
+static char selbordercolor[]  = "#00ffff";
+static char selbgcolor[]      = "#ff00ff";
 
 // Arrays
 static const char *fonts[]           = { "Terminus:size=16" };
@@ -113,6 +113,24 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, key_up,   focusstack, {.i = -1}},
 
 	// Window Resize
+static const char *ipcsockpath = "/tmp/dwm.sock";
+static IPCCommand ipccommands[] = {
+  IPCCOMMAND(  view,                1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  toggleview,          1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  tag,                 1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  toggletag,           1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  tagmon,              1,      {ARG_TYPE_UINT}   ),
+  IPCCOMMAND(  focusmon,            1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  focusstack,          1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  zoom,                1,      {ARG_TYPE_NONE}   ),
+  IPCCOMMAND(  incnmaster,          1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  killclient,          1,      {ARG_TYPE_SINT}   ),
+  IPCCOMMAND(  togglefloating,      1,      {ARG_TYPE_NONE}   ),
+  IPCCOMMAND(  setmfact,            1,      {ARG_TYPE_FLOAT}  ),
+  IPCCOMMAND(  setlayoutsafe,       1,      {ARG_TYPE_PTR}    ),
+  IPCCOMMAND(  quit,                1,      {ARG_TYPE_NONE}   )
+};
+
 	{MODKEY|ControlMask, key_down,	moveresize, {.v = (int []){ 0, -10, 0, 20 }}},
 	{MODKEY|ControlMask, key_up,	moveresize, {.v = (int []){ 0, 10, 0, -20 }}},
 	{MODKEY|ControlMask, key_right, moveresize, {.v = (int []){ -10, 0, 20, 0 }}},
