@@ -3,8 +3,12 @@
 // Basic Variables 
 static const unsigned int gappx    = 10;
 static const unsigned int snap     = 0;
-static const int showbar           = 1;
+static const int showbar           = 0;
 static const int topbar            = 1;
+static const int usealtbar          = 1;
+static const char *altbarclass      = "Polybar";
+static const char *alttrayname      = "tray";
+static const char *altbarcmd        = "/home/_3hy/,dwm/script/bar.sh"; 
 static const int nmaster           = 1;
 static const int resizehints       = 0;
 static const float mfact           = 0.5;
