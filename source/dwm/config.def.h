@@ -168,14 +168,3 @@ static const Button buttons[] = {
     {ClkTagBar,     MODKEY, Button1, tag,            {0}},
     {ClkTagBar,     MODKEY, Button3, toggletag,      {0}}
 };
-
-static void
-draw_bars_call(const Arg *a)
-{
-	drawbars();
-}
-
-static Signal signals[] = {
-	{ 1,             draw_bars_call,       {.v = NULL}},
-	{ 2,             xrdb,           {.v = NULL}},
-};
