@@ -812,17 +812,19 @@ dirtomon(int dir)
 void
 drawbar(Monitor *m)
 {
-	int x, w, tw = 0;
+	int x = 0, w, tw = 0;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
-	Client *c;
+
+		drw_rect(drw, 0, 0, m->ww, m->wh, 1, 0);
+
 
 	if (!m->showbar)
 		return;	
 
 	w = TEXTW(m->ltsymbol);
-	drw_setscheme(drw, scheme[SchemeNorm]);
+	drw_setscheme(drw, scheme[SchemeSel]);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
 	x = w;
@@ -852,8 +854,8 @@ drawbar(Monitor *m)
 		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
 		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
 	}
-
-	/*if ((w = m->ww - tw - x) > bh) {
+	/*
+	if ((w = m->ww - tw - x) > bh) {
 		if (m->sel) {
 			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
 			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
@@ -1158,11 +1160,14 @@ fake_signal(void)
 				}
 			}
 
+
 			// Check if a signal was found, and if so handle it
 			if (signum)
 				for (i = 0; i < LENGTH(signals); i++)
-					if (signum == signals[i].signum && signals[i].func)
+					if (signum == signals[i].signum && signals[i].func){
+						printf("fsignal - %d\n", signum);
 						signals[i].func(&(signals[i].arg));
+					}
 
 			// A fake signal was sent
 			return 1;
@@ -1207,12 +1212,14 @@ loadxrdb()
       xrdb = XrmGetStringDatabase(resm);
 
       if (xrdb != NULL) {
-        XRDB_LOAD_COLOR("dwm.normbordercolor", normbordercolor);
-        XRDB_LOAD_COLOR("dwm.normbgcolor", normbgcolor);
-        XRDB_LOAD_COLOR("dwm.normfgcolor", normfgcolor);
-        XRDB_LOAD_COLOR("dwm.selbordercolor", selbordercolor);
-        XRDB_LOAD_COLOR("dwm.selbgcolor", selbgcolor);
-        XRDB_LOAD_COLOR("dwm.selfgcolor", selfgcolor);
+        XRDB_LOAD_COLOR("color1", selbordercolor);
+        XRDB_LOAD_COLOR("background", normbordercolor);
+
+        XRDB_LOAD_COLOR("color1", normfgcolor);
+        XRDB_LOAD_COLOR("color5", normbgcolor);
+
+        XRDB_LOAD_COLOR("background", selfgcolor);
+        XRDB_LOAD_COLOR("color5", selbgcolor);
       }
     }
   }
@@ -2537,17 +2544,9 @@ zoom(const Arg *arg)
 	pop(c);
 }
 
-void 
-handle_sig()
-{
-	drawbars();
-}
-
-
 int
 main(int argc, char *argv[])
 {
-
 	if (argc == 2 && !strcmp("-v", argv[1]))
 		die("dwm-"VERSION);
 	else if (argc != 1)
@@ -2560,7 +2559,6 @@ main(int argc, char *argv[])
 	checkotherwm();
   XrmInitialize();
   loadxrdb();
-	signal(SIGUSR1, handle_sig);
 	autostart_exec();
 	setup();
 #ifdef __OpenBSD__
