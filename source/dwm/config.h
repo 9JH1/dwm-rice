@@ -170,7 +170,7 @@ static const Button buttons[] = {
 };
 
 static void
-draw_bars_call(Arg *a)
+draw_bars_call(const Arg *a)
 {
 	drawbars();
 }
