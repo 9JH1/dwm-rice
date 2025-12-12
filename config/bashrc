@@ -7,7 +7,7 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-export PATH="/home/_3hy/.cargo/bin:$PATH"
+export PATH="$HOME/.cargo/bin/:$HOME/.local/bin/:$PATH"
 
 alias grep='grep --color=auto'
 PS1='\e[32;1m[\u@\h]\e[34;1m \w \e[0m# '
@@ -28,8 +28,7 @@ function ls(){
 	fi
 }
 
-[[ ! -n $TMUX_SF ]] && return
-
+[[ ! $TMUX_SF ]] && return
 # Tmux config
 TMUX_PATH="/tmp/tmux.conf"
 
@@ -87,3 +86,7 @@ elif [[ ! "$ZSH_ISOLATE" =  "1" ]]; then
 	exit
 fi
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
