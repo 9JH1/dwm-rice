@@ -1,0 +1,3 @@
+bar setup:
+SYMBOL | CPU | RAM | LOAD                                       XWORKSPACES                                   SYSTRAY | NOTIFICATIONS | KEYLAYOUT | TIME 
+MEDIA PREV | MEDIA PLAY | MEDIA NEXT | MEDIA                                          NETWORK SPEED | VOLUME | FREE STORAGE | CLIENT NAME | MONITOR NAME 
