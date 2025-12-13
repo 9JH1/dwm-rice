@@ -3,12 +3,6 @@
 // Basic Variables 
 static const unsigned int gappx    = 10;
 static const unsigned int snap     = 0;
-static const int showbar           = 0;
-static const int topbar            = 1;
-static const int usealtbar         = 1;
-static const char *altbarclass     = "Polybar";
-static const char *alttrayname     = "snixembed";
-static const char *altbarcmd       = "/home/_3hy/.dwm/script/bar.sh no-run"; 
 static const int nmaster           = 1;
 static const int resizehints       = 0;
 static const float mfact           = 0.5;
@@ -67,7 +61,7 @@ static const Layout layouts[] = {
 };
 
 // Definitions
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY, TAG)                                                      \
   {MODKEY, KEY, view, {.ui = 1 << TAG}},                                       \
   {MODKEY | ControlMask, KEY, tagandview, {.ui = 1 << TAG}},               \
@@ -137,7 +131,6 @@ static const Key keys[] = {
     // Misc
 	{MODKEY,             XK_F5, xrdb,           {.v = NULL}},
 	{MODKEY | ShiftMask, XK_f,  togglefullscr,  {0}},
-	{MODKEY,             XK_v,  togglebar,      {0}},
 		
 	// Monitor 
 	{MODKEY,               XK_comma,  focusmon,    {.i = -1}},
@@ -183,7 +176,7 @@ xrdb_set(const Arg *arg)
 
 
 static Signal signals[] = {
-	{ 1,            xrdb,      {.v = NULL}},
+	{ 1,            xrdb_set,      {.v = NULL}},
 };
 
 static const char *ipcsockpath = "/tmp/dwm.sock";

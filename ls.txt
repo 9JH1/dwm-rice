@@ -1,1 +1,0 @@
-ls -F -b -T 0 --color=auto

@@ -1,17 +1,17 @@
 #!/bin/bash
-# Basic screenshot script
+# Takes a selction screenshot and also saves
+# a fullscreen screenshot to ~/Pictures/screenshots
 
-# Create dirs
+# Very Lazy init
 mkdir ~/Pictures &>/dev/null
 mkdir ~/Pictures/screenshots/ &>/dev/null
 
-# Get paths
-file_path=~/Pictures/screenshots/$(date +'%Y-%m-%d_%H-%M-%S')
-file_cut_path=$file_path"_tmp.png"
-file_path=$file_path".png"
+file_path=~/Pictures/screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
+tmp_file=$(mktemp --suffix=".png")
 
-# Get selection
-maim -s -u $file_cut_path && xclip -selection clipboard -t image/png -i $file_cut_path
-
-# Get full size screenshot
-maim "$file_path"	
+maim -s -u "$tmp_file" 
+if [ $? -eq 0 ]; then 
+	cat "$tmp_file" | xclip -selection clipboard -t image/png
+	maim "$file_path"
+	notify-send -i "$tmp_path" "Screenshot copied to clipboard"
+fi

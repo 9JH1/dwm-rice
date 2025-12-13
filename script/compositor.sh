@@ -4,6 +4,8 @@
 # OR if the --restart flag is run 
 # with then picom will only be 
 # started 
+#
+# Are code comments even neccercery?
 
 start(){ picom --config ~/.dwm/config/picom.conf; }
 stop(){ killall picom; }
@@ -16,3 +18,4 @@ if pgrep -x "picom" &>/dev/null; then
 else 
 	start
 fi
+

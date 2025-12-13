@@ -1,23 +1,22 @@
 #!/bin/bash
-# "export ZDOTDIR='$SCRIPT_DIR/../conf/' && export ZSH_ISOLATE=$isolate && exec zsh"
+# Start terminal with tmux or 
+# in iso_term class without tmux
+# 
 
 isolate=0;
+
+# Determine flags
 [[ "$1" == "-isolate" ]] && isolate=1;
-[[ "$1" == "no-run" ]] && exit
+[[ "$1" == "no-run" ]] && exit;
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-source ~/.cache/wal/colors.sh
+# Set mode arguments 
+st_args=(-f "Terminus:size=15");
 
-st_args=();
-[[ $isolate -eq 1 ]] && st_args=(-c "iso_term");
+[[ $isolate -eq 1 ]] && { 
+	st_args+=(-c "iso_term");	
+} || {
+	st_args+=(-e bash -c "export TMUX_SF=1 && bash") 
+}
 
-st_args+=(
-    -f "Terminus:size=15"
-)
-
-[[ "$isolate" = "0" ]] && st_args+=(
-    "-e bash -c \"TMUX_SF=1 bash\"" 
-	)
-
-echo "Running: st ${st_args[*]}"
+# Run terminal with args 
 exec st "${st_args[@]}"
