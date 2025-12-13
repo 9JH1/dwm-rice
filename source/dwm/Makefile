@@ -6,9 +6,10 @@ include config.mk
 SRC = drw.c dwm.c util.c
 OBJ = ${SRC:.c=.o}
 
-all: dwm dwm-msg
+all: dwm dwm-msg 
 
 .c.o:
+	cat config.def.h > config.h
 	${CC} -c ${CFLAGS} $<
 
 ${OBJ}: config.h config.mk

@@ -1,0 +1,2 @@
+fix bug where st will be killed 
+	- I know this is caused anytime the background.sh script is called

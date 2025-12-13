@@ -7,8 +7,6 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 # Quit old programs
 killall unclutter lxqt-policykit-agent nemo-desktop unclutter nm-applet
 
-# Scripts
-$SCRIPT_DIR/background.sh &>/dev/null
 
 # Setup, this isent really required but because of the autostart keybind $mod+r 
 # its nice to be able to easily re-run programs very easily as sometimes they can 
@@ -23,3 +21,9 @@ xrandr --output DisplayPort-0 --primary --mode 1920x1080 --pos 0x0 --rotate norm
 # Actual applications / services
 lxqt-policykit-agent &>/dev/null &
 nm-applet &
+nemo-desktop & 
+
+
+# Scripts (this must go last)
+$SCRIPT_DIR/background.sh &>/dev/null & 
+$SCRIPT_DIR/compositor.sh --restart &

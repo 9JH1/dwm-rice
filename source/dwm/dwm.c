@@ -76,10 +76,27 @@
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel }; /* color schemes */
-enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
-       NetWMFullscreen, NetActiveWindow, NetWMWindowType,
-       NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
-enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
+enum { 
+	NetSupported, 
+	NetWMName, 
+	NetWMState, 
+	NetWMCheck,
+    NetWMFullscreen, 
+	NetActiveWindow, 
+	NetWMWindowType,
+    NetWMWindowTypeDialog, 
+	NetClientList, 
+	NetLast}; /* EWMH atoms */
+
+enum { 
+	WMProtocols, 
+	WMDelete, 
+	WMState, 
+	WMTakeFocus, 
+	NetWMWindowTypeDesktop, 
+	WMLast 
+}; /* default atoms */
+
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast }; /* clicks */
 
@@ -1154,12 +1171,12 @@ loadxrdb()
       xrdb = XrmGetStringDatabase(resm);
 
       if (xrdb != NULL) {
-        XRDB_LOAD_COLOR("dwm.normbordercolor", normbordercolor);
-        XRDB_LOAD_COLOR("dwm.normbgcolor", normbgcolor);
-        XRDB_LOAD_COLOR("dwm.normfgcolor", normfgcolor);
-        XRDB_LOAD_COLOR("dwm.selbordercolor", selbordercolor);
-        XRDB_LOAD_COLOR("dwm.selbgcolor", selbgcolor);
-        XRDB_LOAD_COLOR("dwm.selfgcolor", selfgcolor);
+        XRDB_LOAD_COLOR("dwm.background", normbordercolor);
+        XRDB_LOAD_COLOR("dwm.background", normbgcolor);
+        XRDB_LOAD_COLOR("dwm.background", normfgcolor);
+        XRDB_LOAD_COLOR("dwm.color6", selbordercolor);
+        XRDB_LOAD_COLOR("dwm.color1", selbgcolor);
+        XRDB_LOAD_COLOR("dwm.foreground", selfgcolor);
       }
     }
   }
@@ -1171,11 +1188,37 @@ void
 manage(Window w, XWindowAttributes *wa)
 {
 	Client *c, *t = NULL;
-	Window trans = None;
+	Window trans = None; // not YET ;33333333333
 	XWindowChanges wc;
+	Monitor *m = selmon;
 
 	c = ecalloc(1, sizeof(Client));
 	c->win = w;
+
+	// don't effect desktop windows 
+	if(getatomprop(c, netatom[NetWMWindowType]) == 
+			netatom[NetWMWindowTypeDesktop]){
+	
+		c->bw = 0;
+		c->isfloating = 0;
+		c->x = wa->x; 
+		c->y = wa->y;
+		c->w = wa->width;
+		c->h = wa->height;
+		c->oldbw = c->bw;
+
+		c->mon = m;
+		c->next = m->clients;
+		m->clients = c;
+
+		XMapWindow(dpy, c->win);
+
+
+		XLowerWindow(dpy, c->win);
+		//restack(m);
+		return;
+	}
+
 	/* geometry */
 	c->x = c->oldx = wa->x;
 	c->y = c->oldy = wa->y;
@@ -1876,6 +1919,9 @@ setup(void)
 	netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
 	netatom[NetWMWindowTypeDialog] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
 	netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);
+	netatom[NetWMWindowTypeDesktop] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
+
+
 	/* init cursors */
 	cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
 	cursor[CurResize] = drw_cur_create(drw, XC_sizing);

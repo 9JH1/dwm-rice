@@ -62,6 +62,7 @@ static const Layout layouts[] = {
 
 // Definitions
 #define MODKEY Mod4Mask
+
 #define TAGKEYS(KEY, TAG)                                                      \
   {MODKEY, KEY, view, {.ui = 1 << TAG}},                                       \
   {MODKEY | ControlMask, KEY, tagandview, {.ui = 1 << TAG}},               \
@@ -131,6 +132,7 @@ static const Key keys[] = {
     // Misc
 	{MODKEY,             XK_F5, xrdb,           {.v = NULL}},
 	{MODKEY | ShiftMask, XK_f,  togglefullscr,  {0}},
+	{MODKEY | ControlMask | ShiftMask, XK_q, quit, {0}},
 		
 	// Monitor 
 	{MODKEY,               XK_comma,  focusmon,    {.i = -1}},
