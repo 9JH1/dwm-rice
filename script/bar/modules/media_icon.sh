@@ -2,8 +2,13 @@
 # Uses playerctl to display playing status
 #
 
-if [ $(playerctl status) == "Playing" ]; then
-	echo -e " "
-else 
-	echo -e " "
-fi
+stat=$(playerctl status)
+icon=""
+
+[ ! "$stat" = "Paused" ] && {
+	icon="||"
+} || {
+	icon="|>"
+}
+
+echo "%{F$1 T1}$icon%{F- T-}"

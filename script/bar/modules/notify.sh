@@ -5,8 +5,10 @@
 # to toggle this value.  
 #
 
+
+prefix="%{F$1 T1}N%{F- T-}"
 if [ $(dunstctl is-paused) = "true" ];then
-	echo -n "󰂛 %{F-}%{T1} $(dunstctl count waiting)%{T-}";
+	echo -n "$prefix off ($(dunstctl count waiting))";
 else
-  echo -n " %{F-}%{T2}on%{T-} ";
+  echo -n "$prefix on";
 fi

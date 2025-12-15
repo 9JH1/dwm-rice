@@ -12,7 +12,7 @@ if [[ "$(playerctl metadata --format '-' 2>/dev/null)" == *-* ]]; then
 	artist=$(echo "$raw_artist" | awk "{if(length > $len) printf \"%.$len's'...\n\", \$0; else print}")
 	title=$(echo "$raw_title" | awk "{if(length > $len) printf \"%.$len's'...\n\", \$0; else print}")
 
-	echo "%{T2}$artist - $title%{T-}"
+	echo "%{F$1}$artist - $title%{F-}"
 
 else 
 	echo "Nothing Playing"

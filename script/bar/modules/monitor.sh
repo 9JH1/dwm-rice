@@ -1,12 +1,23 @@
 #!/bin/bash
-# Uses dwm-msg to display the current focused mon idx 
-# then uses xrandr to get the monitors name.
+# gets the mouse location and figures out what monitor 
+# would be in that position.
 #
 
-dwm-msg subscribe monitor_focus_change_event | while IFS= read -r line; do 
-	if [[ "$line" == *"new_monitor_number"* ]];then 
-		mon_num=$(echo $line | awk '{print $2}')
-		mon_name=$(xrandr | grep "connected" | head -n $((mon_num + 1)) | tail -n 1 | awk '{print $1}')
-		echo "$mon_name"
-	fi 
-done
+eval "$(xdotool getmouselocation --shell)"
+
+# Find monitor with matching geometry
+monitor=$(xrandr --query | awk -v X="$X" -v Y="$Y" '
+  /^[^ ]+ connected/ { name=$1 }
+  /[0-9]+x[0-9]+\+[0-9]+\+[0-9]+/ {
+    match($0, /([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)/, m)
+    if (m[1] != "" && m[2] != "" && m[3] != "" && m[4] != "") {
+      w = m[1]; h = m[2]; ox = m[3]; oy = m[4]
+      if (X >= ox && X < ox + w && Y >= oy && Y < oy + h) {
+        print name
+        exit
+      }
+    }
+  }
+')
+
+echo "$monitor"
