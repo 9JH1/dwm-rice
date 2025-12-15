@@ -1,5 +1,6 @@
 #!/bin/bash
 # Sets background using wal color generator 
+# runs background.2 AFTER finish.
 # 
 
 # File type function 

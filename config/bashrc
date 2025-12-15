@@ -3,27 +3,52 @@
 #
 
 
-
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-[[ ! -n $BASH_START_FLAG ]] && return
 
+export PATH="$HOME/.cargo/bin/:$HOME/.local/bin/:$PATH"
 
 alias grep='grep --color=auto'
-PS1='\e[30;42;3m\w \\$\e[0m '
+PS1='\[\e[32;1m\][\u@\h]\[\e[34;1m\] \w \[\e[0m\]# '
 
 bind 'set show-all-if-ambiguous on'
 bind 'TAB:menu-complete'
 
-function ls(){
-	lsd --icon=never
+ls(){
+	if command -v lsd &>/dev/null; then 	
+		lsd --icon=never $@
+	else 
+		command ls $@
+	fi
 }
 
+# Safe rm ! :3 
+rm(){
+	t_p="/tmp/Trash"
+	
+	[ ! -d "$t_p" ] && {
+		mkdir "$t_p"
+	}
+	
+	mv $@ "$t_p"
+}
+
+real_rm(){
+	read -p "are you sure? [yes/N]" opt 
+	if [ "$opt" = "yes" ];then
+		rm $@
+	else 
+		echo "alrighty.."
+	fi
+}
+
+
+[[ ! $TMUX_SF ]] && return
 # Tmux config
 TMUX_PATH="/tmp/tmux.conf"
+
 read -r -d '' TMUX_CONFIG << EOF
 set -g mouse on
-set -g allow-passthrough on
 set -g default-command "bash"
 
 set -g default-terminal "xterm-256color"
@@ -58,15 +83,17 @@ EOF
 
 TMUX_PATH="/tmp/tmux.conf"
 echo "$TMUX_CONFIG" > "$TMUX_PATH"
-tmux source-file "$TMUX_PATH"
+tmux source-file "$TMUX_PATH" &>/dev/null
 
 if [ -n "$TMUX" ];then 
-	source -- ~/.local/share/blesh/ble.sh	
-	source ~/.cache/wal/colors.sh
+	source -- ~/.local/share/blesh/ble.sh &>/dev/null	
+	source ~/.cache/wal/colors.sh &>/dev/null
 	
 	if [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
 		# Run on startup of first pane
-		hyfetch
+		if which hyfetch &>/dev/null; then 
+			hyfetch 
+		fi
 	fi
 
 elif [[ ! "$ZSH_ISOLATE" =  "1" ]]; then
@@ -74,3 +101,7 @@ elif [[ ! "$ZSH_ISOLATE" =  "1" ]]; then
 	exit
 fi
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

@@ -171,7 +171,6 @@ struct Monitor {
 	float mfact;
 	int nmaster;
 	int num;
-	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
 	int gappx;            /* gaps between windows */

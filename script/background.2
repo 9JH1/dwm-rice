@@ -1,7 +1,6 @@
 #!/bin/bash 
 # run after background.sh
 #
-
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # Load dunst
@@ -44,11 +43,9 @@ frame_color = "#ff0000"
 EOM
 
 # Start dunst
-killall dunst
-dunst -config <(echo "$DUNSTRC")
+killall dunst; (dunst -config <(echo "$DUNSTRC") &)
 
-$SCRIPT_DIR/polybar.sh &>/dev/null &
-$SCRIPT_DIR/alacritty.sh no-run &>/dev/null & 
+# $SCRIPT_DIR/polybar.sh &>/dev/null &
 
 # Use walcord to set discord colors 
 walcord &>/dev/null &
@@ -61,6 +58,7 @@ fi
 # reload xrdb colors
 xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources"
 pidof st | xargs kill -s USR1
+xsetroot -name "fsignal.2"
 
 # reload gtk colors 
 if [[ -e "$HOME/.themes/oomox-gtk-theme/change_color.sh" ]]; then 

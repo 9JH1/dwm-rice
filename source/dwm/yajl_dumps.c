@@ -150,7 +150,6 @@ dump_monitor(yajl_gen gen, Monitor *mon, int is_selected)
     )
 
     YSTR("bar"); YMAP(
-      YSTR("y"); YINT(mon->by);
       YSTR("window_id"); YINT(mon->barwin);
     )
   )

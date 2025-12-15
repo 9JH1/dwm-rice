@@ -10,6 +10,8 @@ static const int lockfullscreen    = 0;
 static const int refreshrate       = 120; 
 static const unsigned int borderpx = 3;
 static char dmenumon[2]            = "0"; 
+static const int barheight         = 30; // including gaps 
+static const int dualbar           = 1; // 0 no, 1 yes
 
 // Colors
 static char normbgcolor[]     = "#ff0000";

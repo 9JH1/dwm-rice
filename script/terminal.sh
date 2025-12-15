@@ -10,7 +10,7 @@ isolate=0;
 [[ "$1" == "no-run" ]] && exit;
 
 # Set mode arguments 
-st_args=(-f "Terminus:size=15");
+st_args=();
 
 [[ $isolate -eq 1 ]] && { 
 	st_args+=(-c "iso_term");	

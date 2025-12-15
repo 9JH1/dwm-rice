@@ -17,6 +17,7 @@ config.h:
 $(OBJ): arg.h config.h config.mk drw.h
 
 dmenu: dmenu.o drw.o util.o
+	cat config.def.h > config.h
 	$(CC) -o $@ dmenu.o drw.o util.o $(LDFLAGS)
 
 stest: stest.o
