@@ -8,14 +8,19 @@ stack_tag=511
 stack_title=" "
 tag_titles=("1" "2" "3" "4" "5" "6" "7" "8" "9")
 padding=5 # padding in px
+last_event="";
 
 # Function to draw workspaces for a given monitor
 function draw_workspaces {
   local event=$1
+  last_event=event;
   local monitor=$(echo "$event" | jq -r '.monitor_number // 0' 2>/dev/null)
   local new_selected=$(echo "$event" | jq -r '.new_state.selected // 0' 2>/dev/null)
   local new_occupied=$(echo "$event" | jq -r '.new_state.occupied // 0' 2>/dev/null)
   local new_urgent=$(echo "$event" | jq -r '.new_state.urgent // 0' 2>/dev/null)
+	
+  sym="$(cat $HOME/.cache/dwm_symbol_hook.txt)" 
+  echo "%{F$1 T1}$sym%{F- T-}"
 
   # Only process if monitor is valid
   if [[ -n "$monitor" && "$monitor" != "null" ]]; then
@@ -30,10 +35,10 @@ function draw_workspaces {
         if (( new_occupied & bitwise | new_selected & bitwise )); then
           if (( new_selected & bitwise )); then
             # Active/selected occupied tag
-			out+="%{F$color0}%{B$color1} ${tag_titles[$((i-1))]} %{F- B-}"
+			out+="%{F$color0}%{B$color1}[${tag_titles[$((i-1))]}]%{F- B-}"
           else
             # Inactive occupied tag
-            out+=" %{F$color7}${tag_titles[$((i-1))]}%{F- B-} "
+            out+="%{F$color7}[${tag_titles[$((i-1))]}]%{F- B-}"
           fi
 
         fi
@@ -48,7 +53,6 @@ function draw_workspaces {
 # Function to get current state for a monitor
 function get_monitor_state {
   local monitor=$1
-  # Query dwm for the current state of the specified monitor
   local state=$(dwm-msg get_monitors | jq -r ".[] | select(.num == $monitor) | .tag_state")
   if [[ -n "$state" && "$state" != "null" ]]; then
     echo "$state"
@@ -57,6 +61,17 @@ function get_monitor_state {
   fi
 }
 
+symbol_listen(){
+	
+	dwm-msg subscribe layout_change_event 
+	jq -r '.layout_change_event.new_symbol' --unbuffered \
+	while read -r sym; do
+		[ ! -e "$continue_f" ] && exit 
+		[ $run -gt 0 ] && echo "$sym" | tee "$cache_f"
+    done
+}
+
+symbol_listen &
 # Main event loop
 dwm-msg subscribe tag_change_event monitor_added_event monitor_removed_event | jq -c --unbuffered \
   'select(.tag_change_event or .monitor_added_event or .monitor_removed_event) | 
