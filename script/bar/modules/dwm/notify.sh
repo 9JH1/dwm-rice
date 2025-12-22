@@ -6,7 +6,7 @@
 #
 
 
-prefix="%{F$1 T1}N%{F- T-}"
+prefix="^c$1^N^d^"
 if [ $(dunstctl is-paused) = "true" ];then
 	echo -n "$prefix off ($(dunstctl count waiting))";
 else

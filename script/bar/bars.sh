@@ -1,4 +1,10 @@
 #!/bin/bash
+mypid=$$
+for pid in $(pgrep -f ${0##*/}); do
+	[[ $pid -ne $mypid ]] && kill $pid
+  sleep 1
+done 
+
 # Start the dual lemonbar
 
 source ~/.cache/wal/colors.sh
@@ -7,7 +13,7 @@ opacity=$(((opacity * 255) / 100))
 
 # Colors
 background="#"$(printf "%X" "$opacity")"${background:1}"
-foreground=$foreground
+foreground="$color7"
 accent=$color8
 sep_color=$color1
 
@@ -15,38 +21,33 @@ sep_color=$color1
 CONT=$(mktemp)
 INT=3
 PAD=" "
-SEP=" %{T2}%{F$sep_color}|%{F$foreground}%{T0} "
-MOD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"/modules
+PAT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+MOD="$PAT"/modules
 WORKSPACE_WIDTH=700;
 
 # Bar calculations
-BAR_H=35 # Value with gaps
-BORDER=0
+BAR_H=25 # Value with gaps
 GAP=0
 BAR_W=$((1920-(GAP*2)))
-BAR1_GEOM="$BAR_W"x"$((BAR_H-GAP+BORDER))+$GAP+$GAP"
-BAR2_GEOM="$BAR_W"x"$((BAR_H-GAP+BORDER+BORDER))+$GAP+$GAP"
-BAR3_GEOM="$WORKSPACE_WIDTH"x"$((BAR_H-GAP+BORDER))+$(((1920-$WORKSPACE_WIDTH)/2))+$GAP"
+BAR2_GEOM="$BAR_W"x"$((BAR_H-GAP))+$GAP+$GAP"
 
 bar_1(){
 	framecount=0;
+	SEP="^c$sep_color^ | ^d^"
 
 	# Bar 1 loop 
 	while [ -e $CONT ];do 
-
 		# Modules 
-		SYMBOL=$($MOD/symbol.sh $accent)
-		CPU=$($MOD/cpu.sh $accent)
-		RAM=$($MOD/ram.sh $accent)
-		NOTIFY=$($MOD/notify.sh $accent)
-		LOCALE=$($MOD/locale.sh $accent)
-		TIME=$($MOD/time.sh $accent)
-		LOAD=$($MOD/load.sh $accent)
+		CPU=$($MOD/dwm/cpu.sh $accent)
+		RAM=$($MOD/dwm/ram.sh $accent)
+		NOTIFY=$($MOD/dwm/notify.sh $accent)
+		LOCALE=$($MOD/dwm/locale.sh $accent)
+		TIME=$($MOD/dwm/time.sh $accent)
+		LOAD=$($MOD/dwm/load.sh $accent)
 
-		left="$PAD$SYMBOL$SEP$CPU$SEP$RAM"
-		right="$SEP$LOAD$SEP$NOTIFY$SEP$LOCALE$SEP$TIME$PAD"
+		stat="$PAD$CPU$SEP$RAM$SEP$LOAD$SEP$NOTIFY$SEP$LOCALE$SEP$TIME$PAD"
 
-		echo "%{l}$left%{r}$right"
+		xsetroot -name "$stat"
 
 		framecount=$((framecount+1));
 		sleep $INT
@@ -56,6 +57,7 @@ bar_1(){
 
 bar_2(){
 	framecount=0;
+	SEP=" %{T2}%{F$sep_color}|%{F$foreground}%{T0} "
 	
 	# Bar 2 loop
 	while [ -e $CONT ];do 
@@ -87,55 +89,17 @@ bar_2(){
 # Killall old bars 
 killall lemonbar
 
-# Launch symbol hook 
-$MOD/symbol_hook.sh "$CONT" & 
+bar_1 &
 
-bar_1_id="$(mktemp)"
-# Launch bars
-bar_1 | \
-	lemonbar \
-	-g "$BAR1_GEOM" \
-	-d \
-	-n "$bar_1_id" \
-	-B "$background" \
-	-f "Terminus:size=16" \
-	-f "Terminus:style=Bold:size=16" &
-
-bar_2_id="$(mktemp)"
 bar_2 | \
 	lemonbar \
 	-g "$BAR2_GEOM" \
-	-d -b\
+	-d -b -o 2 \
 	-n "$bar_2_id" \
 	-B "$background" \
 	-f "Terminus:size=16" \
 	-f "Terminus:style=Bold:size=16"&
 
-sleep 0.5
-
-# workspace bar 
-$MOD/workspaces.sh | \
-	lemonbar \
-	-g "$BAR3_GEOM" \
-	-d \
-	-B "#00000000" \
-	-f "Terminus:size=16" \
-	-f "Terminus:style=Bold:size=16" &
-
-# Tray bar 
-BAR_WID="$(xdotool search --name "$bar_1_id" | head -n 1)"
-snixembed --container "$BAR_WID" --position right &
-
 # Leave both bars running in background
-
-exit_handle(){
-	echo "Exiting"
-	command rm "$CONT"
-	command rm "$bar_1_id"
-	command rm "$bar_2_id"
-	exit
-}
-
-trap exit_handle SIGINT
 
 wait

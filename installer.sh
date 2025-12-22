@@ -40,7 +40,7 @@ function install_dwm_rice {
 	echo "applying fonts"
 	mkdir ~/.fonts 
 	cp -r fonts ~/.fonts
-	fc-cache -fv
+	fc-cache -fv ~/.fonts
 
 	echo "updating config" 
 	sed -i "s/_3hy/$USER/g" ./config.def.h

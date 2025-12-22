@@ -3,31 +3,39 @@
 // Basic Variables 
 static const unsigned int gappx    = 10;
 static const unsigned int snap     = 0;
+static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayonleft  = 0;   /* 0: systray in the right corner, >0: systray on left of status text */
+static const unsigned int systrayspacing = 2;   /* systray spacing */
+static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
+static const int showsystray        = 1;        /* 0 means no systray */
 static const int nmaster           = 1;
 static const int resizehints       = 0;
+static const int extrabar          = 1;        /* 0 means no extra bar */
 static const float mfact           = 0.5;
 static const int lockfullscreen    = 0;
 static const int refreshrate       = 120; 
 static const unsigned int borderpx = 3;
 static char dmenumon[2]            = "0"; 
-static const int barheight         = 30; // including gaps 
-static const int dualbar           = 1; // 0 no, 1 yes
-
-// Colors
-static char normbgcolor[]     = "#ff0000";
-static char normbordercolor[] = "#00ff00";
-static char normfgcolor[]     = "#0000ff";
-static char selfgcolor[]      = "#ffff00";
-static char selbordercolor[]  = "#00ffff";
-static char selbgcolor[]      = "#ff00ff";
+static const int barheight         = 25;
+static const int showbar           = 1;
+static const int topbar            = 1;
+static char normbgcolor[]           = "#222222";
+static char normbordercolor[]       = "#444444";
+static char normfgcolor[]           = "#bbbbbb";
+static char selfgcolor[]            = "#eeeeee";
+static char selbordercolor[]        = "#005577";
+static char selbgcolor[]            = "#005577";
 
 // Arrays
 static const char *fonts[]           = { "Terminus:size=16" };
 static const char *const autostart[] = {"/home/_3hy/.dwm/script/startup.sh", NULL, NULL};
+
 static char *colors[][3] = {
-    [SchemeNorm] = {normfgcolor, normbgcolor, normbordercolor},
-    [SchemeSel] = {selfgcolor, selbgcolor, selbordercolor},
+       /*               fg           bg           border   */
+       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
+       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
+
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 static const Rule rules[] = {
     {"iso_term", NULL, NULL, 0, 1, -1},
@@ -110,7 +118,6 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, key_up,   focusstack, {.i = -1}},
 
 	// Window Resize
-
 	{MODKEY|ControlMask, key_down,	moveresize, {.v = (int []){ 0, -10, 0, 20 }}},
 	{MODKEY|ControlMask, key_up,	moveresize, {.v = (int []){ 0, 10, 0, -20 }}},
 	{MODKEY|ControlMask, key_right, moveresize, {.v = (int []){ -10, 0, 20, 0 }}},
@@ -132,9 +139,9 @@ static const Key keys[] = {
     {MODKEY,             XK_Tab,   view,        {0}},
 
     // Misc
-	{MODKEY,             XK_F5, xrdb,           {.v = NULL}},
 	{MODKEY | ShiftMask, XK_f,  togglefullscr,  {0}},
 	{MODKEY | ControlMask | ShiftMask, XK_q, quit, {0}},
+	{ MODKEY,                       XK_F5,     xrdb,           {.v = NULL } },
 		
 	// Monitor 
 	{MODKEY,               XK_comma,  focusmon,    {.i = -1}},
@@ -171,19 +178,11 @@ static const Button buttons[] = {
     {ClkTagBar,     MODKEY, Button3, toggletag,      {0}}
 };
 
-
-void 
-xrdb_set(const Arg *arg)
-{
-	xrdb(arg);
+static void xrdb_fsignal(const Arg *a){
+	xrdb(a);
 }
 
 
-static Signal signals[] = {
-	{ 1,            xrdb_set,      {.v = NULL}},
-};
-
-static const char *ipcsockpath = "/tmp/dwm.sock";
-static IPCCommand ipccommands[] = {
-  IPCCOMMAND(  quit,                1,      {ARG_TYPE_NONE}   )
+static Signal signals[1] = {
+	{1, xrdb_fsignal, {.v= NULL}},
 };

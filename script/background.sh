@@ -78,7 +78,7 @@ fi
 source ~/.cache/wal/colors.sh
 solid_color_ppm=$(mktemp --suffix=.ppm)
 
-hex="$color5"
+hex="$background"
 printf "P6\n1 1\n255\n\\x${hex:1:2}\\x${hex:3:2}\\x${hex:5:2}" > "$solid_color_ppm"
 (feh --bg-scale "$solid_color_ppm" && rm -f "$solid_color_ppm" &)
 

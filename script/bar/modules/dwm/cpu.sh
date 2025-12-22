@@ -24,4 +24,4 @@ avg_cpu_temp_c=$(awk "BEGIN { printf(\"%0.2f\", (($avg_cpu_temp_f - 32) / (9/5))
 # Print data
 percent=$(printf "%0.2f" "$cpu")
 
-echo "%{F$1 T1}C%{F- T-} $percent% : $avg_cpu_temp_c"°C
+echo "^c$1^C^d^ $percent% : $avg_cpu_temp_c"°C

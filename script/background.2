@@ -45,7 +45,7 @@ EOM
 # Start dunst
 killall dunst; (dunst -config <(echo "$DUNSTRC") &)
 
-# $SCRIPT_DIR/polybar.sh &>/dev/null &
+$SCRIPT_DIR/bar/bars.sh &>/dev/null &
 
 # Use walcord to set discord colors 
 walcord &>/dev/null &
@@ -58,7 +58,7 @@ fi
 # reload xrdb colors
 xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources"
 pidof st | xargs kill -s USR1
-xsetroot -name "fsignal.2"
+xsetroot -name "fsignal:1"
 
 # reload gtk colors 
 if [[ -e "$HOME/.themes/oomox-gtk-theme/change_color.sh" ]]; then 

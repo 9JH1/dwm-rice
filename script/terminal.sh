@@ -10,12 +10,12 @@ isolate=0;
 [[ "$1" == "no-run" ]] && exit;
 
 # Set mode arguments 
-st_args=();
+st_args=(-A 0.9);
 
 [[ $isolate -eq 1 ]] && { 
 	st_args+=(-c "iso_term");	
 } || {
-	st_args+=(-e bash -c "export TMUX_SF=1 && bash") 
+	st_args+=(-e bash -c "TMUX_SF=1 bash") 
 }
 
 # Run terminal with args 
