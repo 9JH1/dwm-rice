@@ -61,17 +61,7 @@ function get_monitor_state {
   fi
 }
 
-symbol_listen(){
-	
-	dwm-msg subscribe layout_change_event 
-	jq -r '.layout_change_event.new_symbol' --unbuffered \
-	while read -r sym; do
-		[ ! -e "$continue_f" ] && exit 
-		[ $run -gt 0 ] && echo "$sym" | tee "$cache_f"
-    done
-}
 
-symbol_listen &
 # Main event loop
 dwm-msg subscribe tag_change_event monitor_added_event monitor_removed_event | jq -c --unbuffered \
   'select(.tag_change_event or .monitor_added_event or .monitor_removed_event) | 
