@@ -52,7 +52,7 @@ static const char *zoomcmd[]      = { "/home/_3hy/.dwm/script/zoom.sh", NULL};
 static const char *forcequit[]    = { "/home/_3hy/.dwm/script/forcequit.sh", NULL};
 static const char *compositor[]   = { "/home/_3hy/.dwm/script/compositor.sh", NULL};
 static const char *lock[]         = { "/home/_3hy/.dwm/script/lockscreen.sh", "--suspend",  NULL};
-static const char *lock_alt[]     = { "/home/_3hy/.dwm/script/lockscreen.sh", "--freeze", NULL};
+static const char *lock_alt[]     = { "/home/_3hy/.dwm/script/lockscreen.sh", "--image", NULL};
 static const char *autostartcmd[] = {autostart[0], NULL};
 
 static const char *media_next[]     = { "/home/_3hy/.dwm/script/media/next.sh", NULL};
@@ -60,7 +60,7 @@ static const char *media_prev[]     = { "/home/_3hy/.dwm/script/media/prev.sh", 
 static const char *media_status[]   = { "/home/_3hy/.dwm/script/media/status.sh", NULL};
 static const char *volume_up[]      = { "/home/_3hy/.dwm/script/media/volume_up.sh", NULL};
 static const char *volume_down[]    = { "/home/_3hy/.dwm/script/media/volume_down.sh", NULL};
-static const char *volume_mute[]    = { "/home/_3hy/.dwm/script/media/volume_mute.sh", NULL};
+//static const char *volume_mute[]    = { "/home/_3hy/.dwm/script/media/volume_mute.sh", NULL};
 
 
 

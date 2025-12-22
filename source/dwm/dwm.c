@@ -261,7 +261,7 @@ static void setfullscreen(Client *c, int fullscreen);
 static void setgaps(const Arg *arg);
 static void setlayout(const Arg *arg);
 static void setcfact(const Arg *arg);
-static void setlayoutsafe(const Arg *arg);
+//static void setlayoutsafe(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
 static void seturgent(Client *c, int urg);
@@ -271,7 +271,7 @@ static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
-static void togglebar(const Arg *arg);
+//static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglefullscr(const Arg *arg);
 static void toggletag(const Arg *arg);
@@ -541,7 +541,7 @@ attachstack(Client *c)
 void
 buttonpress(XEvent *e)
 {
-	unsigned int i, x, click;
+	unsigned int i, click;
 	Arg arg = {0};
 	Client *c;
 	Monitor *m;
@@ -1002,7 +1002,7 @@ drawbar(Monitor *m)
 	if (!m->showbar)
 		return;
 	
-	int x = 0, w, tw = 0, stw = 0;
+	int x = 0, w, stw = 0;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
@@ -1015,7 +1015,7 @@ drawbar(Monitor *m)
 	if(showsystray && m == systraytomon(m) && !systrayonleft)
 		stw = getsystraywidth();
 	
-	tw = m->ww - drawstatusbar(m, bh, stext);
+	drawstatusbar(m, bh, stext);
 	resizebarwin(m);
 
 	for (c = m->clients; c; c = c->next) {
@@ -2304,6 +2304,7 @@ tile(Monitor *m)
   }
 }
 
+/*
 void
 togglebar(const Arg *arg)
 {
@@ -2322,7 +2323,7 @@ togglebar(const Arg *arg)
 		XConfigureWindow(dpy, systray->win, CWY, &wc);
 	}
 	arrange(selmon);
-}
+} */
 
 void
 togglefloating(const Arg *arg)
