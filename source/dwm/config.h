@@ -16,9 +16,10 @@ static const int lockfullscreen    = 0;
 static const int refreshrate       = 120; 
 static const unsigned int borderpx = 3;
 static char dmenumon[2]            = "0"; 
-static const int barheight         = 25;
+static const int barheight         = 30;
 static const int showbar           = 1;
 static const int topbar            = 1;
+
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
@@ -53,6 +54,15 @@ static const char *compositor[]   = { "/home/_3hy/.dwm/script/compositor.sh", NU
 static const char *lock[]         = { "/home/_3hy/.dwm/script/lockscreen.sh", "--suspend",  NULL};
 static const char *lock_alt[]     = { "/home/_3hy/.dwm/script/lockscreen.sh", "--freeze", NULL};
 static const char *autostartcmd[] = {autostart[0], NULL};
+
+static const char *media_next[]     = { "/home/_3hy/.dwm/script/media/next.sh", NULL};
+static const char *media_prev[]     = { "/home/_3hy/.dwm/script/media/prev.sh", NULL};
+static const char *media_status[]   = { "/home/_3hy/.dwm/script/media/status.sh", NULL};
+static const char *volume_up[]      = { "/home/_3hy/.dwm/script/media/volume_up.sh", NULL};
+static const char *volume_down[]    = { "/home/_3hy/.dwm/script/media/volume_down.sh", NULL};
+static const char *volume_mute[]    = { "/home/_3hy/.dwm/script/media/volume_mute.sh", NULL};
+
+
 
 // Misc
 static const unsigned int tabModKey = 0x40;
@@ -117,11 +127,13 @@ static const Key keys[] = {
 	{MODKEY | ShiftMask, key_down, focusstack, {.i = +1}},
     {MODKEY | ShiftMask, key_up,   focusstack, {.i = -1}},
 
-	// Window Resize
-	{MODKEY|ControlMask, key_down,	moveresize, {.v = (int []){ 0, -10, 0, 20 }}},
-	{MODKEY|ControlMask, key_up,	moveresize, {.v = (int []){ 0, 10, 0, -20 }}},
-	{MODKEY|ControlMask, key_right, moveresize, {.v = (int []){ -10, 0, 20, 0 }}},
-	{MODKEY|ControlMask, key_left,	moveresize, {.v = (int []){ 10, 0, -20, 0 }}},
+	// media control
+	{MODKEY|ControlMask, key_right, spawn, {.v = media_next}},
+	{MODKEY|ControlMask, key_left,	spawn, {.v = media_prev}},
+	{MODKEY,             XK_p,      spawn, {.v = media_status}},
+	
+	{MODKEY|ShiftMask|ControlMask, key_right, spawn, {.v = volume_up}},
+	{MODKEY|ShiftMask|ControlMask, key_left,	spawn, {.v = volume_down}},
 	
 	// Window properties
 	{MODKEY | ControlMask, XK_q,      quit,           {0}},

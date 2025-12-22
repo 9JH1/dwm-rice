@@ -26,7 +26,7 @@ MOD="$PAT"/modules
 WORKSPACE_WIDTH=700;
 
 # Bar calculations
-BAR_H=25 # Value with gaps
+BAR_H=30 # Value with gaps
 GAP=0
 BAR_W=$((1920-(GAP*2)))
 BAR2_GEOM="$BAR_W"x"$((BAR_H-GAP))+$GAP+$GAP"
@@ -45,7 +45,7 @@ bar_1(){
 		TIME=$($MOD/dwm/time.sh $accent)
 		LOAD=$($MOD/dwm/load.sh $accent)
 
-		stat="$PAD$CPU$SEP$RAM$SEP$LOAD$SEP$NOTIFY$SEP$LOCALE$SEP$TIME$PAD"
+		stat="$PAD$CPU$SEP$RAM$SEP$LOAD$SEP$NOTIFY$SEP$LOCALE$SEP$TIME$SEP"
 
 		xsetroot -name "$stat"
 
@@ -90,16 +90,11 @@ bar_2(){
 killall lemonbar
 
 bar_1 &
-
 bar_2 | \
 	lemonbar \
 	-g "$BAR2_GEOM" \
 	-d -b -o 2 \
 	-n "$bar_2_id" \
 	-B "$background" \
-	-f "Terminus:size=16" \
-	-f "Terminus:style=Bold:size=16"&
+	-f "Terminus:size=16" &
 
-# Leave both bars running in background
-
-wait
