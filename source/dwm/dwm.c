@@ -86,7 +86,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeSelAlt }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetWMWindowTypeDesktop,
@@ -184,6 +184,10 @@ struct Systray {
 	Window win;
 	Client *icons;
 };
+
+typedef struct {
+	int x, y, w, h;
+} DwmLogo;
 
 /* function declarations */
 static void applyrules(Client *c);
@@ -1002,10 +1006,12 @@ drawbar(Monitor *m)
 	if (!m->showbar)
 		return;
 	
-	int x = 0, w, stw = 0;
+	int x = 3, w, stw = 0;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
+	int stroke = 4, letterHeight = bh - 14;
+	int dwmlogowdth = 54+x; /* dwm logo width */
 	
 	Client *c;
 	
@@ -1025,9 +1031,33 @@ drawbar(Monitor *m)
 			urg |= c->tags;
 	}
 
-	w = TEXTW(m->ltsymbol);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+	drw_setscheme(drw, scheme[SchemeSel]);
+
 	
+	/* draw dwm logo */
+	const DwmLogo dwmLogo[] = {
+		{  0,  9, stroke, letterHeight / 2 }, /* d: left vertical */
+		{  0, 15,     35, stroke           }, /* d: bottom horizontal */
+		{ 13,  0, stroke, letterHeight     }, /* d: right vertical */
+		{  0,  7,     15, stroke           }, /* d: top horizontal */
+		{ 22,  7, stroke, letterHeight / 2 }, /* w: center vertical */
+		{ 31,  7, stroke, letterHeight / 2 }, /* w: right vertical */
+		{ 31,  7,     22, stroke           }, /* m: top horizontal */
+		{ 40, 11, stroke, letterHeight / 2 }, /* m: center vertical */
+		{ 49, 11, stroke, letterHeight / 2 }  /* m: right vertical */
+	};
+
+	for (int i = 0; i < LENGTH(dwmLogo); i++) {
+		drw_rect(drw, dwmLogo[i].x+x, dwmLogo[i].y+x, dwmLogo[i].w, dwmLogo[i].h, 1, 1);
+	}
+
+	/* start drawing tags after logo */
+	x = dwmlogowdth;
+	w = TEXTW(m->ltsymbol);
+	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 1);
+	
+	
+	drw_setscheme(drw, scheme[SchemeNorm]);
 	for (i = 0; i < LENGTH(tags); i++) {
 		if(!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
 			continue;

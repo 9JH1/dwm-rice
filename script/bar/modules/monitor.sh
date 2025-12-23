@@ -20,4 +20,4 @@ monitor=$(xrandr --query | awk -v X="$X" -v Y="$Y" '
   }
 ')
 
-echo "$monitor"
+echo "%{F$1}$monitor%{F-}"

@@ -28,13 +28,13 @@ static char selbordercolor[]        = "#005577";
 static char selbgcolor[]            = "#005577";
 
 // Arrays
-static const char *fonts[]           = { "Terminus:size=16" };
+static const char *fonts[]           = { "Terminus (TTF):style=Italic:size=16" };
 static const char *const autostart[] = {"/home/_3hy/.dwm/script/startup.sh", NULL, NULL};
 
 static char *colors[][3] = {
        /*               fg           bg           border   */
-       [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
-       [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
+       [SchemeSel]  =   { selfgcolor,  selbgcolor,  selbordercolor  },
+       [SchemeNorm] =   { normfgcolor, normbgcolor, normbordercolor },
 };
 
 static const char *tags[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};

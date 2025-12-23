@@ -66,7 +66,7 @@ cache_frame="/home/$USER/.cache/wal_video_frame.jpg"
 killall motionlayer &>/dev/null
 
 # run wal  
-wal -i "$wallpaper" -e -t -n -a 92 --saturate 1  --contrast 20 
+wal -i "$wallpaper" -e -t -n -a 92 --saturate 0.5 
 
 # check wal code
 if [ "$?" -ne "0" ];then

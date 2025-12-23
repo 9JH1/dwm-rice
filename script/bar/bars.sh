@@ -14,7 +14,7 @@ opacity=$(((opacity * 255) / 100))
 # Colors
 background="#"$(printf "%X" "$opacity")"${background:1}"
 foreground="$color7"
-accent=$color8
+accent=$color6
 sep_color=$color1
 
 # Main Variables 
@@ -86,8 +86,6 @@ bar_2(){
 	done
 }
 
-# Killall old bars 
-killall lemonbar
 
 bar_1 &
 bar_2 | \
@@ -96,5 +94,6 @@ bar_2 | \
 	-d -b -o 2 \
 	-n "$bar_2_id" \
 	-B "$background" \
-	-f "Terminus:size=16" &
+	-f "Terminus (TTF):style=Italic:size=16" &
 
+wait

@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Terminus:size=16";
+static char *font = "Terminus (TTF):size=16";
 static int borderpx = 2;
 
 /* How to align the content in the window when the size of the terminal

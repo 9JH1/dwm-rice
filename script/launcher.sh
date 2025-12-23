@@ -18,7 +18,7 @@ dmenu_run \
 	-x $(((1920-$size)/2)) \
 	-y 300 \
 	-l 15 \
-	-fn "Terminus:size=18" \
+	-fn "Terminus (TTF):style=Italic:size=18" \
 	-nb "$background" \
 	-nf "$foreground" \
 	-sb "$color6" \
