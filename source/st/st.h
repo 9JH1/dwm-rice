@@ -34,6 +34,7 @@ enum glyph_attribute {
 	ATTR_REVERSE    = 1 << 5,
 	ATTR_INVISIBLE  = 1 << 6,
 	ATTR_STRUCK     = 1 << 7,
+	ATTR_DIRTYUNDERLINE = 1 << 15,
 	ATTR_WRAP       = 1 << 8,
 	ATTR_WIDE       = 1 << 9,
 	ATTR_WDUMMY     = 1 << 10,
@@ -79,6 +80,8 @@ typedef struct {
 	uint32_t fg;      /* foreground  */
 	uint32_t bg;      /* background  */
 	uint32_t decor;   /* decoration (like underline) */
+	int ustyle;	  /* underline style */
+	int ucolor[3];    /* underline color */
 } Glyph;
 
 typedef Glyph *Line;

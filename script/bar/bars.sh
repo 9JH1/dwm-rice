@@ -64,8 +64,6 @@ bar_2(){
 
 		# Modules:
 		MEDIA_ICON=$($MOD/media_icon.sh $accent)
-		MEDIA_NEXT=$($MOD/media_next.sh $accent)
-		MEDIA_PREV=$($MOD/media_prev.sh $accent)
 		MEDIA_PLAYER=$($MOD/media.sh $sep_color)
 		MONITOR=$($MOD/monitor.sh $accent)
 		VOLUME=$($MOD/volume.sh $accent)
@@ -74,12 +72,12 @@ bar_2(){
 		DISK=$($MOD/disk.sh $accent)
 
 		# Set module lists
-		left="$PAD$MEDIA_PREV $MEDIA_ICON $MEDIA_NEXT $MEDIA_PLAYER"
-		right="$NETWORK$SEP$VOLUME$SEP$DISK$SEP$WINDOW$SEP$MONITOR$PAD"
+		left="$MEDIA_ICON $MEDIA_PLAYER"
+		right="$NETWORK$SEP$VOLUME$SEP$DISK$SEP$WINDOW$SEP$MONITOR"
 
 
 		# Print bar
-		echo "%{l}$left%{r}$right"
+		echo "%{l}$PAD$left%{r}$right$PAD"
 
 		framecount=$((framecount+1));
 		sleep $INT
@@ -91,7 +89,7 @@ bar_1 &
 bar_2 | \
 	lemonbar \
 	-g "$BAR2_GEOM" \
-	-d -b -o 2 \
+	-d -b \
 	-n "$bar_2_id" \
 	-B "$background" \
 	-f "Terminus (TTF):style=Italic:size=16" &

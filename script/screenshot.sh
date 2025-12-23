@@ -6,12 +6,13 @@
 mkdir ~/Pictures &>/dev/null
 mkdir ~/Pictures/screenshots/ &>/dev/null
 
-file_path=~/Pictures/screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
-tmp_file=$(mktemp --suffix=".png")
+prefix=~/Pictures/screenshots/
+file="$(date +'%Y-%m-%d_%H-%M-%S').png"
+tmp="tmp_$file"
 
-maim -s -u "$tmp_file" 
+maim -s -u "$prefix$tmp" 
 if [ $? -eq 0 ]; then 
-	cat "$tmp_file" | xclip -selection clipboard -t image/png
-	maim "$file_path"
-	notify-send -i "$tmp_path" "Screenshot copied to clipboard"
+	cat "$prefix$tmp" | xclip -selection clipboard -t image/png
+	maim "$prefix$file"
+	notify-send -i "$prefix$tmp" "Screenshot copied to clipboard"
 fi

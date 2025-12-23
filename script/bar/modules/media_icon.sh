@@ -5,10 +5,10 @@
 stat=$(playerctl status)
 icon=""
 
-[ ! "$stat" = "Paused" ] && {
+[ "$stat" = "Playing" ] && {
 	icon="||"
 } || {
 	icon="|>"
 }
 
-echo "%{F$1 T1}$icon%{F- T-}"
+echo "%{F$1}< $icon >%{F-}"

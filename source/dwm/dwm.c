@@ -190,6 +190,8 @@ typedef struct {
 } DwmLogo;
 
 /* function declarations */
+
+static void change_tag_name(const Arg *arg);
 static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
 static void arrange(Monitor *m);
@@ -415,7 +417,18 @@ applyrules(Client *c)
 	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 }
 
-int
+static void
+change_tag_name(const Arg *arg)
+{
+	const int idx = arg->i;
+	if(idx < 0 || idx > 8)
+		return;
+
+	tags[idx] = (char *)arg->v;
+	updatebars();
+}
+
+	int
 applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact)
 {
 	int baseismin;
@@ -1006,7 +1019,7 @@ drawbar(Monitor *m)
 	if (!m->showbar)
 		return;
 	
-	int x = 3, w, stw = 0;
+	int x = 3, w, stw = 0, indn;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
@@ -1059,6 +1072,7 @@ drawbar(Monitor *m)
 	
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	for (i = 0; i < LENGTH(tags); i++) {
+		indn = 0;
 		if(!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
 			continue;
 		
@@ -1069,6 +1083,14 @@ drawbar(Monitor *m)
 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
 				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
 				urg & 1 << i);
+
+		for (c = m->clients; c; c = c->next) {
+			if (c->tags & (1 << i)) {
+				drw_rect(drw,x + boxs ,1 + boxs + boxw + (indn * 2), boxw, 1, 1, 0);
+				indn++;
+			}
+		}
+
 		x += w;
 	}
 
@@ -1453,6 +1475,7 @@ loadxrdb()
 
   XCloseDisplay(display);
 }
+
 
 void
 manage(Window w, XWindowAttributes *wa)
