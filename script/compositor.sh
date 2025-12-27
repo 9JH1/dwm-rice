@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/local/bin/bash 
 # kills picom if its already running 
 # or starts picom if its not running
 # OR if the --restart flag is run 

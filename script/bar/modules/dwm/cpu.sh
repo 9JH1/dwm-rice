@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/local/bin/bash 
 # Get average CPU percent and temp
 #
 

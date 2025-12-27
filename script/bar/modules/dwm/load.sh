@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/local/bin/bash 
 # Get the uptime.. pretty basic 
 # 
 

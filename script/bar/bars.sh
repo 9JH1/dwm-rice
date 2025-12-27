@@ -1,9 +1,13 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 mypid=$$
 for pid in $(pgrep -f ${0##*/}); do
-	[[ $pid -ne $mypid ]] && kill $pid
-  sleep 1
-done 
+    # Avoid killing the current script
+    if [ "$pid" -ne "$mypid" ]; then
+        kill "$pid"
+    fi
+    sleep 1
+done
+
 
 # Start the dual lemonbar
 
@@ -40,12 +44,10 @@ bar_1(){
 		# Modules 
 		CPU=$($MOD/dwm/cpu.sh $accent)
 		RAM=$($MOD/dwm/ram.sh $accent)
-		NOTIFY=$($MOD/dwm/notify.sh $accent)
-		LOCALE=$($MOD/dwm/locale.sh $accent)
 		TIME=$($MOD/dwm/time.sh $accent)
 		LOAD=$($MOD/dwm/load.sh $accent)
 
-		stat="$PAD$CPU$SEP$RAM$SEP$LOAD$SEP$NOTIFY$SEP$LOCALE$SEP$TIME$SEP"
+		stat="$PAD$CPU$SEP$RAM$SEP$LOAD$SEP$TIME$SEP"
 
 		xsetroot -name "$stat"
 
@@ -65,15 +67,17 @@ bar_2(){
 		# Modules:
 		MEDIA_ICON=$($MOD/media_icon.sh $accent)
 		MEDIA_PLAYER=$($MOD/media.sh $sep_color)
-		MONITOR=$($MOD/monitor.sh $accent)
+		#MONITOR=$($MOD/monitor.sh $accent)
 		VOLUME=$($MOD/volume.sh $accent)
-		WINDOW=$($MOD/window.sh $accent) 
-		NETWORK=$($MOD/net.sh $accent)
+		#WINDOW=$($MOD/window.sh $accent) 
+		NOTIFY=$($MOD/notify.sh $accent)
+		LOCALE=$($MOD/locale.sh $accent)
+		#NETWORK=$($MOD/net.sh $accent)
 		DISK=$($MOD/disk.sh $accent)
 
 		# Set module lists
 		left="$MEDIA_ICON $MEDIA_PLAYER"
-		right="$NETWORK$SEP$VOLUME$SEP$DISK$SEP$WINDOW$SEP$MONITOR"
+		right="$LOCALE$SEP$NOTIFY$SEP$VOLUME$SEP$DISK"
 
 
 		# Print bar

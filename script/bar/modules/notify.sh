@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 # Uses dunstctl to display weather or not notifications 
 # are activated or not. you can use 
 # dunstctl set-paused toggle 
@@ -6,7 +6,7 @@
 #
 
 
-prefix="^c$1^N^d^"
+prefix="%{F$1}N%{F-}"
 if [ $(dunstctl is-paused) = "true" ];then
 	echo -n "$prefix off ($(dunstctl count waiting))";
 else

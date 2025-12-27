@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 # Start terminal with tmux or 
 # in iso_term class without tmux
 # 

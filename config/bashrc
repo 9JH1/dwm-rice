@@ -877,7 +877,8 @@ fi
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-export PATH="$HOME/.cargo/bin/:$HOME/.local/bin/:$PATH"
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+export HYFETCH_DONT_WARN_RUST=1
 
 alias grep='grep --color=auto'
 alias tree='tree -a -I .git'
@@ -890,16 +891,17 @@ alias egrep='egrep --color=auto'
 alias pacman='pacman --color=auto'
 alias yay='yay --color=auto'
 alias sudo='sudo '
-alias ls='ls -F -b -T 0 --color=auto'
+#alias ls='ls -F -b -T 0 --color=auto'
+alias ls='ls -F -b'
 
-exitStatus() {
+__BASH_PROMPT_STATUS__() {
   es=$?
   if [ $es -ne 0 ]; then
     echo -e "\e[32m[$es]\e[0m "
   fi
 }
 
-PS1="\n\[\e[32;1m\][\u@\h]\[\e[34;1m\] \w \[\$(exitStatus)\]\[\e[0m\]# "
+PS1="\n\[\e[32;1m\][\u@\h]\[\e[34;1m\] \w \[\$(__BASH_PROMPT_STATUS__)\]\[\e[0m\]# "
 
 touch ~/.cache/pwd.tmp 
 export PWD_CD_FILE="$HOME/.cache/pwd.tmp"
@@ -964,8 +966,10 @@ tmux source-file "$TMUX_PATH" &>/dev/null
 if [ -n "$TMUX" ];then 
 	source -- ~/.local/share/blesh/ble.sh &>/dev/null
 	source ~/.cache/wal/colors.sh &>/dev/null
-	eval "$(zoxide init bash)"
-	
+	if which zoxide &>/dev/null; then
+		eval "$(zoxide init bash)"
+	fi
+	  
 	if [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
 		# Run on startup of first pane
 		if which hyfetch &>/dev/null; then 

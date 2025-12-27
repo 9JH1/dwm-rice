@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 # Sets background using wal color generator 
 # runs background.2 AFTER finish.
 # 
@@ -15,8 +15,9 @@ err(){
 	exit 1
 }
 
+export PATH="$HOME/.local/bin:$PATH"
 wallpaper=""
-log_file=$(mktemp --suffix=.txt)
+log_file=$(mktemp)".txt"
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers/"
 
 # Check if wallpaper dir exist
@@ -66,6 +67,7 @@ cache_frame="/home/$USER/.cache/wal_video_frame.jpg"
 killall motionlayer &>/dev/null
 
 # run wal  
+export XDG_CACHE_DIR=$HOME/.cache
 wal -i "$wallpaper" -e -t -n -a 92 --saturate 0.5 
 
 # check wal code
@@ -76,7 +78,7 @@ fi
 
 # set secondary monitor(s) background color 
 source ~/.cache/wal/colors.sh
-solid_color_ppm=$(mktemp --suffix=.ppm)
+solid_color_ppm=$(mktemp)".ppm"
 
 hex="$background"
 printf "P6\n1 1\n255\n\\x${hex:1:2}\\x${hex:3:2}\\x${hex:5:2}" > "$solid_color_ppm"
@@ -87,7 +89,9 @@ if ! ft "$wallpaper"; then
 	pkill -f xwallpaper
 
 	output=$(xrandr | grep "primary" | awk '{print $1}')
+	echo "Setting Xwallpaper"
 	xwallpaper --output  $output --zoom "$wallpaper"
+	echo $wallpaper
 
 	[[ "$?" != "0" ]] && err "XWallpaper failed"
 fi

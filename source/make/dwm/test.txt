@@ -1,0 +1,5 @@
+cc -o dwm drw.o dwm.o util.o -L/usr/local/lib -lX11 -lXinerama 
+*** Error code 1
+
+Stop.
+make: stopped making "all" in /home/_3hy/.dwm/source/make/dwm

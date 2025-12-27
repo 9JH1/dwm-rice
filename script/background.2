@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/local/bin/bash 
 # run after background.sh
 #
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -24,7 +24,6 @@ mouse_middle_click = close_current
 mouse_right_click = close_current
 width = (100,400)
 progress_bar = false
-progress_bar_min_width = (100,400)
 
 [urgency_low]
 foreground = "${color3:-#ffffff}"
@@ -57,7 +56,7 @@ fi
 
 # reload xrdb colors
 xrdb -merge -quiet "$HOME/.cache/wal/colors.Xresources"
-pidof st | xargs kill -s USR1
+ps aux | grep st | grep -v grep | awk '{print $2}' | xargs kill -s USR1
 xsetroot -name "fsignal:1"
 
 # reload gtk colors 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 # Takes a selction screenshot and also saves
 # a fullscreen screenshot to ~/Pictures/screenshots
 
