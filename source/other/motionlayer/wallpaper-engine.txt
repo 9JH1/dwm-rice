@@ -1,0 +1,65 @@
+BEST PERFORMANCE MPV LINE: 
+mpv --hwdec=auto --vo=gpu --profile=low-latency --no-cache --video-sync=display-resample --framedrop=vo your_video_file
+WITHOUT: min: 24, max 66, avg 40
+WITH     min: 09, max 22, avg 10 
+
+FOR THIS TO WORK WITH XWINWRAP ADD: 
+-wid WID 
+AND FOR MORE COMPAT ADD: 
+--no-sub --no-osc --no-input-default-bindings --no-config
+
+basic idea: 
+deps: xwinwrap, mpv, ffmpeg
+use ffmpeg to get the first frame of selected video, use feh to set that as the background
+use xwinwrap and mpv to generate the wallpaper window on the desktop.
+
+options 
+required: 
+--path 
+--size-x
+--size-y 
+--margin-x 
+--margin-y 
+
+wanted 
+--randomize 
+--volume 
+--mute
+--zoom
+--audio-path
+
+THINGS THAT NEED TO BE WORKED OUT:
+how to make it set wallpaper DONE:
+	ffmpeg -i <video> -frames:v 1 <outputfile>.jpg
+	then use feh to set the wallpaper
+how to detect fullscreen DONE: 
+	fullscreen_check.c does this
+remove xwinwrap dependancy as this works too: 
+https://github.com/mmhobi7/xwinwrap/blob/master/xwinwrap.c
+
+create temporary file using C not bash
+DONE: stdio.h tmpfile
+detect if audio is playing: DONE: ( pulseaudio only )
+audio_check.c
+
+can also remove some dependacys:
+feh -- we dont need to set the background
+xwinwrap - we are intergrating it. 
+
+current prog deps: 
+mpv 
+
+current lib deps:
+gcc -o out vi.c -lpulse -lX11 -lXinerama  -O2 -Wall -Wextra -lXext -lXrender -lavcodec -lavformat -lavutil -lswscale
+
+libpulse      - PulseAudio client library for audio processing
+libX11        - X11 client-side library for X Window System
+libXinerama   - Xinerama extension for multi-monitor support
+libXext       - X11 miscellaneous extensions library
+libXrender    - X11 rendering extension library
+libavcodec    - FFmpeg library for audio/video codec handling
+libavformat   - FFmpeg library for audio/video container muxing/demuxing
+libavutil     - FFmpeg utility library for common functions
+libswscale    - FFmpeg library for video scaling and pixel format conversion
+
+motionlayer: as the name

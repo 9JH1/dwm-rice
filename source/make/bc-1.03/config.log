@@ -1,0 +1,20 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:535:10: fatal error: minix/config.h: No such file or directory
+  535 | #include <minix/config.h>
+      |          ^~~~~~~~~~~~~~~~
+compilation terminated.
+/usr/bin/ld: /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libfl.so: undefined reference to `yylex'
+collect2: error: ld returned 1 exit status
+configure:831:1: error: return type defaults to 'int' [-Wimplicit-int]
+  831 | main(){return(0);}
+      | ^~~~
+In file included from configure:1016:
+configure: In function 't':
+configure:1027:6: error: expected expression before ')' token
+ 1027 | char $ac_func(); $ac_func();
+      |      ^~~~~~~
+configure:1027:17: error: expected expression before ')' token
+ 1027 | char $ac_func(); $ac_func();
+      |                 ^~~~~~~

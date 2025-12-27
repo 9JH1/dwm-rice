@@ -1,11 +1,10 @@
 #!/bin/bash
-# Build all projects that have a Makefile
 
-find . -type d -maxdepth 1 | while IFS= read -r dir; do
-    [ "$dir" = "." ] && continue
-    cd "${dir#./}" && sudo make clean install || {
-		echo "Stopped due to error in $dir"
-		exit
-	}
-	cd ..
-done
+cd make
+./buildall.sh 
+[[ "$?" -ne "0" ]] && exit
+
+cd ../other
+./buildall.sh
+cd ..
+echo "Done"

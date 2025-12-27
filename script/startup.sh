@@ -5,7 +5,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # Quit old programs
-killall unclutter lxqt-policykit-agent nemo-desktop unclutter nm-applet
+killall unclutter lxqt-policykit-agent nemo-desktop unclutter nm-applet snixembed
 
 
 # Setup, this isent really required but because of the autostart keybind $mod+r 
@@ -20,8 +20,9 @@ xrandr --output DisplayPort-0 --primary --mode 1920x1080 --pos 0x0 --rotate norm
 
 # Actual applications / services
 lxqt-policykit-agent &>/dev/null &
-#nm-applet &
+nm-applet &
 nemo-desktop & 
+snixembed &
 
 
 # Scripts (this must go last)

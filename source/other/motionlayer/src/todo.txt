@@ -1,0 +1,4 @@
+add a better argument parsing system 
+introduce proper checks to output_path variable 
+somehow daemonize the script so i can start and stop the video remotly 
+clean up the ximplement.c file

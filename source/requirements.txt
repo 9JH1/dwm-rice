@@ -1,0 +1,6 @@
+libimg2
+libxinerama
+freetype
+libxft
+glibc
+x11-base
