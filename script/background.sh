@@ -89,8 +89,8 @@ if ! ft "$wallpaper"; then
 	pkill -f xwallpaper
 
 	output=$(xrandr | grep "primary" | awk '{print $1}')
-	echo "Setting Xwallpaper"
-	xwallpaper --output  $output --zoom "$wallpaper"
+	echo "Setting Xwallpaper on display \"$output\""
+	xwallpaper --zoom "$wallpaper" --output  $output 
 	echo $wallpaper
 
 	[[ "$?" != "0" ]] && err "XWallpaper failed"

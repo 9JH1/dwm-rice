@@ -2904,6 +2904,10 @@ usage(void)
 	    " [stty_args ...]\n", argv0, argv0);
 }
 
+void my_function
+
+
+
 int
 main(int argc, char *argv[])
 {

@@ -4,7 +4,7 @@
 
 len=60
 len_s="$len"s
-
+out="%{F$1}"
 if [[ "$(playerctl metadata --format '-' 2>/dev/null)" == *-* ]]; then
 	raw_artist=$(playerctl -a metadata --format '{{ artist }}')
 	raw_title=$(playerctl -a metadata --format '{{ title }}')
@@ -13,8 +13,11 @@ if [[ "$(playerctl metadata --format '-' 2>/dev/null)" == *-* ]]; then
 	artist=$(echo "$raw_artist" | awk "{if(length > $len) printf \"%.$len_s...\n\", \$0; else print}")
 	title=$(echo "$raw_title" | awk "{if(length > $len) printf \"%.$len_s...\n\", \$0; else print}")
 
-	echo "%{F$1}$artist - $title%{F-}"
+	out+="$artist - $title"
 
 else 
-	echo "Nothing Playing"
+	out+="Nothing Playing"
 fi
+
+out+="%{F-}"
+echo "$out"

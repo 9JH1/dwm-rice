@@ -3,6 +3,8 @@
 #
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+$SCRIPT_DIR/bar/bars.sh  
+
 # Load dunst
 source "$HOME/.cache/wal/colors.sh"
 read -r -d '' DUNSTRC << EOM
@@ -44,7 +46,6 @@ EOM
 # Start dunst
 killall dunst; (dunst -config <(echo "$DUNSTRC") &)
 
-$SCRIPT_DIR/bar/bars.sh &>/dev/null &
 
 # Use walcord to set discord colors 
 walcord &>/dev/null &

@@ -1,97 +1,74 @@
 #!/usr/local/bin/bash
 mypid=$$
-for pid in $(pgrep -f ${0##*/}); do
-    # Avoid killing the current script
-    if [ "$pid" -ne "$mypid" ]; then
-        kill "$pid"
-    fi
-    sleep 1
-done
-
-
-# Start the dual lemonbar
 
 source ~/.cache/wal/colors.sh
-opacity=90
-opacity=$(((opacity * 255) / 100))
-
-# Colors
-background="#"$(printf "%X" "$opacity")"${background:1}"
-foreground="$color7"
+background=$color0
+foreground=$color7
 accent=$color6
-sep_color=$color1
+mut=$(mktemp)
 
 # Main Variables 
-CONT=$(mktemp)
-INT=3
-PAD=" "
-PAT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-MOD="$PAT"/modules
-WORKSPACE_WIDTH=700;
+MOD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"/modules
 
-# Bar calculations
-BAR_H=30 # Value with gaps
-GAP=0
-BAR_W=$((1920-(GAP*2)))
-BAR2_GEOM="$BAR_W"x"$((BAR_H-GAP))+$GAP+$GAP"
+
+echo "using tmp file $mut"
 
 bar_1(){
-	framecount=0;
-	SEP="^c$sep_color^ | ^d^"
-
-	# Bar 1 loop 
-	while [ -e $CONT ];do 
+	SEP="^c$color1^ | ^d^"
+	while [ -e "$mut" ];do
 		# Modules 
 		CPU=$($MOD/dwm/cpu.sh $accent)
 		RAM=$($MOD/dwm/ram.sh $accent)
 		TIME=$($MOD/dwm/time.sh $accent)
 		LOAD=$($MOD/dwm/load.sh $accent)
 
-		stat="$PAD$CPU$SEP$RAM$SEP$LOAD$SEP$TIME$SEP"
+		# Set status lists
+		stat="$CPU$SEP$RAM$SEP$LOAD$SEP$TIME"
+		xsetroot -name " $stat "
 
-		xsetroot -name "$stat"
-
-		framecount=$((framecount+1));
-		sleep $INT
+		sleep 3
 	done
 }
-
 
 bar_2(){
-	framecount=0;
-	SEP=" %{T2}%{F$sep_color}|%{F$foreground}%{T0} "
-	
-	# Bar 2 loop
-	while [ -e $CONT ];do 
-
-		# Modules:
+	SEP="%{F$color1} | %{F-}"
+	while [ -e "$mut" ] ; do
 		MEDIA_ICON=$($MOD/media_icon.sh $accent)
-		MEDIA_PLAYER=$($MOD/media.sh $sep_color)
-		#MONITOR=$($MOD/monitor.sh $accent)
+		MEDIA_PLAYER=$($MOD/media.sh $accent)
 		VOLUME=$($MOD/volume.sh $accent)
-		#WINDOW=$($MOD/window.sh $accent) 
 		NOTIFY=$($MOD/notify.sh $accent)
 		LOCALE=$($MOD/locale.sh $accent)
-		#NETWORK=$($MOD/net.sh $accent)
 		DISK=$($MOD/disk.sh $accent)
-
-		# Set module lists
-		left="$MEDIA_ICON $MEDIA_PLAYER"
-		right="$LOCALE$SEP$NOTIFY$SEP$VOLUME$SEP$DISK"
-
-
-		# Print bar
-		echo "%{l}$PAD$left%{r}$right$PAD"
-
-		framecount=$((framecount+1));
-		sleep $INT
+		
+		# Set bar lists
+		left="$MEDIA_ICON$SEP$VOLUME"
+		right="$LOCALE$SEP$NOTIFY$SEP$DISK"
+		echo "%{l} $left%{c}$MEDIA_PLAYER%{r}$right "
+		
+		sleep 3
 	done
 }
 
+# Bar calculations
+BAR_H=30 # Value with gaps
+BAR_W=$((1920-(GAP*2)))
+BAR2_GEOM="$BAR_W"x"$BAR_H+0+0"
 
+# Kill old bar
+killall lemonbar &>/dev/null
+for pid in $(ps aux |  grep "${0##*/}" | awk '{print $2}'); do
+    # Avoid killing the current script
+    if [ "$pid" -ne "$mypid" ]; then
+        kill "$pid" && echo "Killed Pid: $pid"
+    fi
+done 
+
+
+sleep 0.1
+
+# Startup new bars
 bar_1 &
-bar_2 | \
-	lemonbar \
+bar_2 | lemonbar \
 	-g "$BAR2_GEOM" \
 	-d -b \
 	-n "$bar_2_id" \
@@ -99,3 +76,5 @@ bar_2 | \
 	-f "Terminus (TTF):style=Italic:size=16" &
 
 wait
+echo "Exiting.."
+rm "$mut"

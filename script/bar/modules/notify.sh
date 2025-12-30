@@ -7,7 +7,7 @@
 
 
 prefix="%{F$1}N%{F-}"
-if [ $(dunstctl is-paused) = "true" ];then
+if [ "$(dunstctl is-paused)" = "true" ];then
 	echo -n "$prefix off ($(dunstctl count waiting))";
 else
   echo -n "$prefix on";

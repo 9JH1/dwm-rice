@@ -1,5 +1,6 @@
 #!/usr/local/bin/bash 
-# show locale 
+# show locale REQUIRES xkb-switch
+# pkg install xkb-switch
 #
 
-echo "%{F$1}L%{F-} Locale"
+echo "%{F$1}L%{F-} $(xkb-switch)"

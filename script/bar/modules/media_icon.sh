@@ -2,10 +2,10 @@
 # Uses playerctl to display playing status
 #
 
-stat=$(playerctl status)
+
 icon=""
 
-[ "$stat" = "Playing" ] && {
+[ "$(playerctl status &>/dev/null)" = "Playing" ] && {
 	icon="||"
 } || {
 	icon="|>"
