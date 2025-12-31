@@ -2,6 +2,6 @@
 # Get average CPU percent and temp
 #
 
-percent=$(top -n 1 | grep "CPU:" | awk '{print $2}')
+percent=$(printf "%.2f" $(top -b -n 0 -d 2 | grep "CPU:" | tail -n 1 | awk '{print $2}'))
 
 echo "^c$1^C^d^ $percent"

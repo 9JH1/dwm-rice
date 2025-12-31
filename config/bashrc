@@ -72,6 +72,8 @@ PS1="\# \[\e[32;1m\][\u@\h]\[\e[34;1m\] \w $(__BASH_PROMPT_STATUS__)\[\e[0m\]$ "
 # Bindings
 bind 'set show-all-if-ambiguous on'
 bind 'TAB:menu-complete'
+bind '"\C-h": beginning-of-line'
+bind '"\C-l": end-of-line'
 
 # Misc
 touch ~/.cache/pwd.tmp 
