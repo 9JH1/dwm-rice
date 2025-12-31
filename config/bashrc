@@ -5,6 +5,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+source ~/.fzf
+
 # Aliases
 alias grep='grep --color=auto'
 alias tree='tree -a -I .git'
@@ -63,7 +65,9 @@ export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 export HYFETCH_DONT_WARN_RUST=1
 export PWD_CD_FILE="$HOME/.cache/pwd.tmp"
 export PWD_CD_HISTORY="$(cat $PWD_CD_FILE)"
-PS1="\n\# \[\e[32;1m\][\u@\h]\[\e[34;1m\] \w $(__BASH_PROMPT_STATUS__)\[\e[0m\]$ "
+export HISTSIZE=1000
+export HISTFILESIZE=2000
+PS1="\# \[\e[32;1m\][\u@\h]\[\e[34;1m\] \w $(__BASH_PROMPT_STATUS__)\[\e[0m\]$ "
 
 # Bindings
 bind 'set show-all-if-ambiguous on'
@@ -114,25 +118,36 @@ set -g status-justify absolute-centre
 EOF
 
 TMUX_PATH="/tmp/tmux.conf"
+PROMPT_BOTTOM=0
 echo "$TMUX_CONFIG" > "$TMUX_PATH"
 tmux source-file "$TMUX_PATH" &>/dev/null
 
 # Handle startup
 if [ -n "$TMUX" ];then 
-	source -- ~/.local/share/blesh/ble.sh &>/dev/null
 	source ~/.cache/wal/colors.sh &>/dev/null
-	if which zoxide &>/dev/null; then
-		eval "$(zoxide init bash)"
-	fi
-	  
-	if [ "$(tmux display-message -p '#{pane_index}')" = "0" ];then 
-		# Run on startup of first pane
-		if which hyfetch &>/dev/null; then 
-			hyfetch 
-		fi
-	fi
 
-elif [[ ! "$ZSH_ISOLATE" =  "1" ]]; then
+	# Greet user on first pane in tab
+	pane_index=$(tmux display-message -p '#{pane_index}') &>/dev/null
+	[ -n "$pane_index" ] && { 
+		[ "$pane_index" = "0" ] && {
+			echo -e "\033[1;1H"
+			hyfetch --args "--structure logo" > /tmp/logo
+			fastfetch | lolcat
+			echo -e "\033[1;1H"
+			cat /tmp/logo
+			
+			# go to bottom of prompt
+			[ $PROMPT_BOTTOM = 1 ] && {
+				tput cup $(echo "$(tput lines)-2" | bc) 0 
+			} || echo -e "\n\n"
+		} 
+		notify-send "Opened new tmux pane $pane_index"
+	}
+
+	# Load shell features
+	source -- ~/.local/share/blesh/ble.sh 
+	which zoxide &>/dev/null && eval "$(zoxide init bash)" &
+elif [[ ! "$ZSH_ISOLATE" =  "1" ]];then
 	tmux -f "$TMUX_PATH" -u new -A -D
 	exit
 fi

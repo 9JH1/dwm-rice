@@ -7,5 +7,6 @@ source "$HOME/.cache/wal/colors.sh"
 hex="${color3:1}10"
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+playerctl pause
 sudo zzz && i3lock -c "$hex" && $SCRIPT_DIR/startup.sh
 

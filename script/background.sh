@@ -83,11 +83,11 @@ hex="$background"
 solid_color=$(mktemp);
 rm $solid_color
 
-touch $solid_color.ppm;
-printf "P6\n1 1\n255\n\\x${hex:1:2}\\x${hex:3:2}\\x${hex:5:2}" > "$solid_color"
+#touch $solid_color.ppm;
+#printf "P6\n1 1\n255\n\\x${hex:1:2}\\x${hex:3:2}\\x${hex:5:2}" > "$solid_color"
 
 # Set primary monitor wallpaper
-feh --bg-fill "$wallpaper" --bg-scale "$solid_color" 
+feh --bg-fill "$wallpaper" # --bg-scale "$solid_color" 
 [[ "$?" != "0" ]] && err "Wallpaper failed"
 
 rm -f "$solid_color_ppm"

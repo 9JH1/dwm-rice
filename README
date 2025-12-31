@@ -1,0 +1,59 @@
+This is made for my FreeBSD system, majority of the scripts will not work on non-bsd systems
+unless you change the shebang to the correct path to bash (bsd uses a different binary folder).
+
+This repo contains the code for custom builds of DWM, ST, DMENU and a few other bits and bobs.
+all source code is within the source folder and all scripts/modules for the bars are in the 
+script/bar/modules and script/bar/modules/dwm directorys.
+
+This is my PERSONAL repo so I will not have user catering at the top of my priority list.
+All of the scripts are custom. If you have any questions you can contact me through my 
+website: https://9jh1.github.com
+
+Thank you
+
+File Decriptions:
+8 directories, 36 files
+.
+├── README                      this file
+├── TODO.txt                    todo for entire project
+├── config                      configuration settings
+│   ├── bashrc                  bash shell configuration
+│   ├── fzf                     bash fzf config
+│   ├── picom.conf              picom compositor settings
+│   └── yazi                    file manager settings
+│       ├── theme.toml          file manager theme
+│       └── yazi.toml           file manager settings
+└── script                      all scripts
+    ├── background.2            various other scripts run after background.sh
+    ├── background.sh           changes the background
+    ├── bar                     bar scripts
+    │   ├── TODO.txt            todo for bar
+    │   ├── bars.sh             starts bar update loop
+    │   └── modules             Modules for status bar
+    │       ├── disk.sh         shows disk usage
+    │       ├── dwm             modules specifically for the top bar
+    │       │   ├── cpu.sh      show cpu percentage
+    │       │   ├── load.sh     show load amount (uptime)
+    │       │   ├── ram.sh      show active ram usage out of combined ram usage (ram+swap)
+    │       │   └── time.sh     show formatted time
+    │       ├── locale.sh       show locale (I use qwerty/dvorak)
+    │       ├── media.sh        show the current playing media
+    │       ├── media_icon.sh   show media status (play|pause) and song user rating (out of five)
+    │       ├── notify.sh       show if notifications are on or off
+    │       └── volume.sh       shows volume
+    ├── compositor.sh           various compositor options for keybinds
+    ├── forcequit.sh            forcefully quits the focused program
+    ├── launcher.sh             launches the launcher (dmenu)
+    ├── lockscreen.sh           locks and suspends the system
+    ├── media                   variables media scripts
+    │   ├── next.sh             skip to next song
+    │   ├── notifications.sh    toggle notifications
+    │   ├── prev.sh             go back to previous song
+    │   ├── status.sh           pause or play current song
+    │   ├── volume_down.sh      turn the volume down
+    │   └── volume_up.sh        put the volume up
+    ├── screenshot.sh           start a selection screenshot
+    ├── startup.sh              this script is ran on startup of dwm
+    ├── terminal.sh             starts the terminal
+    └── zoom.sh                 runs the zoom manager (boomer)
+
