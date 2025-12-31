@@ -1019,7 +1019,7 @@ drawbar(Monitor *m)
 	if (!m->showbar)
 		return;
 	
-	int x = 3, w, stw = 0, indn;
+	int x = 3, w, stw = 0, indn, tw = 0;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
@@ -1028,13 +1028,16 @@ drawbar(Monitor *m)
 	
 	Client *c;
 	
+
+	// draw bar background 
 	drw_setscheme(drw, scheme[SchemeNorm]);
-	drw_rect(drw, 0, 0, m->mw, bh, 1, 1);
-	
+	drw_rect(drw, 0, 0, dwmlogowdth, bh, 1, 1);
+
+	// draw status 
 	if(showsystray && m == systraytomon(m) && !systrayonleft)
 		stw = getsystraywidth();
-	
-	drawstatusbar(m, bh, stext);
+
+	tw = m->ww - drawstatusbar(m, bh, stext);
 	resizebarwin(m);
 
 	for (c = m->clients; c; c = c->next) {
@@ -1046,7 +1049,7 @@ drawbar(Monitor *m)
 
 	drw_setscheme(drw, scheme[SchemeSel]);
 
-	
+
 	/* draw dwm logo */
 	const DwmLogo dwmLogo[] = {
 		{  0,  9, stroke, letterHeight / 2 }, /* d: left vertical */
@@ -1064,12 +1067,12 @@ drawbar(Monitor *m)
 		drw_rect(drw, dwmLogo[i].x+x, dwmLogo[i].y+x, dwmLogo[i].w, dwmLogo[i].h, 1, 1);
 	}
 
-	/* start drawing tags after logo */
+	// draw symbol
 	x = dwmlogowdth;
 	w = TEXTW(m->ltsymbol);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 1);
 	
-	
+	// draw tags
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	for (i = 0; i < LENGTH(tags); i++) {
 		indn = 0;
@@ -1081,8 +1084,7 @@ drawbar(Monitor *m)
 		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
 		if (occ & 1 << i)
 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
-				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-				urg & 1 << i);
+				m == selmon && selmon->sel && selmon->sel->tags & 1 << i, urg & 1 << i);
 
 		for (c = m->clients; c; c = c->next) {
 			if (c->tags & (1 << i)) {
@@ -1092,6 +1094,19 @@ drawbar(Monitor *m)
 		}
 
 		x += w;
+	}
+
+	// draw window name 
+	if((w = m->ww - tw - x) > bh){
+		if(m->sel){
+			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
+			drw_text(drw, x, 0, w, bh, lrpad / 2,m->sel->name, m == selmon);
+			if(m->sel->isfloating)
+				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 1);
+		} else {
+			drw_setscheme(drw, scheme[SchemeNorm]);
+			drw_rect(drw, x , 0, w, bh, 1, 1);
+		} 
 	}
 
 	drw_setscheme(drw, scheme[SchemeNorm]);

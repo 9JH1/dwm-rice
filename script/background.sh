@@ -51,7 +51,7 @@ cache_frame="/home/$USER/.cache/wal_video_frame.jpg"
 		old_sha=$(echo "$old_wall" | sha1sum);
 
 		# Run ranger choosefile dialog
-		st -c "iso_term" -e sh -c "ranger --choosefile \"$cache_file\" \"$WALLPAPER_DIR\" --cmd=\"sort random\""		
+		st -c "iso_term" -e sh -c "yazi --chooser-file $cache_file $WALLPAPER_DIR"
 
 		# Exit if selected is same as old wallpaper
 		[[ "$(cat "$cache_file" | sha1sum)" = "$old_sha" ]] && {
@@ -78,23 +78,19 @@ fi
 
 # set secondary monitor(s) background color 
 source ~/.cache/wal/colors.sh
-solid_color_ppm=$(mktemp)".ppm"
-
 hex="$background"
-printf "P6\n1 1\n255\n\\x${hex:1:2}\\x${hex:3:2}\\x${hex:5:2}" > "$solid_color_ppm"
-(feh --bg-scale "$solid_color_ppm" && rm -f "$solid_color_ppm" &)
+
+solid_color=$(mktemp);
+rm $solid_color
+
+touch $solid_color.ppm;
+printf "P6\n1 1\n255\n\\x${hex:1:2}\\x${hex:3:2}\\x${hex:5:2}" > "$solid_color"
 
 # Set primary monitor wallpaper
-if ! ft "$wallpaper"; then 
-	pkill -f xwallpaper
+feh --bg-fill "$wallpaper" --bg-scale "$solid_color" 
+[[ "$?" != "0" ]] && err "Wallpaper failed"
 
-	output=$(xrandr | grep "primary" | awk '{print $1}')
-	echo "Setting Xwallpaper on display \"$output\""
-	xwallpaper --zoom "$wallpaper" --output  $output 
-	echo $wallpaper
-
-	[[ "$?" != "0" ]] && err "XWallpaper failed"
-fi
+rm -f "$solid_color_ppm"
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-$SCRIPT_DIR/background.2
+($SCRIPT_DIR/background.2 &>/dev/null &>/dev/null &)

@@ -1,6 +1,7 @@
 #!/usr/local/bin/bash 
 # run after background.sh
 #
+sleep 0.1
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 $SCRIPT_DIR/bar/bars.sh  
@@ -9,7 +10,7 @@ $SCRIPT_DIR/bar/bars.sh
 source "$HOME/.cache/wal/colors.sh"
 read -r -d '' DUNSTRC << EOM
 [global]
-font = Mononoki Nerd Font Bold 16
+font = Terminus (TTF)
 markup = full
 format = "<b>%s</b>\n<b>%b</b>"
 icon_position = left
@@ -45,6 +46,7 @@ EOM
 
 # Start dunst
 killall dunst; (dunst -config <(echo "$DUNSTRC") &)
+dunstctl set-paused false
 
 
 # Use walcord to set discord colors 

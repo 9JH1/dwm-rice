@@ -1,0 +1,23 @@
+[icon]
+globs = []
+dirs  = []
+files = []
+exts  = []
+conds = []
+
+[status]
+overall   = {}
+sep_left  = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+separator = { fg = "reset", bg = "reset" }  # Makes them blend into the background
+
+[which]
+seperator=""
+
+[tabs]
+sep_inner = { open = "", close = "" }
+sep_outer = { open = "", close = "" }
+
+[file]
+sep = ""
+border_symbol = " "

@@ -65,6 +65,7 @@ static const char *media_prev[]     = { "/home/_3hy/.dwm/script/media/prev.sh", 
 static const char *media_status[]   = { "/home/_3hy/.dwm/script/media/status.sh", NULL};
 static const char *volume_up[]      = { "/home/_3hy/.dwm/script/media/volume_up.sh", NULL};
 static const char *volume_down[]    = { "/home/_3hy/.dwm/script/media/volume_down.sh", NULL};
+static const char *notifications[]  = { "/home/_3hy/.dwm/script/media/notifications.sh", NULL};
 //static const char *volume_mute[]    = { "/home/_3hy/.dwm/script/media/volume_mute.sh", NULL};
 
 
@@ -104,9 +105,10 @@ static const Key keys[] = {
     {MODKEY,             XK_m,      spawn, {.v = lock_alt}},
     {MODKEY | ShiftMask, XK_s,      spawn, {.v = screenshot}},
     {MODKEY | ShiftMask, XK_r,      spawn, {.v = autostartcmd}},
-		{MODKEY | ShiftMask, XK_b,      spawn, {.v = compositor}},
+	{MODKEY | ShiftMask, XK_b,      spawn, {.v = compositor}},
     {MODKEY | ShiftMask, XK_q,      spawn, {.v = forcequit}},
     {MODKEY,             XK_z,      spawn, {.v = zoomcmd}},
+	{MODKEY,             XK_g,      spawn, {.v = notifications}},
 
     // Gaps
     {MODKEY,             XK_minus, setgaps, {.i = -1}},
@@ -116,7 +118,6 @@ static const Key keys[] = {
     // NMaster 
 	{MODKEY | ShiftMask, XK_i, incnmaster, {.i = -1}},
     {MODKEY,             XK_i, incnmaster, {.i = +1}},
-    {MODKEY,             XK_g, incnmaster, {.i = 0}},
 
 	// MFacts
     {MODKEY,             key_left,  setmfact, {.f = -0.05}},

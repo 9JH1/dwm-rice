@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 gcc -o motionlayer *.c -lavcodec -lavformat -lavutil -lswscale -lX11 -Wall -lXext
